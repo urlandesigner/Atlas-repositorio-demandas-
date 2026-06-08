@@ -4,6 +4,9 @@ import Link from "next/link"
 import { useMemo, useState, useSyncExternalStore } from "react"
 import { useParams } from "next/navigation"
 import type { ProjectStatus } from "@/types"
+import { ImpactCallout } from "@/components/records/impact-callout"
+import { useRecords } from "@/components/shell/records-provider"
+import type { RecordEntry } from "@/lib/records/types"
 import {
   emitProjectsChange,
   findProject,
@@ -15,7 +18,6 @@ import {
   STATUS_LABEL,
   STATUS_OPTIONS,
   subscribeProjectsStore,
-  TAB_LABEL,
   type PaymentEntry,
   type ProjectEntry,
   type ProjectLinkEntry,
@@ -328,18 +330,23 @@ function buildAutomaticTimelineEvents(previous: ProjectEntry, next: ProjectEntry
 function DetailSection({
   title,
   description,
+  action,
   children,
 }: {
   title: string
   description?: string
+  action?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
     <Card className="border-border/70">
       <CardHeader className="pb-4">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-          {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+            {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
+          </div>
+          {action && <div className="shrink-0">{action}</div>}
         </div>
       </CardHeader>
       <CardContent className="space-y-4">{children}</CardContent>
@@ -411,6 +418,13 @@ function ProjectDetailSurface({
       startedLabel: formatFullDate(editStartedAt || project.started_at),
     }
   }, [editStartedAt, editStatus, project.started_at, project.updated_at])
+
+  const { openCapture, openDetail, records, updateExistingRecord, deleteExistingRecord } = useRecords()
+
+  const linkedRecords = useMemo(
+    () => records.filter((r) => r.projectId === project.id || r.projectName?.trim().toLowerCase() === project.name.trim().toLowerCase()).sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
+    [records, project.id, project.name]
+  )
 
   function persist(updated: ProjectEntry) {
     const next = {
@@ -553,10 +567,7 @@ function ProjectDetailSurface({
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-            {TAB_LABEL[workspace]}
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
+          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
             {editName}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
@@ -564,7 +575,7 @@ function ProjectDetailSurface({
           </p>
         </div>
 
-        <div className="flex w-full gap-2 sm:w-auto">
+        <div className="flex w-full flex-wrap gap-2 sm:w-auto">
           <Button variant="ghost" className="flex-1 sm:flex-none" onClick={handleReset}>
             Desfazer
           </Button>
@@ -575,42 +586,43 @@ function ProjectDetailSurface({
       </div>
 
       <Card className="border-border/70 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_32px_rgba(15,23,42,0.06)]">
-        <CardContent className="space-y-4 p-5">
-          <div className="min-w-0">
-            <div className="mb-3 flex flex-wrap items-center gap-2">
-              <Badge className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-none", getStatusBadgeClassName(editStatus))}>
-                {STATUS_LABEL[editStatus]}
-              </Badge>
+        <CardContent className="p-4">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
+            <div className="min-w-0 space-y-1.5 lg:shrink-0">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-none", getStatusBadgeClassName(editStatus))}>
+                  {STATUS_LABEL[editStatus]}
+                </Badge>
+                {showFreelancerFields && clientDisplayName && (
+                  <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                    {clientDisplayName}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock3 className="size-3.5" />
+                  {commandCenter.updatedLabel}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <CalendarDays className="size-3.5" />
+                  Projeto iniciado em {commandCenter.startedLabel}
+                </span>
+              </div>
             </div>
 
-            {showFreelancerFields && clientDisplayName && (
-              <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                {clientDisplayName}
-              </p>
-            )}
-
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <Clock3 className="size-3.5" />
-                {commandCenter.updatedLabel}
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <CalendarDays className="size-3.5" />
-                Projeto iniciado em {commandCenter.startedLabel}
-              </span>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-              <span>Progressão do projeto</span>
-              <span>{commandCenter.progress}%</span>
-            </div>
-            <div className="h-2 rounded-full bg-muted/80">
-              <div
-                className={cn("h-full rounded-full transition-[width,background-color] duration-200 ease-out", getProgressFillClassName(editStatus))}
-                style={{ width: `${commandCenter.progress}%` }}
-              />
+            <div className="space-y-1.5 lg:flex-1">
+              <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                <span>Progressão</span>
+                <span>{commandCenter.progress}%</span>
+              </div>
+              <div className="h-2 rounded-full bg-muted/80">
+                <div
+                  className={cn("h-full rounded-full transition-[width,background-color] duration-200 ease-out", getProgressFillClassName(editStatus))}
+                  style={{ width: `${commandCenter.progress}%` }}
+                />
+              </div>
             </div>
           </div>
         </CardContent>
@@ -686,6 +698,60 @@ function ProjectDetailSurface({
             </div>
           </DetailSection>
 
+          <DetailSection
+            title={`Entregas registradas${linkedRecords.length > 0 ? ` (${linkedRecords.length})` : ""}`}
+            description="Contribuições e impactos documentados vinculados a este projeto. Aparecem no histórico profissional."
+            action={
+              linkedRecords.length > 0 ? (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5"
+                  onClick={() => openCapture({ id: project.id, name: project.name })}
+                >
+                  <Plus className="size-4" />
+                  Registrar entrega
+                </Button>
+              ) : undefined
+            }
+          >
+            {linkedRecords.length === 0 ? (
+              <div className="flex flex-col items-center gap-3 rounded-[20px] border border-dashed border-border/60 bg-muted/15 px-4 py-8 text-center">
+                <p className="text-sm text-muted-foreground">Nenhuma entrega registrada ainda.</p>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5"
+                  onClick={() => openCapture({ id: project.id, name: project.name })}
+                >
+                  <Plus className="size-4" />
+                  Registrar primeira entrega
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {linkedRecords.map((record: RecordEntry) => (
+                  <button
+                    key={record.id}
+                    type="button"
+                    onClick={() => openDetail(record)}
+                    className="w-full rounded-[20px] border border-border/60 bg-card/[0.98] p-3 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="min-w-0 truncate text-sm font-medium text-foreground">{record.enriched.title || "Entrega sem título"}</p>
+                      <span className="shrink-0 text-[11px] text-muted-foreground">
+                        {new Date(record.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                      </span>
+                    </div>
+                    <ImpactCallout size="sm" lines={2} className="mt-2.5">
+                      {record.enriched.impact || record.enriched.contribution || "—"}
+                    </ImpactCallout>
+                  </button>
+                ))}
+              </div>
+            )}
+          </DetailSection>
+
           <DetailSection title="Timeline do Projeto" description="Feed histórico gerado automaticamente conforme você atualiza status, links, observações, período e pagamentos do projeto.">
             <div className="rounded-2xl border border-border/70 bg-muted/10">
               {groupedTimeline.length === 0 ? (
@@ -739,11 +805,8 @@ function ProjectDetailSurface({
         </div>
 
         <div className="space-y-6">
-          <DetailSection title="Links importantes" description="Acessos rápidos usados diariamente neste projeto.">
-            <div className="flex items-start justify-between gap-3">
-              <div className="text-xs text-muted-foreground">
-                Figma, GitHub, Vercel, Notion, staging, produção e outros acessos operacionais.
-              </div>
+          <DetailSection title="Links importantes">
+            <div className="flex items-start justify-end gap-3">
               <Button
                 size="sm"
                 className="gap-1.5"
@@ -790,7 +853,7 @@ function ProjectDetailSurface({
             )}
 
             {editLinks.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-border/80 bg-muted/20 px-4 py-5 text-sm text-muted-foreground">
+              <div className="rounded-[20px] border border-dashed border-border/60 bg-muted/15 px-4 py-5 text-sm text-muted-foreground">
                 Nenhum link importante cadastrado ainda.
               </div>
             ) : (
@@ -835,7 +898,7 @@ function ProjectDetailSurface({
             )}
           </DetailSection>
 
-          <DetailSection title="Período" description="Datas principais para entender o ciclo do projeto.">
+          <DetailSection title="Período">
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1.5 block text-xs text-muted-foreground">Data de início</label>
@@ -930,7 +993,7 @@ function ProjectDetailSurface({
             </DetailSection>
           )}
 
-          <DetailSection title="Observações" description="Notas livres e aprendizados complementares do projeto.">
+          <DetailSection title="Observações">
             <Textarea
               placeholder="Anotações sobre o projeto..."
               value={editObs}

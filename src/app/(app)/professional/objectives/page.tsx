@@ -161,7 +161,7 @@ function ObjectiveSheet({
           </p>
         </SheetHeader>
 
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 min-h-0">
           <div className="flex flex-col gap-5 px-5 py-5">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Objetivo *</label>
@@ -331,7 +331,7 @@ function ObjectiveCard({
 
   return (
     <Card
-      className="h-full cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-muted/35 hover:shadow-sm"
+      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
@@ -400,7 +400,7 @@ function ObjectiveCard({
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed bg-muted/15 py-16">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-[20px] border border-dashed border-border/60 bg-muted/15 py-16">
       <div className="flex size-10 items-center justify-center rounded-full bg-muted">
         <Target className="size-5 text-muted-foreground" />
       </div>
@@ -458,7 +458,7 @@ function ObjectiveDrawer({
               </p>
             </SheetHeader>
 
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 min-h-0">
               <div className="flex flex-col gap-5 px-5 py-5">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-lg border bg-muted/20 p-3">

@@ -40,6 +40,8 @@ export interface RecordEntry {
   impactScope: ImpactScope
   impactLevel: ImpactLevel
   tags: string[]
+  /** Destaque manual exibido no card do histórico. Quando vazio, é derivado do texto. */
+  highlight?: string
   projectId?: string
   projectName?: string
   createdAt: string

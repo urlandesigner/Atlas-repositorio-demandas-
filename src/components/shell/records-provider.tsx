@@ -6,9 +6,14 @@ import { loadRecords, addRecord, updateRecord, deleteRecord } from "@/lib/record
 import { QuickCapture } from "@/components/records/quick-capture"
 import { RecordDetail } from "@/components/records/record-detail"
 
+export interface CaptureProjectContext {
+  id: string
+  name: string
+}
+
 interface RecordsContextValue {
   records: RecordEntry[]
-  openCapture: () => void
+  openCapture: (project?: CaptureProjectContext) => void
   addNewRecord: (record: RecordEntry) => void
   openDetail: (record: RecordEntry) => void
   updateExistingRecord: (id: string, updates: Partial<RecordEntry>) => void
@@ -31,6 +36,7 @@ export function useRecords() {
 export function RecordsProvider({ children }: { children: React.ReactNode }) {
   const [records, setRecords] = useState<RecordEntry[]>([])
   const [open, setOpen] = useState(false)
+  const [captureProject, setCaptureProject] = useState<CaptureProjectContext | undefined>(undefined)
   const [detailRecord, setDetailRecord] = useState<RecordEntry | null>(null)
 
   // Load from localStorage on mount
@@ -56,7 +62,10 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  const openCapture = useCallback(() => setOpen(true), [])
+  const openCapture = useCallback((project?: CaptureProjectContext) => {
+    setCaptureProject(project)
+    setOpen(true)
+  }, [])
 
   const addNewRecord = useCallback((record: RecordEntry) => {
     addRecord(record)
@@ -99,7 +108,7 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-      <QuickCapture open={open} onOpenChange={setOpen} onSave={addNewRecord} />
+      <QuickCapture open={open} onOpenChange={setOpen} onSave={addNewRecord} initialProject={captureProject} />
       <RecordDetail
         record={detailRecord}
         onOpenChange={(o) => {

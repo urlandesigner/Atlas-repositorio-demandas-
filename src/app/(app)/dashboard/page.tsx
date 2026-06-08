@@ -156,7 +156,7 @@ function EmptyPanel({
   action?: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-lg border border-dashed bg-muted/15 px-4 py-10 text-center">
+    <div className="flex flex-col items-center justify-center gap-3 rounded-[20px] border border-dashed border-border/60 bg-muted/15 px-4 py-10 text-center">
       <div className="flex size-10 items-center justify-center rounded-full bg-muted">
         <Icon className="size-5 text-muted-foreground" />
       </div>
@@ -173,7 +173,7 @@ function ObjectiveRow({ objective }: { objective: ObjectiveEntry }) {
   return (
     <Link
       href="/professional/objectives"
-      className="flex items-start justify-between gap-4 rounded-lg border bg-background px-3 py-3 transition-colors hover:bg-muted/40"
+      className="flex items-start justify-between gap-4 rounded-[20px] border border-border/60 bg-card/[0.98] px-3 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
     >
       <div className="min-w-0">
         <p className="line-clamp-1 text-sm font-medium">{objective.title}</p>
@@ -225,27 +225,6 @@ function ActivityRow({ item }: { item: ActivityItem }) {
   )
 }
 
-function ProjectWorkspaceRow({
-  workspace,
-  projects,
-}: {
-  workspace: WorkspaceTab
-  projects: ProjectEntry[]
-}) {
-  const active = projects.filter((project) => project.status === "active").length
-
-  return (
-    <div className="flex items-center justify-between gap-3 rounded-lg border bg-background px-3 py-3">
-      <div>
-        <p className="text-sm font-medium">{TAB_LABEL[workspace]}</p>
-        <p className="text-xs text-muted-foreground">{projects.length} projeto(s)</p>
-      </div>
-      <Badge variant="outline" className="font-normal">
-        {active} ativo(s)
-      </Badge>
-    </div>
-  )
-}
 
 export default function DashboardPage() {
   const { records, openCapture } = useRecords()
@@ -284,11 +263,6 @@ export default function DashboardPage() {
       .slice(0, 4)
   }, [activeObjectives])
 
-  const recentRecords = useMemo(
-    () => [...records].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)).slice(0, 4),
-    [records]
-  )
-
   const recentActivity = useMemo(() => {
     const recordActivity = records.slice(0, 4).map(getRecordActivity)
     const objectiveActivity = objectives.slice(0, 4).map(getObjectiveActivity)
@@ -312,7 +286,7 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <Button size="sm" onClick={openCapture}>
+        <Button size="sm" onClick={() => openCapture()}>
           <Zap data-icon="inline-start" />
           Novo registro
         </Button>
@@ -378,7 +352,7 @@ export default function DashboardPage() {
                 icon={Zap}
                 title="Nenhuma atividade registrada ainda. Comece documentando uma atuação ou criando um objetivo."
                 action={
-                  <Button size="sm" onClick={openCapture}>
+                  <Button size="sm" onClick={() => openCapture()}>
                     <Zap data-icon="inline-start" />
                     Criar registro
                   </Button>
@@ -430,19 +404,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Projetos</CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Visão geral dos projetos profissionais.
-            </p>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-2">
-            <ProjectWorkspaceRow workspace="professional" projects={projects.professional} />
-          </CardContent>
-        </Card>
-
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
@@ -539,43 +501,6 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {recentRecords.length ? (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-4">
-            <div>
-              <CardTitle className="text-sm font-medium">Últimos registros de impacto</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Evidências que alimentam timeline, objetivos e PDI.
-              </p>
-            </div>
-            <Button variant="outline" size="sm" onClick={openCapture}>
-              Novo registro
-              <Zap data-icon="inline-end" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-              {recentRecords.map((record) => (
-                <Link
-                  key={record.id}
-                  href="/professional/timeline"
-                  className="rounded-lg border bg-background px-4 py-3 transition-colors hover:bg-muted/40"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="line-clamp-1 text-sm font-medium">{record.enriched.title}</p>
-                    <Badge variant="outline" className="shrink-0 font-normal">
-                      {record.impactLevel}/5
-                    </Badge>
-                  </div>
-                  <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
-                    {record.enriched.impact || record.enriched.contribution || record.raw}
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
     </div>
   )
 }

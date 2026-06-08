@@ -3,12 +3,35 @@ import type { EnrichedFields } from "@/lib/records/types"
 
 // ─── Smart mock (used when OPENAI_API_KEY is absent) ─────────────────────────
 
+// Deriva um título curto e fiel ao texto digitado pelo usuário.
+function deriveTitleFromRaw(raw: string): string {
+  const cleaned = raw.trim().replace(/\s+/g, " ")
+  if (!cleaned) return "Registro profissional"
+
+  // Usa a primeira frase como base do título.
+  const firstSentence = cleaned.split(/(?<=[.!?])\s+/)[0] ?? cleaned
+  let title = firstSentence.replace(/[.!?]+$/, "").trim()
+
+  // Capitaliza a primeira letra preservando o restante.
+  title = title.charAt(0).toUpperCase() + title.slice(1)
+
+  // Limita a 80 caracteres, cortando no limite de palavra.
+  if (title.length > 80) {
+    const truncated = title.slice(0, 80)
+    const lastSpace = truncated.lastIndexOf(" ")
+    title = (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated).trimEnd() + "…"
+  }
+
+  return title
+}
+
 function mockEnrich(raw: string): EnrichedFields {
   const lower = raw.toLowerCase()
+  const title = deriveTitleFromRaw(raw)
 
   if (/design.?system|sistema de design|kaizen|token|component/.test(lower)) {
     return {
-      title: "Estruturação e documentação do Design System",
+      title,
       context:
         "A equipe não possuía uma fonte centralizada de verdade para os padrões e componentes do Design System — o conhecimento estava fragmentado entre arquivos dispersos, dependendo de comunicação informal e do conhecimento tácito de poucos membros.",
       objective:
@@ -25,7 +48,7 @@ function mockEnrich(raw: string): EnrichedFields {
 
   if (/arquitetura|microsservi|plataforma|backend|api|módulo/.test(lower)) {
     return {
-      title: "Definição de arquitetura técnica estratégica",
+      title,
       context:
         "O crescimento do produto criou dependências críticas na arquitetura existente, gerando gargalos de escalabilidade e dificultando entregas independentes entre os times.",
       objective:
@@ -42,7 +65,7 @@ function mockEnrich(raw: string): EnrichedFields {
 
   if (/lider|conduzi|alinhei|stakeholder|apresent/.test(lower)) {
     return {
-      title: "Liderança e alinhamento de iniciativa estratégica",
+      title,
       context:
         "A iniciativa envolvia múltiplos stakeholders com perspectivas divergentes, sem um processo claro de tomada de decisão que permitisse avançar com velocidade e confiança.",
       objective:
@@ -59,7 +82,7 @@ function mockEnrich(raw: string): EnrichedFields {
 
   // Generic but professional fallback
   return {
-    title: "Contribuição profissional documentada",
+    title,
     context:
       "Contexto que motivou a iniciativa: identificou-se uma oportunidade ou necessidade de melhoria que justificava atuação direta para gerar impacto mensurável.",
     objective:
@@ -79,7 +102,10 @@ function mockEnrich(raw: string): EnrichedFields {
 export async function POST(request: Request) {
   const { raw } = await request.json()
 
-  if (!process.env.OPENAI_API_KEY) {
+  // Trata chave ausente OU placeholder/ inválida como "sem chave" — evita uma
+  // chamada real que só falharia e cairia no mock depois de latência extra.
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey || !apiKey.startsWith("sk-")) {
     await new Promise((r) => setTimeout(r, 3200))
     return Response.json({ enriched: mockEnrich(raw) })
   }

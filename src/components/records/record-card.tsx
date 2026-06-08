@@ -28,8 +28,8 @@ export function RecordCard({ record, onClick }: RecordCardProps) {
       onClick={onClick}
       onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
       className={cn(
-        "group flex flex-col gap-3 rounded-xl border bg-card p-4 text-left transition-all",
-        onClick && "cursor-pointer hover:shadow-sm hover:border-foreground/20"
+        "group flex flex-col gap-3 rounded-[20px] border border-border/60 bg-card/[0.98] p-4 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out",
+        onClick && "cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
       )}
     >
       {/* Header: atuação badge + area label + impact dots */}

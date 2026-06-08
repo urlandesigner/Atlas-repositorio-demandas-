@@ -65,7 +65,7 @@ function formatProjectPeriod(project: ProjectEntry) {
 function ProjectCard({ project }: { project: ProjectEntry }) {
   return (
     <Link href={createProjectPath(WORKSPACE, project.id)} className="block">
-      <Card className="h-full cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm">
+      <Card className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
         <CardHeader className="pb-0">
           <div className="flex items-center justify-between gap-2">
             <h3 className="truncate text-sm font-medium">{project.name}</h3>
@@ -142,7 +142,7 @@ function NewProjectSheet({
           <p className="text-xs text-muted-foreground">Profissional</p>
         </SheetHeader>
 
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 min-h-0">
           <div className="flex flex-col gap-4 px-5 py-5">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Nome *</label>

@@ -248,9 +248,10 @@ interface QuickCaptureProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSave: (record: RecordEntry) => void
+  initialProject?: { id: string; name: string }
 }
 
-export function QuickCapture({ open, onOpenChange, onSave }: QuickCaptureProps) {
+export function QuickCapture({ open, onOpenChange, onSave, initialProject }: QuickCaptureProps) {
   const [step, setStep] = useState<Step>("input")
   const [raw, setRaw] = useState("")
   const [enriched, setEnriched] = useState<EnrichedFields | null>(null)
@@ -367,6 +368,7 @@ export function QuickCapture({ open, onOpenChange, onSave }: QuickCaptureProps) 
       impactScope,
       impactLevel,
       tags: [],
+      ...(initialProject ? { projectId: initialProject.id, projectName: initialProject.name } : {}),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
@@ -392,6 +394,7 @@ export function QuickCapture({ open, onOpenChange, onSave }: QuickCaptureProps) 
             error={error}
             detection={detection}
             detecting={detecting}
+            projectName={initialProject?.name}
           />
         )}
         {step === "processing" && (
@@ -429,6 +432,7 @@ function InputStep({
   error,
   detection,
   detecting,
+  projectName,
 }: {
   raw: string
   setRaw: (v: string) => void
@@ -437,6 +441,7 @@ function InputStep({
   error: boolean
   detection: Detection | null
   detecting: boolean
+  projectName?: string
 }) {
   const canAnalyze = raw.trim().length >= 20
   const showDetection = raw.trim().length >= 60 && (!!detection || detecting)
@@ -454,7 +459,11 @@ function InputStep({
         <div>
           <p className="text-sm font-semibold">Novo Registro</p>
           <p className="text-xs text-muted-foreground">
-            Registre decisões, impactos e conquistas — a IA estrutura sua trajetória.
+            {projectName ? (
+              <>Vinculado ao projeto <span className="font-medium text-foreground">{projectName}</span></>
+            ) : (
+              "Registre decisões, impactos e conquistas — a IA estrutura sua trajetória."
+            )}
           </p>
         </div>
       </div>

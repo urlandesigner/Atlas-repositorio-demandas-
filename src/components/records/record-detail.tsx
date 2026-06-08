@@ -20,6 +20,7 @@ import { AREAS } from "./area-picker"
 import { AtuacaoPicker } from "./atuacao-picker"
 import { AreaPicker } from "./area-picker"
 import { ImpactSelector, SCOPES } from "./impact-selector"
+import { HIGHLIGHT_SUGGESTIONS } from "@/lib/records/highlights"
 import type {
   RecordEntry,
   EnrichedFields,
@@ -45,6 +46,26 @@ const FIELD_LABELS: Record<keyof EnrichedFields, string> = {
   decisions: "Decisões",
   impact: "Impacto",
   learnings: "Aprendizados",
+}
+
+// Converte um ISO em "YYYY-MM-DD" no fuso local (para <input type="date">).
+function toDateInputValue(iso: string): string {
+  const date = new Date(iso)
+  if (Number.isNaN(date.getTime())) return ""
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
+}
+
+// Aplica a data escolhida preservando a hora original do registro (evita rollover de fuso).
+function fromDateInputValue(value: string, fallbackIso: string): string {
+  const [year, month, day] = value.split("-").map(Number)
+  if (!year || !month || !day) return fallbackIso
+  const base = new Date(fallbackIso)
+  const next = Number.isNaN(base.getTime()) ? new Date() : new Date(base)
+  next.setFullYear(year, month - 1, day)
+  return next.toISOString()
 }
 
 // Title is rendered as a heading; these are shown as body sections
@@ -113,6 +134,8 @@ function DetailBody({
   const [draftScope, setDraftScope] = useState<ImpactScope>(record.impactScope)
   const [draftLevel, setDraftLevel] = useState<ImpactLevel>(record.impactLevel)
   const [draftTags, setDraftTags] = useState(record.tags.join(", "))
+  const [draftHighlight, setDraftHighlight] = useState(record.highlight ?? "")
+  const [draftDate, setDraftDate] = useState(toDateInputValue(record.createdAt))
 
   const atuacao = ATUACOES.find((a) => a.value === record.atuacao)
   const area = AREAS.find((a) => a.value === record.area)
@@ -145,6 +168,8 @@ function DetailBody({
       impactScope: draftScope,
       impactLevel: draftLevel,
       tags: normalizedTags,
+      highlight: draftHighlight.trim() || undefined,
+      createdAt: fromDateInputValue(draftDate, record.createdAt),
     })
 
     setEditing(false)
@@ -221,6 +246,14 @@ function DetailBody({
 
             <div className="flex flex-col gap-1.5">
               <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                Data
+              </span>
+              <Input type="date" value={draftDate} onChange={(e) => setDraftDate(e.target.value)} className="w-fit" />
+              <p className="text-[11px] text-muted-foreground">Define onde o registro aparece na linha do tempo.</p>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
                 Contexto
               </span>
               <Textarea value={draftContext} onChange={(e) => setDraftContext(e.target.value)} className="min-h-[110px] resize-none" />
@@ -238,6 +271,26 @@ function DetailBody({
                 Impacto
               </span>
               <Textarea value={draftImpact} onChange={(e) => setDraftImpact(e.target.value)} className="min-h-[110px] resize-none" />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                Destaque
+              </span>
+              <Input
+                value={draftHighlight}
+                onChange={(e) => setDraftHighlight(e.target.value)}
+                placeholder="Ex: Melhoria de comunicação"
+                list="highlight-suggestions"
+              />
+              <datalist id="highlight-suggestions">
+                {HIGHLIGHT_SUGGESTIONS.map((suggestion) => (
+                  <option key={suggestion} value={suggestion} />
+                ))}
+              </datalist>
+              <p className="text-[11px] text-muted-foreground">
+                Tag exibida no card do histórico. Deixe em branco para gerar automaticamente a partir do texto.
+              </p>
             </div>
 
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,260px)]">

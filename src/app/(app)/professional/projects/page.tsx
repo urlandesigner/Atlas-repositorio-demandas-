@@ -127,7 +127,7 @@ function ProjectCard({
 }) {
   return (
     <Card
-      className="cursor-pointer hover:bg-muted/50 transition-colors"
+      className="cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
       onClick={onClick}
     >
       <CardHeader className="pb-2">
@@ -186,7 +186,7 @@ function ProjectDrawer({
               </div>
             </SheetHeader>
 
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 min-h-0">
               <div className="flex flex-col gap-5 px-5 py-5">
                 <section>
                   <p className="text-xs font-medium text-muted-foreground mb-1.5">Sobre</p>

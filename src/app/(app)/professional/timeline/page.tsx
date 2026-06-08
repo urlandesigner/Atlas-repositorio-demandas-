@@ -9,14 +9,13 @@ import {
   SparklesIcon,
   StarIcon,
   TargetIcon,
-  TrendingUpIcon,
 } from "lucide-react"
 
 import { ATUACOES } from "@/components/records/atuacao-picker"
 import { AREAS } from "@/components/records/area-picker"
+import { ImpactCallout } from "@/components/records/impact-callout"
 import { SCOPES } from "@/components/records/impact-selector"
 import { useRecords } from "@/components/shell/records-provider"
-import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { getProjectsServerSnapshot, getProjectsSnapshot, subscribeProjectsStore, type ProjectEntry, type WorkspaceTab } from "@/lib/projects/store"
 import {
@@ -27,6 +26,7 @@ import {
   subscribeTimelinePinsStore,
 } from "@/lib/timeline/pins-store"
 import type { ImpactLevel, RecordEntry } from "@/lib/records/types"
+import { HIGHLIGHT_DEFS, resolveHighlightTone, type HighlightTone } from "@/lib/records/highlights"
 import { cn } from "@/lib/utils"
 
 type ImpactTypeFilter =
@@ -51,7 +51,6 @@ type StrategicCategoryFilter =
   | "growth"
 
 type SeniorityTier = Exclude<SeniorityFilter, "all">
-type HighlightTone = "violet" | "sky" | "emerald" | "amber"
 
 interface TimelineProjectMeta extends ProjectEntry {
   workspace: WorkspaceTab
@@ -246,21 +245,16 @@ function deriveStrategicTags(record: RecordEntry, project: TimelineProjectMeta |
 }
 
 function deriveHighlights(record: RecordEntry): HighlightItem[] {
+  // Destaque manual tem prioridade sobre a derivação automática.
+  const manual = record.highlight?.trim()
+  if (manual) {
+    return [{ label: manual, tone: resolveHighlightTone(manual) }]
+  }
+
   const text = normalizeToken([record.enriched.impact, record.enriched.contribution, record.enriched.decisions].filter(Boolean).join(" "))
   const highlights: HighlightItem[] = []
 
-  const defs: { label: string; tone: HighlightTone; regex: RegExp }[] = [
-    { label: "Redução de retrabalho", tone: "emerald", regex: /(retrabalho|rework)/ },
-    { label: "Ganho operacional", tone: "sky", regex: /(eficien|produtiv|tempo|operacional|agilidad)/ },
-    { label: "Padronização", tone: "violet", regex: /(padron|consisten|governan|design system)/ },
-    { label: "Melhoria de comunicação", tone: "amber", regex: /(comunic|alinh|clareza|stakeholder)/ },
-    { label: "Aceleração de desenvolvimento", tone: "sky", regex: /(aceler|velocity|desenvolvimento)/ },
-    { label: "Automação", tone: "violet", regex: /(automat|automa|workflow|pipeline)/ },
-    { label: "Clareza estratégica", tone: "amber", regex: /(estrateg|prioriz|direcionamento)/ },
-    { label: "Escalabilidade", tone: "violet", regex: /(escala|escalabil|reuso|foundation)/ },
-  ]
-
-  for (const def of defs) {
+  for (const def of HIGHLIGHT_DEFS) {
     if (def.regex.test(text)) highlights.push({ label: def.label, tone: def.tone })
   }
 
@@ -380,22 +374,17 @@ function FeaturedStoryCard({
   onOpen: (record: RecordEntry) => void
 }) {
   return (
-    <article className="rounded-[24px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_28px_rgba(15,23,42,0.06)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_18px_42px_rgba(15,23,42,0.09)]">
+    <article className="flex h-full flex-col rounded-[20px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_28px_rgba(15,23,42,0.06)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_18px_42px_rgba(15,23,42,0.09)]">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="outline" className="rounded-full border-border/60 bg-background/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-            {item.impactLabel}
-          </Badge>
-          <Badge className="rounded-full border border-violet-500/15 bg-violet-500/10 px-2.5 py-1 text-[11px] font-medium text-violet-700 shadow-none dark:text-violet-300">
-            {item.seniorityLabel}
-          </Badge>
-        </div>
+        <p className="min-w-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+          {item.projectName || item.areaLabel}
+        </p>
 
         <button
           type="button"
           onClick={() => onPinToggle(item.id)}
           className={cn(
-            "inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
+            "inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
             pinned
               ? "border-foreground/15 bg-foreground text-background"
               : "border-border bg-background text-muted-foreground hover:text-foreground"
@@ -406,17 +395,12 @@ function FeaturedStoryCard({
         </button>
       </div>
 
-      <div className="mt-3.5">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
-          {item.projectName || item.areaLabel}
-        </p>
-        <h2 className="mt-1.5 line-clamp-2 text-xl font-semibold tracking-tight text-foreground">
-          {item.title}
-        </h2>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-muted-foreground">
-          {item.impact}
-        </p>
-      </div>
+      <h2 className="mt-2 line-clamp-2 text-base font-semibold leading-snug tracking-tight text-foreground">
+        {item.title}
+      </h2>
+      <p className="mt-1.5 line-clamp-2 flex-1 text-sm leading-6 text-muted-foreground">
+        {item.impact}
+      </p>
 
       {item.highlights[0] && (
         <div className="mt-3 rounded-xl border border-border/60 bg-background/55 px-3 py-2">
@@ -426,7 +410,7 @@ function FeaturedStoryCard({
       )}
 
       <div className="mt-3 flex items-center justify-end">
-        <Button variant="ghost" size="sm" className="gap-1.5 px-2.5" onClick={() => onOpen(item.record)}>
+        <Button variant="ghost" size="sm" className="gap-1.5 px-2.5 text-muted-foreground hover:text-foreground" onClick={() => onOpen(item.record)}>
           Abrir história
           <ArrowUpRightIcon className="size-3.5" />
         </Button>
@@ -462,79 +446,53 @@ function StoryCard({
         </div>
       </div>
 
-      <article className="rounded-[24px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
+      <article className="rounded-[20px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
         <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-2.5 xl:flex-row xl:items-start xl:justify-between">
-            <div className="space-y-1.5">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-none", item.roleClassName)}>
-                  {item.roleLabel}
-                </Badge>
-                <Badge className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-none", item.areaClassName)}>
-                  {item.areaLabel}
-                </Badge>
-              </div>
-
-              <div>
-                <h2 className="line-clamp-2 text-xl font-semibold tracking-tight text-foreground sm:text-[1.3rem]">{item.title}</h2>
-                <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                  <span className="font-medium text-foreground/70">{item.projectName || "Entrega profissional"}</span>
-                  <span className="hidden sm:inline text-muted-foreground/40">•</span>
-                  <span>{item.period}</span>
-                </div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 space-y-1">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                {item.areaLabel}
+              </p>
+              <h2 className="line-clamp-2 text-xl font-semibold tracking-tight text-foreground sm:text-[1.3rem]">{item.title}</h2>
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                <span className="font-medium text-foreground/70">{item.projectName || "Entrega profissional"}</span>
+                <span className="hidden sm:inline text-muted-foreground/40">•</span>
+                <span>{item.period}</span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
-              {item.weightBadges.map((badge) => (
-                <Badge key={badge} className="rounded-full border border-border/60 bg-background/70 px-2.5 py-1 text-[11px] font-medium text-foreground/80 shadow-none">
-                  {badge}
-                </Badge>
-              ))}
-              <button
-                type="button"
-                onClick={() => onPinToggle(item.id)}
-                className={cn(
-                  "inline-flex size-8 items-center justify-center rounded-full border transition-colors",
-                  pinned
-                    ? "border-foreground/15 bg-foreground text-background"
-                    : "border-border bg-background text-muted-foreground hover:text-foreground"
-                )}
-                aria-label={pinned ? "Desfixar entrega" : "Fixar entrega"}
-              >
-                <PinIcon className="size-3.5" />
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => onPinToggle(item.id)}
+              className={cn(
+                "inline-flex size-8 shrink-0 items-center justify-center rounded-full border transition-colors",
+                pinned
+                  ? "border-foreground/15 bg-foreground text-background"
+                  : "border-border bg-background text-muted-foreground hover:text-foreground"
+              )}
+              aria-label={pinned ? "Desfixar entrega" : "Fixar entrega"}
+            >
+              <PinIcon className="size-3.5" />
+            </button>
           </div>
 
-          <section className="rounded-[18px] border border-foreground/10 bg-foreground/[0.045] px-4 py-3 shadow-[0_6px_16px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.5)]">
-            <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-              <TrendingUpIcon className="size-3.5" />
-              Impacto gerado
-            </div>
-            <p className="mt-1.5 line-clamp-2 text-[15px] font-medium leading-6 text-foreground">{item.impact}</p>
-          </section>
-          <div className="flex flex-col gap-2 border-t border-border/60 pt-2.5 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex min-w-0 flex-wrap items-center gap-2">
-              {item.highlights[0] ? (
-                <span
-                  className={cn(
-                    "inline-flex rounded-full border px-3 py-1 text-sm font-medium shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]",
-                    HIGHLIGHT_TONE_CLASS[item.highlights[0].tone]
-                  )}
-                >
-                  {item.highlights[0].label}
-                </span>
-              ) : null}
-              <span className="rounded-full border border-border/60 bg-background/80 px-2.5 py-0.5 text-[11px] font-medium text-foreground/70">
-                {item.scopeLabel}
-              </span>
-              <span className="rounded-full border border-border/60 bg-background/80 px-2.5 py-0.5 text-[11px] font-medium text-foreground/70">
-                {item.impactLabel}
-              </span>
-            </div>
+          <ImpactCallout lines={2}>{item.impact}</ImpactCallout>
 
-            <Button size="sm" className="gap-1.5 self-start lg:ml-auto lg:self-auto" onClick={() => onOpen(item.record)}>
+          <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-2.5">
+            {item.highlights[0] ? (
+              <span
+                className={cn(
+                  "inline-flex rounded-full border px-3 py-1 text-sm font-medium shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]",
+                  HIGHLIGHT_TONE_CLASS[item.highlights[0].tone]
+                )}
+              >
+                {item.highlights[0].label}
+              </span>
+            ) : (
+              <span />
+            )}
+
+            <Button variant="ghost" size="sm" className="shrink-0 gap-1.5 px-2.5 text-muted-foreground hover:text-foreground" onClick={() => onOpen(item.record)}>
               Abrir história completa
               <ArrowUpRightIcon className="size-3.5" />
             </Button>
@@ -586,18 +544,15 @@ export default function TimelinePage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" className="gap-1.5" onClick={openCapture}>
+          <Button size="sm" className="gap-1.5" onClick={() => openCapture()}>
             <SparklesIcon className="size-3.5" />
             Novo registro
           </Button>
-          <Link href="/projects" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-            Ver projetos
-          </Link>
         </div>
       </div>
 
       {stories.length === 0 ? (
-        <EmptyState onOpen={openCapture} />
+        <EmptyState onOpen={() => openCapture()} />
       ) : (
         <>
           {featuredStories.length > 0 && (

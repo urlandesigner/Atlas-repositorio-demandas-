@@ -94,7 +94,7 @@ function PresentationSheet({
           </p>
         </SheetHeader>
 
-        <ScrollArea className="flex-1">
+        <ScrollArea className="flex-1 min-h-0">
           <div className="flex flex-col gap-4 px-5 py-5">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Título *</label>
@@ -163,7 +163,7 @@ function PresentationCard({
 }) {
   return (
     <Card
-      className="h-full cursor-pointer transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/15 hover:bg-muted/40 hover:shadow-sm"
+      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
       onClick={onClick}
     >
       <CardHeader className="pb-2">
@@ -201,7 +201,7 @@ function PresentationCard({
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 gap-3 rounded-[28px] border border-dashed bg-muted/15">
+    <div className="flex flex-col items-center justify-center py-16 gap-3 rounded-[20px] border border-dashed border-border/60 bg-muted/15">
       <div className="size-10 rounded-full bg-muted flex items-center justify-center">
         <Presentation className="size-5 text-muted-foreground" />
       </div>
@@ -243,7 +243,7 @@ function PresentationDrawer({
               </div>
             </SheetHeader>
 
-            <ScrollArea className="flex-1">
+            <ScrollArea className="flex-1 min-h-0">
               <div className="flex flex-col gap-5 px-5 py-5">
                 <section>
                   <p className="text-xs font-medium text-muted-foreground mb-1.5">Descrição</p>
