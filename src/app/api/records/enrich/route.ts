@@ -3,26 +3,31 @@ import type { EnrichedFields } from "@/lib/records/types"
 
 // ─── Smart mock (used when OPENAI_API_KEY is absent) ─────────────────────────
 
-// Deriva um título curto e fiel ao texto digitado pelo usuário.
+// Deriva um título curto a partir do texto digitado pelo usuário.
+// Quebra no primeiro ponto natural e limita a 5 palavras — aproxima
+// o resultado de um título gerado por IA sem depender de chave real.
 function deriveTitleFromRaw(raw: string): string {
   const cleaned = raw.trim().replace(/\s+/g, " ")
   if (!cleaned) return "Registro profissional"
 
-  // Usa a primeira frase como base do título.
-  const firstSentence = cleaned.split(/(?<=[.!?])\s+/)[0] ?? cleaned
-  let title = firstSentence.replace(/[.!?]+$/, "").trim()
+  // Quebra em pontuação ou em conectivos comuns (vírgula, ponto-e-vírgula,
+  // "com", "para", "que", "mas", "–", "-").
+  const firstChunk =
+    cleaned
+      .split(/[,;.!?]|\s+(?:com|para|que|mas|porque|quando|onde|como|–|-)(?:\s+|$)/i)[0]
+      ?.trim() ?? cleaned
 
-  // Capitaliza a primeira letra preservando o restante.
+  // Limita a 5 palavras para manter o título conciso.
+  const words = firstChunk.split(/\s+/)
+  let title = words.slice(0, 5).join(" ")
+
+  // Remove preposições/artigos que ficam pendurados no final.
+  title = title.replace(/\s+(?:de|da|do|dos|das|um|uma|o|a|os|as)$/i, "").trim()
+
+  // Capitaliza a primeira letra.
   title = title.charAt(0).toUpperCase() + title.slice(1)
 
-  // Limita a 80 caracteres, cortando no limite de palavra.
-  if (title.length > 80) {
-    const truncated = title.slice(0, 80)
-    const lastSpace = truncated.lastIndexOf(" ")
-    title = (lastSpace > 40 ? truncated.slice(0, lastSpace) : truncated).trimEnd() + "…"
-  }
-
-  return title
+  return title || "Registro profissional"
 }
 
 function mockEnrich(raw: string): EnrichedFields {
