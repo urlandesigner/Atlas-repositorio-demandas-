@@ -14,27 +14,29 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
+  SidebarSeparator,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
 
-const professionalNav = [
+const navItems = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { label: "Objetivos", href: "/professional/objectives", icon: Target },
+  { label: "Projetos", href: "/projects", icon: FolderOpen },
   { label: "Timeline", href: "/professional/timeline", icon: CircleDot },
+  { label: "Objetivos", href: "/professional/objectives", icon: Target },
   { label: "Apresentações", href: "/professional/presentations", icon: Presentation },
+  { label: "Backup", href: "/backup", icon: Database },
 ]
 
 type NavItem = { label: string; href: string; icon: React.ElementType }
 
-function NavGroup({ label, items, pathname }: { label: string; items: NavItem[]; pathname: string }) {
+function NavMenu({ items, pathname }: { items: NavItem[]; pathname: string }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>{label}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.href}>
@@ -56,54 +58,37 @@ export function AppSidebar() {
   const pathname = usePathname()
 
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader className="px-4 py-4">
-        <div className="flex items-center gap-2">
-          <div className="size-7 rounded-lg bg-foreground flex items-center justify-center">
-            <span className="text-background text-xs font-bold tracking-tight">A</span>
+        <div className="flex items-center justify-between gap-3 group-data-[collapsible=icon]:justify-center">
+          <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
+            <div className="flex size-10 items-center justify-center rounded-2xl bg-brand shadow-[0_8px_20px_oklch(0.6_0.12_162/0.24)]">
+              <span className="text-brand-foreground text-sm font-bold tracking-tight">A</span>
+            </div>
+            <span className="text-[17px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
+              Atlas
+            </span>
           </div>
-          <span className="font-semibold text-sm tracking-tight">Atlas Profissional</span>
+          <SidebarTrigger className="size-10 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
+        </div>
+        <SidebarSeparator className="mx-0" />
+        <div className="hidden justify-center pt-2 group-data-[collapsible=icon]:flex">
+          <SidebarTrigger className="size-10 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground" />
         </div>
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                render={<Link href="/projects" />}
-                isActive={pathname.startsWith("/projects")}
-              >
-                <FolderOpen />
-                <span>Projetos</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
-        <NavGroup label="Profissional" items={professionalNav} pathname={pathname} />
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton
-                render={<Link href="/backup" />}
-                isActive={pathname.startsWith("/backup")}
-              >
-                <Database />
-                <span>Backup</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
+        <NavMenu items={navItems} pathname={pathname} />
       </SidebarContent>
 
-      <SidebarFooter className="px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="size-7 rounded-full bg-muted flex items-center justify-center shrink-0">
-            <span className="text-xs font-medium text-muted-foreground">U</span>
+      <SidebarFooter className="mt-4 border-t border-sidebar-border/60 px-4 pt-4">
+        <div className="flex items-center gap-3 rounded-xl group-data-[collapsible=icon]:justify-center">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-muted">
+            <span className="text-xs font-semibold text-brand-muted-foreground">U</span>
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium truncate">Usuário</p>
-            <p className="text-xs text-muted-foreground truncate">urlan87@gmail.com</p>
+          <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
+            <p className="text-xs font-medium truncate text-sidebar-foreground/90">Usuário</p>
+            <p className="text-[11px] text-sidebar-foreground/45 truncate">urlan87@gmail.com</p>
           </div>
         </div>
       </SidebarFooter>

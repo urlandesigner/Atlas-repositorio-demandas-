@@ -39,12 +39,12 @@ export function ImpactCallout({
   return (
     <div
       className={cn(
-        "border border-foreground/10 bg-foreground/[0.045] shadow-[0_6px_16px_rgba(15,23,42,0.05),inset_0_1px_0_rgba(255,255,255,0.5)]",
+        "border border-brand/15 bg-brand-muted shadow-[0_6px_16px_oklch(0.6_0.12_162/0.08),inset_0_1px_0_rgba(255,255,255,0.45)]",
         sizeClass.container,
         className
       )}
     >
-      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-muted-foreground">
         <TrendingUpIcon className="size-3.5" />
         {label}
       </div>
