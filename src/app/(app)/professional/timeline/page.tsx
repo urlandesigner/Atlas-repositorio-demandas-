@@ -15,6 +15,7 @@ import { ATUACOES } from "@/components/records/atuacao-picker"
 import { AREAS } from "@/components/records/area-picker"
 import { ImpactCallout } from "@/components/records/impact-callout"
 import { SCOPES } from "@/components/records/impact-selector"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { useRecords } from "@/components/shell/records-provider"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { getProjectsServerSnapshot, getProjectsSnapshot, subscribeProjectsStore, type ProjectEntry, type WorkspaceTab } from "@/lib/projects/store"
@@ -537,18 +538,18 @@ export default function TimelinePage() {
     <div className="flex flex-col gap-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Timeline</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Trajetória</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Registro estratégico das entregas, sistemas e iniciativas desenvolvidas ao longo da trajetória.
           </p>
         </div>
 
-        <div className="flex flex-wrap gap-2">
+        <PageHeaderActions>
           <Button size="sm" className="gap-1.5" onClick={() => openCapture()}>
             <SparklesIcon className="size-3.5" />
             Novo registro
           </Button>
-        </div>
+        </PageHeaderActions>
       </div>
 
       {stories.length === 0 ? (

@@ -17,6 +17,7 @@ import { AIReviewField } from "./ai-review-field"
 import { AtuacaoPicker, ATUACOES } from "./atuacao-picker"
 import { AreaPicker } from "./area-picker"
 import { ImpactSelector } from "./impact-selector"
+import { getMatchingCompetencies } from "@/lib/evolution/competencies"
 import type {
   RecordEntry,
   EnrichedFields,
@@ -671,6 +672,7 @@ function ReviewStep({
   const [showRaw, setShowRaw] = useState(false)
   const signals = computeSignals(enriched, atuacao, impactScope)
   const score = computeScore(impactLevel, impactScope, atuacao)
+  const competencyMatches = getMatchingCompetencies({ atuacao, area, impactScope, impactLevel, tags: [], enriched })
 
   return (
     <>
@@ -769,6 +771,27 @@ function ReviewStep({
             <div className="flex flex-col gap-2">
               <SidebarLabel>Área</SidebarLabel>
               <AreaPicker value={area} onChange={onAreaChange} />
+            </div>
+
+            {/* Contribui para */}
+            <div className="flex flex-col gap-2">
+              <SidebarLabel>Contribui para</SidebarLabel>
+              {competencyMatches.length > 0 ? (
+                <div className="flex flex-col gap-1">
+                  {competencyMatches.map((c) => (
+                    <span
+                      key={c.id}
+                      className="rounded-md border bg-muted/40 px-2 py-1 text-[11px] text-muted-foreground"
+                    >
+                      {c.label}
+                    </span>
+                  ))}
+                </div>
+              ) : (
+                <span className="text-[11px] text-muted-foreground/50">
+                  Nenhuma competência identificada
+                </span>
+              )}
             </div>
 
             {/* Impact + scope */}

@@ -21,6 +21,7 @@ import { AtuacaoPicker } from "./atuacao-picker"
 import { AreaPicker } from "./area-picker"
 import { ImpactSelector, SCOPES } from "./impact-selector"
 import { HIGHLIGHT_SUGGESTIONS } from "@/lib/records/highlights"
+import { getMatchingCompetencies } from "@/lib/evolution/competencies"
 import type {
   RecordEntry,
   EnrichedFields,
@@ -140,6 +141,7 @@ function DetailBody({
   const atuacao = ATUACOES.find((a) => a.value === record.atuacao)
   const area = AREAS.find((a) => a.value === record.area)
   const scopeLabel = SCOPES.find((s) => s.value === record.impactScope)?.label
+  const competencyMatches = getMatchingCompetencies(record)
 
   const timeAgo = formatDistanceToNow(new Date(record.createdAt), {
     addSuffix: true,
@@ -224,6 +226,20 @@ function DetailBody({
             </>
           )}
         </div>
+
+        {competencyMatches.length > 0 && (
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] text-muted-foreground/60 shrink-0">Contribui para:</span>
+            {competencyMatches.map((c) => (
+              <span
+                key={c.id}
+                className="rounded border bg-muted/40 px-1.5 py-0.5 text-[10px] text-muted-foreground"
+              >
+                {c.label}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Body: enriched fields */}

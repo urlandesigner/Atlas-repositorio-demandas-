@@ -12,11 +12,14 @@ import {
   PauseCircle,
   Pencil,
   Plus,
+  Presentation,
   Target,
   Trash2,
 } from "lucide-react"
 
 import { useRecords } from "@/components/shell/records-provider"
+import { AssignedObjectivesSection } from "@/components/gestao/assigned-objectives-section"
+import { useOptionalSession } from "@/hooks/use-optional-session"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -33,6 +36,7 @@ import {
 import { Textarea } from "@/components/ui/textarea"
 import {
   addObjectiveToCollection,
+  countObjectiveEvidence,
   createObjectiveForm,
   createObjectiveFromForm,
   deleteObjectiveFromCollection,
@@ -52,7 +56,15 @@ import {
   type ObjectiveStatus,
   type PdiDimension,
 } from "@/lib/objectives/store"
+import {
+  getPresentationsServerSnapshot,
+  getPresentationsSnapshot,
+  PRESENTATION_STATUS_LABEL,
+  subscribePresentationsStore,
+  type PresentationEntry,
+} from "@/lib/presentations/store"
 import type { RecordEntry } from "@/lib/records/types"
+import { getRecordImpactText } from "@/lib/records/display"
 import { cn } from "@/lib/utils"
 
 const STATUS_BADGE_CLASS: Record<ObjectiveStatus, string> = {
@@ -76,8 +88,6 @@ const DIMENSION_CLASS: Record<PdiDimension, string> = {
   processos: "border-stone-500/15 bg-stone-500/10 text-stone-700 dark:text-stone-300",
   influencia: "border-violet-500/15 bg-violet-500/10 text-violet-700 dark:text-violet-300",
   estudo: "border-orange-500/15 bg-orange-500/10 text-orange-700 dark:text-orange-300",
-  comunicacao: "border-rose-500/15 bg-rose-500/10 text-rose-700 dark:text-rose-300",
-  previsibilidade: "border-teal-500/15 bg-teal-500/10 text-teal-700 dark:text-teal-300",
 }
 
 function formatDate(iso: string | null) {
@@ -99,7 +109,7 @@ function getDaysUntil(deadline: string | null) {
 
 function getProgress(item: ObjectiveEntry) {
   if (item.status === "done") return 100
-  const evidenceScore = Math.min(item.linkedRecordIds.length * 25, 75)
+  const evidenceScore = Math.min(countObjectiveEvidence(item) * 25, 75)
   const statusScore = item.status === "in_progress" ? 15 : item.status === "paused" ? 5 : 0
   return Math.min(evidenceScore + statusScore, 95)
 }
@@ -109,11 +119,28 @@ function findLinkedRecords(records: RecordEntry[], objective: ObjectiveEntry) {
   return records.filter((record) => ids.has(record.id))
 }
 
+function findLinkedPresentations(
+  presentations: PresentationEntry[],
+  objective: ObjectiveEntry
+) {
+  const ids = new Set(objective.linkedPresentationIds)
+  return presentations.filter((presentation) => ids.has(presentation.id))
+}
+
+function formatPresentationDate(iso: string | null) {
+  if (!iso) return null
+  return new Date(`${iso}T00:00:00`).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })
+}
+
 function toggleDimension(list: PdiDimension[], value: PdiDimension) {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value]
 }
 
-function toggleRecord(list: string[], value: string) {
+function toggleId(list: string[], value: string) {
   return list.includes(value) ? list.filter((item) => item !== value) : [...list, value]
 }
 
@@ -122,6 +149,7 @@ function ObjectiveSheet({
   mode,
   initialForm,
   records,
+  presentations,
   onClose,
   onSubmit,
 }: {
@@ -129,6 +157,7 @@ function ObjectiveSheet({
   mode: "create" | "edit"
   initialForm: ObjectiveForm
   records: RecordEntry[]
+  presentations: PresentationEntry[]
   onClose: () => void
   onSubmit: (form: ObjectiveForm) => void
 }) {
@@ -199,7 +228,17 @@ function ObjectiveSheet({
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-xs font-medium text-muted-foreground">Dimensões PDI</label>
+              <div className="flex items-center justify-between gap-3">
+                <label className="text-xs font-medium text-muted-foreground">
+                  Competências vinculadas
+                </label>
+                <span className="text-[11px] text-muted-foreground">
+                  {form.dimensions.length} selecionada(s)
+                </span>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Selecione uma ou mais competências que este objetivo ajuda a desenvolver.
+              </p>
               <div className="flex flex-wrap gap-2">
                 {PDI_DIMENSION_OPTIONS.map((dimension) => {
                   const selected = form.dimensions.includes(dimension)
@@ -241,7 +280,7 @@ function ObjectiveSheet({
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Evidências esperadas</label>
               <Textarea
-                placeholder="Que registros, materiais ou feedbacks comprovariam avanço?"
+                placeholder="Que registros, apresentações, materiais ou feedbacks comprovariam avanço?"
                 value={form.expectedEvidence}
                 onChange={(event) => set("expectedEvidence", event.target.value)}
                 className="min-h-[92px] resize-none"
@@ -271,7 +310,7 @@ function ObjectiveSheet({
                         key={record.id}
                         type="button"
                         onClick={() =>
-                          set("linkedRecordIds", toggleRecord(form.linkedRecordIds, record.id))
+                          set("linkedRecordIds", toggleId(form.linkedRecordIds, record.id))
                         }
                         className={cn(
                           "flex w-full items-start gap-3 border-b px-3 py-3 text-left text-sm transition-colors last:border-b-0 hover:bg-muted/50",
@@ -291,7 +330,74 @@ function ObjectiveSheet({
                             {record.enriched.title}
                           </span>
                           <span className="mt-0.5 line-clamp-2 block text-xs text-muted-foreground">
-                            {record.enriched.impact || record.raw}
+                            {getRecordImpactText(record) || record.raw}
+                          </span>
+                        </span>
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-3">
+                <label className="text-xs font-medium text-muted-foreground">
+                  Apresentações vinculadas
+                </label>
+                <span className="text-[11px] text-muted-foreground">
+                  {form.linkedPresentationIds.length} selecionada(s)
+                </span>
+              </div>
+              <p className="text-[11px] text-muted-foreground">
+                Vincule apresentações realizadas ou agendadas como evidência do objetivo.
+              </p>
+
+              {presentations.length === 0 ? (
+                <div className="rounded-lg border border-dashed bg-muted/20 px-3 py-4 text-xs text-muted-foreground">
+                  Nenhuma apresentação cadastrada ainda. Registre em Apresentações e volte para
+                  vincular aqui.
+                </div>
+              ) : (
+                <div className="max-h-56 overflow-auto rounded-lg border bg-background">
+                  {presentations.map((presentation) => {
+                    const checked = form.linkedPresentationIds.includes(presentation.id)
+                    return (
+                      <button
+                        key={presentation.id}
+                        type="button"
+                        onClick={() =>
+                          set(
+                            "linkedPresentationIds",
+                            toggleId(form.linkedPresentationIds, presentation.id)
+                          )
+                        }
+                        className={cn(
+                          "flex w-full items-start gap-3 border-b px-3 py-3 text-left text-sm transition-colors last:border-b-0 hover:bg-muted/50",
+                          checked && "bg-muted/60"
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border",
+                            checked && "border-primary bg-primary text-primary-foreground"
+                          )}
+                        >
+                          {checked ? <CheckCircle2 className="size-3" /> : null}
+                        </span>
+                        <span className="min-w-0">
+                          <span className="flex items-center gap-2">
+                            <Presentation className="size-3.5 shrink-0 text-muted-foreground" />
+                            <span className="block truncate font-medium">{presentation.title}</span>
+                          </span>
+                          <span className="mt-0.5 line-clamp-2 block text-xs text-muted-foreground">
+                            {PRESENTATION_STATUS_LABEL[presentation.status]}
+                            {presentation.sharedWith
+                              ? ` · ${presentation.sharedWith}`
+                              : null}
+                            {formatPresentationDate(presentation.date)
+                              ? ` · ${formatPresentationDate(presentation.date)}`
+                              : null}
                           </span>
                         </span>
                       </button>
@@ -318,11 +424,11 @@ function ObjectiveSheet({
 
 function ObjectiveCard({
   item,
-  linkedRecordsCount,
+  evidenceCount,
   onClick,
 }: {
   item: ObjectiveEntry
-  linkedRecordsCount: number
+  evidenceCount: number
   onClick: () => void
 }) {
   const StatusIcon = STATUS_ICON[item.status]
@@ -390,7 +496,7 @@ function ObjectiveCard({
           </div>
           <div className="flex items-center gap-2">
             <FileText className="size-3.5" />
-            <span>{linkedRecordsCount} evidência(s)</span>
+            <span>{evidenceCount} evidência(s)</span>
           </div>
         </div>
       </CardContent>
@@ -429,17 +535,23 @@ function DetailSection({ label, children }: { label: string; children: React.Rea
 function ObjectiveDrawer({
   item,
   records,
+  presentations,
   onEdit,
   onDelete,
   onClose,
+  onOpenRecord,
 }: {
   item: ObjectiveEntry | null
   records: RecordEntry[]
+  presentations: PresentationEntry[]
   onEdit: (item: ObjectiveEntry) => void
   onDelete: (item: ObjectiveEntry) => void
   onClose: () => void
+  onOpenRecord: (record: RecordEntry) => void
 }) {
   const linkedRecords = item ? findLinkedRecords(records, item) : []
+  const linkedPresentations = item ? findLinkedPresentations(presentations, item) : []
+  const evidenceCount = item ? countObjectiveEvidence(item) : 0
 
   return (
     <Sheet open={!!item} onOpenChange={(open) => !open && onClose()}>
@@ -467,11 +579,11 @@ function ObjectiveDrawer({
                   </div>
                   <div className="rounded-lg border bg-muted/20 p-3">
                     <p className="text-xs text-muted-foreground">Evidências</p>
-                    <p className="mt-1 text-2xl font-semibold tracking-tight">{linkedRecords.length}</p>
+                    <p className="mt-1 text-2xl font-semibold tracking-tight">{evidenceCount}</p>
                   </div>
                 </div>
 
-                <DetailSection label="Dimensões PDI">
+                <DetailSection label="Competências vinculadas">
                   <div className="flex flex-wrap gap-1.5">
                     {item.dimensions.length ? (
                       item.dimensions.map((dimension) => (
@@ -516,19 +628,55 @@ function ObjectiveDrawer({
                         <button
                           key={record.id}
                           type="button"
+                          onClick={() => onOpenRecord(record)}
                           className="rounded-lg border bg-background px-3 py-2 text-left transition-colors hover:bg-muted/50"
                         >
                           <p className="line-clamp-1 text-sm font-medium text-foreground">
                             {record.enriched.title}
                           </p>
                           <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                            {record.enriched.impact || record.raw}
+                            {getRecordImpactText(record) || record.raw}
                           </p>
                         </button>
                       ))}
                     </div>
                   ) : (
                     <p>Sem registros vinculados ainda.</p>
+                  )}
+                </DetailSection>
+
+                <Separator />
+
+                <DetailSection label="Apresentações vinculadas">
+                  {linkedPresentations.length ? (
+                    <div className="flex flex-col gap-2">
+                      {linkedPresentations.map((presentation) => (
+                        <div
+                          key={presentation.id}
+                          className="rounded-lg border bg-background px-3 py-2"
+                        >
+                          <p className="line-clamp-1 text-sm font-medium text-foreground">
+                            {presentation.title}
+                          </p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {PRESENTATION_STATUS_LABEL[presentation.status]}
+                            {presentation.sharedWith
+                              ? ` · ${presentation.sharedWith}`
+                              : null}
+                            {formatPresentationDate(presentation.date)
+                              ? ` · ${formatPresentationDate(presentation.date)}`
+                              : null}
+                          </p>
+                          {presentation.description ? (
+                            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                              {presentation.description}
+                            </p>
+                          ) : null}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>Sem apresentações vinculadas ainda.</p>
                   )}
                 </DetailSection>
               </div>
@@ -552,7 +700,8 @@ function ObjectiveDrawer({
 }
 
 export default function ObjectivesPage() {
-  const { records } = useRecords()
+  const { records, openDetail } = useRecords()
+  const session = useOptionalSession()
   const [isAdding, setIsAdding] = useState(false)
   const [editing, setEditing] = useState<ObjectiveEntry | null>(null)
   const [selected, setSelected] = useState<ObjectiveEntry | null>(null)
@@ -561,11 +710,19 @@ export default function ObjectivesPage() {
     getObjectivesSnapshot,
     getObjectivesServerSnapshot
   )
+  const presentations = useSyncExternalStore(
+    subscribePresentationsStore,
+    getPresentationsSnapshot,
+    getPresentationsServerSnapshot
+  )
 
   const stats = useMemo(() => {
     const active = objectives.filter((item) => item.status === "in_progress").length
     const done = objectives.filter((item) => item.status === "done").length
-    const evidence = objectives.reduce((total, item) => total + item.linkedRecordIds.length, 0)
+    const evidence = objectives.reduce(
+      (total, item) => total + countObjectiveEvidence(item),
+      0
+    )
     const dueSoon = objectives.filter((item) => {
       const days = getDaysUntil(item.deadline)
       return item.status !== "done" && days !== null && days >= 0 && days <= 30
@@ -666,6 +823,8 @@ export default function ObjectivesPage() {
           </Card>
         </div>
 
+        {session?.userId ? <AssignedObjectivesSection userId={session.userId} /> : null}
+
         {objectives.length === 0 ? (
           <EmptyState onOpen={() => setIsAdding(true)} />
         ) : (
@@ -674,7 +833,7 @@ export default function ObjectivesPage() {
               <ObjectiveCard
                 key={item.id}
                 item={item}
-                linkedRecordsCount={findLinkedRecords(records, item).length}
+                evidenceCount={countObjectiveEvidence(item)}
                 onClick={() => setSelected(item)}
               />
             ))}
@@ -688,6 +847,7 @@ export default function ObjectivesPage() {
         mode="create"
         initialForm={EMPTY_OBJECTIVE_FORM}
         records={records}
+        presentations={presentations}
         onClose={() => setIsAdding(false)}
         onSubmit={handleAdd}
       />
@@ -697,18 +857,24 @@ export default function ObjectivesPage() {
         mode="edit"
         initialForm={editing ? createObjectiveForm(editing) : EMPTY_OBJECTIVE_FORM}
         records={records}
+        presentations={presentations}
         onClose={() => setEditing(null)}
         onSubmit={handleEdit}
       />
       <ObjectiveDrawer
         item={selected}
         records={records}
+        presentations={presentations}
         onEdit={(item) => {
           setSelected(null)
           setEditing(item)
         }}
         onDelete={handleDelete}
         onClose={() => setSelected(null)}
+        onOpenRecord={(record) => {
+          setSelected(null)
+          openDetail(record)
+        }}
       />
     </>
   )

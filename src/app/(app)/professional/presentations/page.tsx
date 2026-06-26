@@ -16,6 +16,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { CalendarDays, ExternalLink, Pencil, Plus, Presentation, Trash2, UsersRound } from "lucide-react"
+import { EvolutionShell } from "@/components/evolution/evolution-shell"
 import {
   addPresentationToCollection,
   createPresentationForm,
@@ -357,35 +358,33 @@ export default function PresentationsPage() {
 
   return (
     <>
-      <div className="flex flex-col gap-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Apresentações</h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Materiais compartilhados com o time e iniciativas de conhecimento
-            </p>
+      <EvolutionShell
+        title="Conhecimento compartilhado"
+        description="Materiais e apresentações que você compartilhou com o time."
+      >
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-end">
+            <Button size="sm" className="gap-1.5 shrink-0" onClick={() => setIsAdding(true)}>
+              <Plus className="size-4" />
+              Nova apresentação
+            </Button>
           </div>
 
-          <Button size="sm" className="gap-1.5 shrink-0" onClick={() => setIsAdding(true)}>
-            <Plus className="size-4" />
-            Nova apresentação
-          </Button>
+          {presentations.length === 0 ? (
+            <EmptyState onOpen={() => setIsAdding(true)} />
+          ) : (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {presentations.map((item) => (
+                <PresentationCard
+                  key={item.id}
+                  item={item}
+                  onClick={() => setSelected(item)}
+                />
+              ))}
+            </div>
+          )}
         </div>
-
-        {presentations.length === 0 ? (
-          <EmptyState onOpen={() => setIsAdding(true)} />
-        ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {presentations.map((item) => (
-              <PresentationCard
-                key={item.id}
-                item={item}
-                onClick={() => setSelected(item)}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      </EvolutionShell>
 
       <PresentationSheet
         key={`create-${isAdding ? "open" : "closed"}`}

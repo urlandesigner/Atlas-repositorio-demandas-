@@ -1,6 +1,13 @@
 import { createServerClient } from "@supabase/ssr"
 import { NextResponse, type NextRequest } from "next/server"
 
+import {
+  decodeSessionCookie,
+  SESSION_COOKIE_NAME,
+} from "@/lib/auth/session-cookie"
+import { getHomeRouteForRole } from "@/lib/auth/routes"
+import type { AuthSession } from "@/lib/auth/types"
+
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -34,19 +41,28 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  const mockCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value
+  const mockSession = mockCookie
+    ? decodeSessionCookie<AuthSession>(mockCookie)
+    : null
+
   const isAuthRoute =
     request.nextUrl.pathname.startsWith("/login") ||
     request.nextUrl.pathname.startsWith("/signup")
 
-  if (!user && !isAuthRoute) {
+  const effectiveUser = user ?? mockSession
+
+  if (!effectiveUser && !isAuthRoute) {
     const url = request.nextUrl.clone()
     url.pathname = "/login"
     return NextResponse.redirect(url)
   }
 
-  if (user && isAuthRoute) {
+  if (effectiveUser && isAuthRoute) {
     const url = request.nextUrl.clone()
-    url.pathname = "/dashboard"
+    url.pathname = mockSession
+      ? getHomeRouteForRole(mockSession.role)
+      : "/dashboard"
     return NextResponse.redirect(url)
   }
 

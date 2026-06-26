@@ -9,8 +9,6 @@ export type PdiDimension =
   | "processos"
   | "influencia"
   | "estudo"
-  | "comunicacao"
-  | "previsibilidade"
 
 export interface ObjectiveEntry {
   id: string
@@ -22,6 +20,7 @@ export interface ObjectiveEntry {
   status: ObjectiveStatus
   dimensions: PdiDimension[]
   linkedRecordIds: string[]
+  linkedPresentationIds: string[]
   created_at: string
   updated_at: string
 }
@@ -35,6 +34,7 @@ export interface ObjectiveForm {
   status: ObjectiveStatus
   dimensions: PdiDimension[]
   linkedRecordIds: string[]
+  linkedPresentationIds: string[]
 }
 
 export const OBJECTIVES_STORAGE_KEY = "atlas_objectives"
@@ -61,8 +61,6 @@ export const PDI_DIMENSION_LABEL: Record<PdiDimension, string> = {
   processos: "Processos",
   influencia: "Influência",
   estudo: "Estudo",
-  comunicacao: "Comunicação",
-  previsibilidade: "Previsibilidade",
 }
 
 export const PDI_DIMENSION_OPTIONS: PdiDimension[] = [
@@ -72,8 +70,6 @@ export const PDI_DIMENSION_OPTIONS: PdiDimension[] = [
   "processos",
   "influencia",
   "estudo",
-  "comunicacao",
-  "previsibilidade",
 ]
 
 export const EMPTY_OBJECTIVE_FORM: ObjectiveForm = {
@@ -85,6 +81,7 @@ export const EMPTY_OBJECTIVE_FORM: ObjectiveForm = {
   status: "planned",
   dimensions: [],
   linkedRecordIds: [],
+  linkedPresentationIds: [],
 }
 
 const SEED: ObjectiveEntry[] = [
@@ -101,6 +98,7 @@ const SEED: ObjectiveEntry[] = [
     status: "in_progress",
     dimensions: ["influencia", "tecnologia", "pessoas", "estudo"],
     linkedRecordIds: [],
+    linkedPresentationIds: [],
     created_at: "2026-01-01T00:00:00.000Z",
     updated_at: "2026-01-01T00:00:00.000Z",
   },
@@ -110,6 +108,17 @@ export const DEFAULT_OBJECTIVES = SEED
 
 let cachedObjectivesRaw: string | null | undefined
 let cachedObjectivesSnapshot: ObjectiveEntry[] = DEFAULT_OBJECTIVES
+
+const LEGACY_COMPETENCY_DIMENSIONS: Record<string, PdiDimension[]> = {
+  "lideranca-tecnica": ["tecnologia", "pessoas"],
+  "influencia-cross": ["influencia"],
+  "gestao-stakeholders": ["influencia", "dominio"],
+  mentoria: ["pessoas", "estudo"],
+  "estrategia-produto": ["dominio", "processos"],
+  "comunicacao-executiva": ["influencia", "estudo"],
+  "tomada-decisao": ["dominio", "processos"],
+  "visao-sistemica": ["dominio", "processos", "tecnologia"],
+}
 
 function normalizeStatus(status: ObjectiveStatus | string | null | undefined): ObjectiveStatus {
   return status === "planned" ||
@@ -127,13 +136,26 @@ function normalizeDimensions(value: unknown): PdiDimension[] {
   )
 }
 
+function normalizeLegacyCompetencyDimensions(value: unknown): PdiDimension[] {
+  if (!Array.isArray(value)) return []
+  return value.flatMap((item) =>
+    typeof item === "string" ? LEGACY_COMPETENCY_DIMENSIONS[item] ?? [] : []
+  )
+}
+
 function normalizeStringArray(value: unknown): string[] {
   if (!Array.isArray(value)) return []
   return value.filter((item): item is string => typeof item === "string")
 }
 
+function mergeDimensions(...lists: PdiDimension[][]): PdiDimension[] {
+  return Array.from(new Set(lists.flat()))
+}
+
 function normalizeObjective(entry: Partial<ObjectiveEntry>): ObjectiveEntry {
   const createdAt = entry.created_at ?? new Date().toISOString()
+  const legacyCompetencyIds = (entry as Partial<ObjectiveEntry> & { competencyIds?: unknown })
+    .competencyIds
 
   return {
     id: entry.id ?? crypto.randomUUID(),
@@ -143,8 +165,12 @@ function normalizeObjective(entry: Partial<ObjectiveEntry>): ObjectiveEntry {
     expectedEvidence: entry.expectedEvidence?.trim() || null,
     deadline: entry.deadline || null,
     status: normalizeStatus(entry.status),
-    dimensions: normalizeDimensions(entry.dimensions),
+    dimensions: mergeDimensions(
+      normalizeDimensions(entry.dimensions),
+      normalizeLegacyCompetencyDimensions(legacyCompetencyIds)
+    ),
     linkedRecordIds: normalizeStringArray(entry.linkedRecordIds),
+    linkedPresentationIds: normalizeStringArray(entry.linkedPresentationIds),
     created_at: createdAt,
     updated_at: entry.updated_at ?? createdAt,
   }
@@ -206,6 +232,12 @@ export function subscribeObjectivesStore(onStoreChange: () => void) {
   }
 }
 
+export function countObjectiveEvidence(
+  entry: Pick<ObjectiveEntry, "linkedRecordIds" | "linkedPresentationIds">
+) {
+  return entry.linkedRecordIds.length + entry.linkedPresentationIds.length
+}
+
 export function createObjectiveFromForm(form: ObjectiveForm): ObjectiveEntry {
   const now = new Date().toISOString()
   return normalizeObjective({
@@ -218,6 +250,7 @@ export function createObjectiveFromForm(form: ObjectiveForm): ObjectiveEntry {
     status: form.status,
     dimensions: form.dimensions,
     linkedRecordIds: form.linkedRecordIds,
+    linkedPresentationIds: form.linkedPresentationIds,
     created_at: now,
     updated_at: now,
   })
@@ -233,6 +266,7 @@ export function createObjectiveForm(entry: ObjectiveEntry): ObjectiveForm {
     status: entry.status,
     dimensions: entry.dimensions,
     linkedRecordIds: entry.linkedRecordIds,
+    linkedPresentationIds: entry.linkedPresentationIds,
   }
 }
 
@@ -257,6 +291,7 @@ export function updateObjectiveInCollection(
           status: form.status,
           dimensions: form.dimensions,
           linkedRecordIds: form.linkedRecordIds,
+          linkedPresentationIds: form.linkedPresentationIds,
           updated_at: new Date().toISOString(),
         })
       : item

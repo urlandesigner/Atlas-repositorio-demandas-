@@ -2,11 +2,12 @@
 
 import Link from "next/link"
 import { useMemo, useState, useSyncExternalStore } from "react"
-import { useParams } from "next/navigation"
+import { useParams, useRouter } from "next/navigation"
 import type { ProjectStatus } from "@/types"
 import { ImpactCallout } from "@/components/records/impact-callout"
 import { useRecords } from "@/components/shell/records-provider"
 import type { RecordEntry } from "@/lib/records/types"
+import { getRecordImpactText } from "@/lib/records/display"
 import {
   emitProjectsChange,
   findProject,
@@ -172,19 +173,26 @@ function getTimelineDateLabel(iso: string) {
   return target.toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })
 }
 
-function getProjectProgress(status: ProjectStatus) {
-  switch (status) {
-    case "not_started":
-      return 8
-    case "active":
-      return 68
-    case "paused":
-      return 44
-    case "closed":
-      return 100
-    case "inactive":
-      return 12
+function getProjectProgress(
+  status: ProjectStatus,
+  startedAt: string | null,
+  endedAt: string | null
+) {
+  if (status === "closed") return 100
+  if (status === "not_started") return 0
+
+  // Progresso real: posição de hoje dentro do período planejado do projeto.
+  if (startedAt && endedAt) {
+    const start = new Date(startedAt).getTime()
+    const end = new Date(endedAt).getTime()
+    if (Number.isFinite(start) && Number.isFinite(end) && end > start) {
+      const ratio = (Date.now() - start) / (end - start)
+      return Math.min(99, Math.max(1, Math.round(ratio * 100)))
+    }
   }
+
+  // Sem período definido não há como medir avanço: indicador mínimo por status.
+  return status === "active" ? 5 : 0
 }
 
 function getStatusBadgeClassName(status: ProjectStatus) {
@@ -259,23 +267,6 @@ function buildAutomaticTimelineEvents(previous: ProjectEntry, next: ProjectEntry
       id: crypto.randomUUID(),
       type: "update",
       description: `Período do projeto atualizado para ${formatFullDate(next.started_at)} → ${formatFullDate(next.ended_at)}.`,
-      created_at: new Date().toISOString(),
-      user_name: "Você",
-    })
-  }
-
-  const previousStack = previous.stack.map((item) => item.toLowerCase())
-  const nextStack = next.stack.map((item) => item.toLowerCase())
-  if (previousStack.join("|") !== nextStack.join("|")) {
-    const added = next.stack.filter((item) => !previousStack.includes(item.toLowerCase()))
-    const removed = previous.stack.filter((item) => !nextStack.includes(item.toLowerCase()))
-    const parts: string[] = []
-    if (added.length > 0) parts.push(`adicionadas ${added.join(", ")}`)
-    if (removed.length > 0) parts.push(`removidas ${removed.join(", ")}`)
-    events.push({
-      id: crypto.randomUUID(),
-      type: "update",
-      description: parts.length > 0 ? `Stack atualizada: ${parts.join(" | ")}.` : "Stack tecnológica revisada.",
       created_at: new Date().toISOString(),
       user_name: "Você",
     })
@@ -361,6 +352,7 @@ function ProjectDetailSurface({
   workspace: WorkspaceTab
   project: ProjectEntry
 }) {
+  const router = useRouter()
   const allProjects = useSyncExternalStore(subscribeProjectsStore, getProjectsSnapshot, getProjectsServerSnapshot)
   const clients = useSyncExternalStore(subscribeClientsStore, getClientsSnapshot, getClientsServerSnapshot)
   const showFreelancerFields = workspace === "freelancer"
@@ -371,6 +363,7 @@ function ProjectDetailSurface({
   const [editStartedAt, setEditStartedAt] = useState(project.started_at ?? "")
   const [editEndedAt, setEditEndedAt] = useState(project.ended_at ?? "")
   const [editObs, setEditObs] = useState(project.observations ?? "")
+  const [editValue, setEditValue] = useState(project.value != null ? String(project.value) : "")
   const [editLinks, setEditLinks] = useState<ProjectLinkEntry[]>(project.links)
   const [editTimeline, setEditTimeline] = useState<ProjectTimelineEntry[]>(project.timeline ?? [])
   const [isLinkComposerOpen, setIsLinkComposerOpen] = useState(false)
@@ -413,11 +406,15 @@ function ProjectDetailSurface({
 
   const commandCenter = useMemo(() => {
     return {
-      progress: getProjectProgress(editStatus),
+      progress: getProjectProgress(
+        editStatus,
+        editStartedAt || project.started_at,
+        editEndedAt || project.ended_at
+      ),
       updatedLabel: formatUpdatedAgo(project.updated_at),
       startedLabel: formatFullDate(editStartedAt || project.started_at),
     }
-  }, [editStartedAt, editStatus, project.started_at, project.updated_at])
+  }, [editStartedAt, editEndedAt, editStatus, project.started_at, project.ended_at, project.updated_at])
 
   const { openCapture, openDetail, records, updateExistingRecord, deleteExistingRecord } = useRecords()
 
@@ -450,7 +447,9 @@ function ProjectDetailSurface({
       stack: project.stack,
       started_at: editStartedAt || null,
       ended_at: editEndedAt || null,
-      value: null,
+      value: showFreelancerFields
+        ? (editValue.trim() && Number.isFinite(Number(editValue)) ? Number(editValue) : null)
+        : null,
       billing_date: showFreelancerFields ? (project.billing_date ?? null) : null,
       observations: editObs.trim() || null,
       links: editLinks,
@@ -465,8 +464,8 @@ function ProjectDetailSurface({
     const nextProject = buildUpdatedProject()
     const automaticEvents = buildAutomaticTimelineEvents(project, nextProject)
     const updatedTimeline = [...automaticEvents, ...editTimeline].sort((a, b) => b.created_at.localeCompare(a.created_at))
-    setEditTimeline(updatedTimeline)
     persist({ ...nextProject, timeline: updatedTimeline })
+    router.push(`/projects/${workspace}`)
   }
 
   function handleReset() {
@@ -477,6 +476,7 @@ function ProjectDetailSurface({
     setEditStartedAt(project.started_at ?? "")
     setEditEndedAt(project.ended_at ?? "")
     setEditObs(project.observations ?? "")
+    setEditValue(project.value != null ? String(project.value) : "")
     setEditLinks(project.links)
     setEditTimeline(project.timeline ?? [])
     setIsLinkComposerOpen(false)
@@ -744,7 +744,7 @@ function ProjectDetailSurface({
                       </span>
                     </div>
                     <ImpactCallout size="sm" lines={2} className="mt-2.5">
-                      {record.enriched.impact || record.enriched.contribution || "—"}
+                      {getRecordImpactText(record) || "—"}
                     </ImpactCallout>
                   </button>
                 ))}
@@ -752,7 +752,7 @@ function ProjectDetailSurface({
             )}
           </DetailSection>
 
-          <DetailSection title="Timeline do Projeto" description="Feed histórico gerado automaticamente conforme você atualiza status, links, observações, período e pagamentos do projeto.">
+          <DetailSection title="Histórico do projeto" description="Feed histórico gerado automaticamente conforme você atualiza status, links, observações, período e pagamentos do projeto.">
             <div className="rounded-2xl border border-border/70 bg-muted/10">
               {groupedTimeline.length === 0 ? (
                 <div className="px-4 py-5 text-sm text-muted-foreground">Nenhum evento registrado ainda nesta timeline.</div>
@@ -913,6 +913,19 @@ function ProjectDetailSurface({
 
           {showFreelancerFields && (
             <DetailSection title="Financeiro" description="Receitas e despesas registradas diretamente no histórico do projeto.">
+              <div>
+                <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Valor do projeto (R$)</label>
+                <Input
+                  type="number"
+                  placeholder="0,00"
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                />
+                <p className="mt-1.5 text-xs text-muted-foreground">
+                  Valor contratado do projeto. Salve as alterações para persistir.
+                </p>
+              </div>
+
               <div>
                 <div className="mb-3 flex items-center justify-between">
                   <p className="text-xs font-medium text-muted-foreground">Histórico de pagamentos</p>

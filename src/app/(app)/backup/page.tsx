@@ -19,6 +19,21 @@ const IMPORT_KEYS: string[] | null = [
   "atlas_timeline_pins",
   "atlas_presentations",
   "atlas_projects",
+  "atlas_recognitions",
+  "atlas_one_on_one_entries",
+  "atlas_evolution_reports",
+  "atlas_profile",
+  "atlas_pdi",
+  "atlas_org",
+  "atlas_session",
+  "atlas_gestao_profiles",
+  "atlas_gestao_pdi",
+  "atlas_gestao_objectives",
+  "atlas_gestao_reports",
+  "atlas_gestao_permissions",
+  "atlas_gestao_soft_skills_template",
+  "atlas_gestao_audit",
+  "atlas_notifications",
 ]
 
 // Mantém somente o workspace deste sistema ao importar atlas_projects.

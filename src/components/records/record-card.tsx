@@ -2,6 +2,7 @@ import { formatDistanceToNow } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { cn } from "@/lib/utils"
 import type { RecordEntry } from "@/lib/records/types"
+import { getRecordImpactText } from "@/lib/records/display"
 import { ATUACOES } from "./atuacao-picker"
 import { AREAS } from "./area-picker"
 import { SCOPES } from "./impact-selector"
@@ -20,6 +21,7 @@ export function RecordCard({ record, onClick }: RecordCardProps) {
     addSuffix: true,
     locale: ptBR,
   })
+  const impactText = getRecordImpactText(record)
 
   return (
     <div
@@ -68,11 +70,11 @@ export function RecordCard({ record, onClick }: RecordCardProps) {
       </h3>
 
       {/* Impact excerpt */}
-      {record.enriched.impact && (
+      {impactText ? (
         <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
-          {record.enriched.impact}
+          {impactText}
         </p>
-      )}
+      ) : null}
 
       {/* Footer */}
       <div className="flex items-center gap-2 pt-0.5">

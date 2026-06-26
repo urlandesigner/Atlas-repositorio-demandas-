@@ -207,14 +207,17 @@ function NewProjectSheet({
 
 export default function ProjectsPage() {
   const [isAdding, setIsAdding] = useState(false)
+  const [statusFilter, setStatusFilter] = useState<"all" | ProjectStatus>("all")
   const allProjects = useSyncExternalStore(subscribeProjectsStore, getProjectsSnapshot, getProjectsServerSnapshot)
 
-  const projects = [...allProjects[WORKSPACE]].sort((a, b) => {
-    if (!a.started_at && !b.started_at) return a.name.localeCompare(b.name, "pt-BR")
-    if (!a.started_at) return 1
-    if (!b.started_at) return -1
-    return a.started_at.localeCompare(b.started_at) || a.name.localeCompare(b.name, "pt-BR")
-  })
+  const projects = [...allProjects[WORKSPACE]]
+    .filter((project) => statusFilter === "all" || project.status === statusFilter)
+    .sort((a, b) => {
+      if (!a.started_at && !b.started_at) return a.name.localeCompare(b.name, "pt-BR")
+      if (!a.started_at) return 1
+      if (!b.started_at) return -1
+      return a.started_at.localeCompare(b.started_at) || a.name.localeCompare(b.name, "pt-BR")
+    })
 
   function handleAdd(form: ProjectForm) {
     const entry = createProjectFromForm(WORKSPACE, form)
@@ -236,6 +239,26 @@ export default function ProjectsPage() {
             <Plus className="size-4" />
             Novo projeto
           </Button>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant={statusFilter === "all" ? "default" : "outline"}
+            onClick={() => setStatusFilter("all")}
+          >
+            Todos
+          </Button>
+          {STATUS_OPTIONS.map((status) => (
+            <Button
+              key={status}
+              size="sm"
+              variant={statusFilter === status ? "default" : "outline"}
+              onClick={() => setStatusFilter(status)}
+            >
+              {STATUS_LABEL[status]}
+            </Button>
+          ))}
         </div>
 
         {projects.length === 0 ? (

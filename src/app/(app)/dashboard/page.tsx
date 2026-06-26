@@ -14,6 +14,8 @@ import {
   Zap,
 } from "lucide-react"
 
+import { useAuth } from "@/components/auth/auth-provider"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { useRecords } from "@/components/shell/records-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -41,6 +43,7 @@ import {
   type WorkspaceTab,
 } from "@/lib/projects/store"
 import type { RecordEntry } from "@/lib/records/types"
+import { getRecordImpactText } from "@/lib/records/display"
 import { cn } from "@/lib/utils"
 
 type ActivityItem = {
@@ -97,7 +100,7 @@ function getRecordActivity(record: RecordEntry): ActivityItem {
   return {
     id: `record-${record.id}`,
     title: record.enriched.title,
-    description: record.enriched.impact || record.enriched.contribution || record.raw,
+    description: getRecordImpactText(record) || record.raw,
     href: "/professional/timeline",
     date: record.updatedAt || record.createdAt,
     icon: Zap,
@@ -227,7 +230,9 @@ function ActivityRow({ item }: { item: ActivityItem }) {
 
 
 export default function DashboardPage() {
+  const { session } = useAuth()
   const { records, openCapture } = useRecords()
+  const firstName = session?.name?.trim().split(/\s+/)[0]
   const projects = useSyncExternalStore(
     subscribeProjectsStore,
     getProjectsSnapshot,
@@ -280,16 +285,20 @@ export default function DashboardPage() {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Olá, Urlan</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">
+            {firstName ? `Olá, ${firstName}` : "Olá"}
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             O que está em andamento, o que virou evidência e onde vale focar agora.
           </p>
         </div>
 
-        <Button size="sm" onClick={() => openCapture()}>
-          <Zap data-icon="inline-start" />
-          Novo registro
-        </Button>
+        <PageHeaderActions>
+          <Button size="sm" onClick={() => openCapture()}>
+            <Zap data-icon="inline-start" />
+            Novo registro
+          </Button>
+        </PageHeaderActions>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -336,7 +345,7 @@ export default function DashboardPage() {
               href="/professional/timeline"
               className={buttonVariants({ variant: "outline", size: "sm" })}
             >
-              Timeline
+              Trajetória
               <ArrowUpRight data-icon="inline-end" />
             </Link>
           </CardHeader>

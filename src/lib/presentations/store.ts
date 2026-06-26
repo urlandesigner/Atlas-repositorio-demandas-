@@ -25,6 +25,12 @@ export interface PresentationForm {
 export const PRESENTATIONS_STORAGE_KEY = "atlas_presentations"
 export const PRESENTATIONS_STORAGE_EVENT = "atlas-presentations-change"
 
+export const PRESENTATION_STATUS_LABEL: Record<PresentationStatus, string> = {
+  done: "Realizada",
+  scheduled: "Agendada",
+  not_done: "Não realizada",
+}
+
 export const EMPTY_PRESENTATION_FORM: PresentationForm = {
   title: "",
   description: "",
