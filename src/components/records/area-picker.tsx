@@ -9,6 +9,7 @@ import {
   HeartIcon,
   BarChart2Icon,
   TagIcon,
+  type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { AreaType } from "@/lib/records/types"
@@ -16,7 +17,7 @@ import type { AreaType } from "@/lib/records/types"
 export const AREAS: {
   value: AreaType
   label: string
-  icon: React.ElementType
+  icon: LucideIcon
   baseClass: string
   selectedClass: string
 }[] = [

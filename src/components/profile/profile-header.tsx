@@ -1,10 +1,10 @@
-import { Building2, Clock3, Users } from "lucide-react"
+import { Building2, Clock3, Users, type LucideIcon } from "lucide-react"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import type { ProfileIdentity } from "@/lib/profile/types"
 import { formatTenure, initialsFromName } from "@/lib/profile/store"
 
-function Chip({ icon: Icon, children }: { icon: React.ElementType; children: React.ReactNode }) {
+function Chip({ icon: Icon, children }: { icon: LucideIcon; children: React.ReactNode }) {
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground">
       <Icon className="size-3.5" />

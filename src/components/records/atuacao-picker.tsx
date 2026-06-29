@@ -7,6 +7,7 @@ import {
   LayersIcon,
   BookOpenIcon,
   ZapIcon,
+  type LucideIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { AtuacaoType } from "@/lib/records/types"
@@ -14,7 +15,7 @@ import type { AtuacaoType } from "@/lib/records/types"
 export const ATUACOES: {
   value: AtuacaoType
   label: string
-  icon: React.ElementType
+  icon: LucideIcon
   baseClass: string
   selectedClass: string
 }[] = [

@@ -9,6 +9,7 @@ import {
   Target,
   UserCog,
   Users,
+  type LucideIcon,
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
@@ -367,7 +368,7 @@ function Metric({
   value,
   hint,
 }: {
-  icon: React.ElementType
+  icon: LucideIcon
   label: string
   value: number
   hint?: string

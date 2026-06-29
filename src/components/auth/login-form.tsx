@@ -45,54 +45,47 @@ export function LoginForm() {
 
   return (
     <div className="w-full">
-      <div className="space-y-1">
-        <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-          Entrar
-        </h2>
-        <p className="text-sm leading-relaxed text-muted-foreground">
-          Use seu e-mail corporativo.
-        </p>
-      </div>
+      <form className="flex flex-col" onSubmit={handleSubmit}>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-foreground/90" htmlFor="email">
+              Email
+            </label>
+            <Input
+              id="email"
+              type="email"
+              autoComplete="email"
+              placeholder="voce@atlas.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className={inputClassName}
+              required
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium text-foreground/90" htmlFor="password">
+              Senha
+            </label>
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              className={inputClassName}
+              required
+            />
+          </div>
 
-      <form className="mt-6 flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-foreground/90" htmlFor="email">
-            Email
-          </label>
-          <Input
-            id="email"
-            type="email"
-            autoComplete="email"
-            placeholder="voce@atlas.com"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className={inputClassName}
-            required
-          />
+          {error ? (
+            <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3.5 py-2.5 text-sm text-destructive">
+              {error}
+            </p>
+          ) : null}
         </div>
-        <div className="flex flex-col gap-2">
-          <label className="text-sm font-medium text-foreground/90" htmlFor="password">
-            Senha
-          </label>
-          <Input
-            id="password"
-            type="password"
-            autoComplete="current-password"
-            placeholder="••••••••"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className={inputClassName}
-            required
-          />
-        </div>
 
-        {error ? (
-          <p className="rounded-xl border border-destructive/20 bg-destructive/5 px-3.5 py-2.5 text-sm text-destructive">
-            {error}
-          </p>
-        ) : null}
-
-        <Button className="h-11 w-full" type="submit" disabled={loading}>
+        <Button className="mt-6 h-11 w-full" type="submit" disabled={loading}>
           {loading ? "Entrando…" : "Entrar"}
         </Button>
       </form>

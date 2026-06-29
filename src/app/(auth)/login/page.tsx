@@ -1,47 +1,55 @@
-import Image from "next/image"
+import Link from "next/link"
 
 import { LoginForm } from "@/components/auth/login-form"
+import { LoginHeroPanel } from "@/components/auth/login-hero-panel"
 import { AuthProvider } from "@/components/auth/auth-provider"
+
+function AtlasLogo() {
+  return (
+    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand shadow-[0_8px_20px_color-mix(in_srgb,var(--color-brand)_24%,transparent)]">
+      <span className="text-sm font-bold tracking-tight text-brand-foreground">A</span>
+    </div>
+  )
+}
 
 export default function LoginPage() {
   return (
     <AuthProvider>
-      <div className="grid min-h-screen bg-white lg:grid-cols-[45%_minmax(0,1fr)]">
-        <div className="hidden bg-white lg:flex lg:min-h-screen lg:p-5">
-          <div className="relative flex w-full flex-col overflow-hidden rounded-[24px] bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.16),_transparent_32%),linear-gradient(160deg,#5060f4_0%,#3a4adf_46%,#2f3fc3_100%)]">
-            <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.14),transparent_42%)]" />
-            <div className="relative z-10 flex min-h-full flex-col justify-between px-12 pt-12 pb-16 xl:px-16 xl:pt-12 xl:pb-20">
-              <Image
-                src="/images/yberagroup.svg"
-                alt="YberaGroup"
-                width={189}
-                height={20}
-                className="h-5 w-auto self-start"
-                priority
-              />
-              <div className="w-full max-w-lg space-y-4">
-                <h1 className="text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-white">
-                  Evolução profissional, com método.
-                </h1>
-                <p className="max-w-md text-base leading-7 text-white/78">
-                  PDIs, objetivos e registros em ambiente confidencial.
-                </p>
-              </div>
-            </div>
-          </div>
+      <div className="grid min-h-dvh bg-white lg:grid-cols-[45%_minmax(0,1fr)]">
+        <div className="hidden bg-white lg:flex lg:min-h-dvh lg:w-full lg:p-4">
+          <LoginHeroPanel />
         </div>
 
-        <div className="flex min-h-screen items-center justify-center bg-white px-6 py-8 sm:px-10 lg:px-16 xl:px-24">
-          <div className="w-full max-w-[26rem] space-y-8">
-            <div className="flex items-center gap-3">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-brand shadow-[0_8px_24px_rgba(58,74,223,0.28)]">
-                <span className="text-base font-bold text-brand-foreground">A</span>
+        <div className="flex min-h-dvh flex-col bg-white">
+          <main className="flex flex-1 items-center justify-center px-6 sm:px-10 lg:px-12 xl:px-16">
+            <div className="w-full max-w-[26rem] space-y-8">
+              <div className="space-y-3">
+                <AtlasLogo />
+                <div className="space-y-2">
+                  <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                    Bem-vindo ao Atlas
+                  </h1>
+                  <p className="text-sm leading-relaxed text-muted-foreground">
+                    Entre com seu e-mail corporativo para acessar sua conta.
+                  </p>
+                </div>
               </div>
-              <p className="text-xl font-semibold tracking-tight text-foreground">Atlas</p>
-            </div>
 
-            <LoginForm />
-          </div>
+              <LoginForm />
+            </div>
+          </main>
+
+          <footer className="flex flex-col gap-3 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-10 lg:px-12 xl:px-16">
+            <span>© 2026 YberaGroup</span>
+            <div className="flex items-center gap-4">
+              <Link href="#" className="transition-colors hover:text-foreground">
+                Privacidade
+              </Link>
+              <Link href="#" className="transition-colors hover:text-foreground">
+                Suporte
+              </Link>
+            </div>
+          </footer>
         </div>
       </div>
     </AuthProvider>

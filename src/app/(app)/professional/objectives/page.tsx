@@ -15,6 +15,7 @@ import {
   Presentation,
   Target,
   Trash2,
+  type LucideIcon,
 } from "lucide-react"
 
 import { useRecords } from "@/components/shell/records-provider"
@@ -74,7 +75,7 @@ const STATUS_BADGE_CLASS: Record<ObjectiveStatus, string> = {
   paused: "border-muted-foreground/20 bg-muted text-muted-foreground",
 }
 
-const STATUS_ICON: Record<ObjectiveStatus, React.ElementType> = {
+const STATUS_ICON: Record<ObjectiveStatus, LucideIcon> = {
   planned: CircleDot,
   in_progress: Clock3,
   done: CheckCircle2,

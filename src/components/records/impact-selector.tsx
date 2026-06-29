@@ -1,10 +1,10 @@
 "use client"
 
-import { UserIcon, Users2Icon, Building2Icon, GlobeIcon } from "lucide-react"
+import { UserIcon, Users2Icon, Building2Icon, GlobeIcon, type LucideIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { ImpactScope, ImpactLevel } from "@/lib/records/types"
 
-export const SCOPES: { value: ImpactScope; label: string; icon: React.ElementType }[] = [
+export const SCOPES: { value: ImpactScope; label: string; icon: LucideIcon }[] = [
   { value: "personal", label: "Pessoal", icon: UserIcon },
   { value: "team", label: "Time", icon: Users2Icon },
   { value: "area", label: "Área", icon: Building2Icon },

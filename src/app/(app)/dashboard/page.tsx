@@ -12,6 +12,7 @@ import {
   Presentation,
   Target,
   Zap,
+  type LucideIcon,
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
@@ -52,7 +53,7 @@ type ActivityItem = {
   description: string
   href: string
   date: string
-  icon: React.ElementType
+  icon: LucideIcon
   label: string
 }
 
@@ -131,7 +132,7 @@ function MetricCard({
   value: number | string
   description: string
   href: string
-  icon: React.ElementType
+  icon: LucideIcon
 }) {
   return (
     <Card className="transition-colors hover:bg-muted/30">
@@ -154,7 +155,7 @@ function EmptyPanel({
   title,
   action,
 }: {
-  icon: React.ElementType
+  icon: LucideIcon
   title: string
   action?: React.ReactNode
 }) {

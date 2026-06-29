@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -17,10 +18,13 @@ import {
   UserCog,
   UserRound,
   Users,
+  type LucideIcon,
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
+import { shellHeaderClassName } from "@/components/shell/shell-header-styles"
 import { Button } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 import {
   Sidebar,
   SidebarContent,
@@ -39,7 +43,7 @@ import {
 type NavItem = {
   label: string
   href: string
-  icon: React.ElementType
+  icon: LucideIcon
   activePaths?: string[]
   exact?: boolean
 }
@@ -78,6 +82,9 @@ const adminNavItems: NavItem[] = [
   { label: "Exportar dados", href: "/admin/exportacao", icon: Download },
 ]
 
+const brandMarkClassName =
+  "flex size-9 items-center justify-center rounded-lg bg-brand shadow-[0_8px_20px_color-mix(in_srgb,var(--color-brand)_24%,transparent)]"
+
 function SidebarBrandMark() {
   const { state, toggleSidebar } = useSidebar()
 
@@ -86,17 +93,20 @@ function SidebarBrandMark() {
       <button
         type="button"
         onClick={toggleSidebar}
-        className="flex size-11 items-center justify-center rounded-2xl bg-brand text-brand-foreground shadow-[0_8px_20px_color-mix(in_srgb,var(--color-brand)_24%,transparent)] transition-colors hover:bg-primary/90"
+        className={cn(
+          brandMarkClassName,
+          "text-brand-foreground transition-colors hover:bg-primary/90"
+        )}
         aria-label="Expandir sidebar"
       >
-        <PanelLeft className="size-4" />
+        <PanelLeft className="size-3.5" />
       </button>
     )
   }
 
   return (
-    <div className="flex size-11 items-center justify-center rounded-2xl bg-brand shadow-[0_8px_20px_color-mix(in_srgb,var(--color-brand)_24%,transparent)]">
-      <span className="text-brand-foreground text-base font-bold tracking-tight">A</span>
+    <div className={brandMarkClassName}>
+      <span className="text-sm font-bold tracking-tight text-brand-foreground">A</span>
     </div>
   )
 }
@@ -140,29 +150,35 @@ function NavGroup({
 export function AppSidebar() {
   const pathname = usePathname()
   const { session, logout } = useAuth()
+  const { isMobile, setOpenMobile } = useSidebar()
   const role = session?.role
+
+  useEffect(() => {
+    if (isMobile) {
+      setOpenMobile(false)
+    }
+  }, [pathname, isMobile, setOpenMobile])
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="relative px-4 py-4">
-        <div className="flex items-center justify-between gap-3 group-data-[collapsible=icon]:justify-center">
+      <SidebarHeader className={cn("gap-0 bg-sidebar p-0", shellHeaderClassName)}>
+        <div className="flex h-full w-full items-center justify-between gap-3 px-4 group-data-[collapsible=icon]:justify-center">
           <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
             <SidebarBrandMark />
             <span className="text-[17px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
               Atlas
             </span>
           </div>
-          <SidebarTrigger className="size-11 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
+          <SidebarTrigger className="size-8 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
         </div>
-        <SidebarSeparator className="mx-0" />
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="pt-4">
         {role !== "admin" && <NavGroup items={workspaceNavItems} pathname={pathname} />}
 
         {role === "gestor" && (
           <>
-            <SidebarSeparator className="mx-4" />
+            <SidebarSeparator />
             <NavGroup items={gestaoNavItems} pathname={pathname} label="Gestão" />
           </>
         )}
@@ -170,8 +186,9 @@ export function AppSidebar() {
         {role === "admin" && <NavGroup items={adminNavItems} pathname={pathname} />}
       </SidebarContent>
 
-      <SidebarFooter className="mt-4 border-t border-sidebar-border/60 px-4 pt-4">
-        <div className="flex flex-col gap-3 group-data-[collapsible=icon]:items-center">
+      <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
+        <SidebarSeparator />
+        <div className="flex flex-col gap-3 px-4 group-data-[collapsible=icon]:items-center">
           <div className="flex items-center gap-3 rounded-xl group-data-[collapsible=icon]:justify-center">
             <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-muted">
               <span className="text-xs font-semibold text-brand-muted-foreground">

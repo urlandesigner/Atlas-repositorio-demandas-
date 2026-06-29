@@ -8,12 +8,13 @@ import {
   Layers,
   Network,
   Users,
+  type LucideIcon,
 } from "lucide-react"
 
 import type { Achievement } from "@/lib/profile/derive"
 import { cn } from "@/lib/utils"
 
-const ACHIEVEMENT_ICON: Record<string, React.ElementType> = {
+const ACHIEVEMENT_ICON: Record<string, LucideIcon> = {
   "first-record": FileText,
   "first-strategic": Compass,
   "first-mentorship": Users,
