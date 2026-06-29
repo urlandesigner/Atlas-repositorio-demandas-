@@ -167,9 +167,7 @@ export function AppSidebar() {
           </>
         )}
 
-        {role === "admin" && (
-          <NavGroup items={adminNavItems} pathname={pathname} label="Administração" />
-        )}
+        {role === "admin" && <NavGroup items={adminNavItems} pathname={pathname} />}
       </SidebarContent>
 
       <SidebarFooter className="mt-4 border-t border-sidebar-border/60 px-4 pt-4">

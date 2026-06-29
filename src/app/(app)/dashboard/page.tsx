@@ -273,7 +273,7 @@ export default function DashboardPage() {
     const objectiveActivity = objectives.slice(0, 4).map(getObjectiveActivity)
     return [...recordActivity, ...objectiveActivity]
       .sort((a, b) => b.date.localeCompare(a.date))
-      .slice(0, 6)
+      .slice(0, 5)
   }, [objectives, records])
 
   const latestProjects = useMemo(
