@@ -16,6 +16,7 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   getGestaoPdiServerSnapshot,
   getGestaoPdiSnapshot,
@@ -94,6 +95,7 @@ export default function AdminHomePage() {
       .map((manager) => ({
         id: manager.id,
         name: manager.name,
+        avatarUrl: manager.avatarUrl,
         title: manager.managementTitle ?? "Gestor",
         reports: directReportCount.get(manager.id) ?? 0,
       }))
@@ -109,6 +111,7 @@ export default function AdminHomePage() {
         return {
           id: user.id,
           name: user.name,
+          avatarUrl: user.avatarUrl,
           managerName: manager?.name ?? "Sem gestor",
         }
       })
@@ -240,7 +243,13 @@ export default function AdminHomePage() {
                     className="flex flex-col gap-2 rounded-[12px] border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="min-w-0">
-                      <p className="text-sm font-medium">{collaborator?.name ?? "Colaborador"}</p>
+                      <div className="flex items-center gap-3">
+                        <PersonAvatar
+                          name={collaborator?.name ?? "Colaborador"}
+                          imageUrl={collaborator?.avatarUrl}
+                        />
+                        <p className="text-sm font-medium">{collaborator?.name ?? "Colaborador"}</p>
+                      </div>
                       <p className="text-xs text-muted-foreground">
                         {framework?.name ?? "Trilha"} · {fromName} → {toName}
                       </p>
@@ -271,7 +280,10 @@ export default function AdminHomePage() {
                   key={item.id}
                   className="rounded-[12px] border border-border/60 px-4 py-3"
                 >
-                  <p className="text-sm font-medium">{item.name}</p>
+                  <div className="flex items-center gap-3">
+                    <PersonAvatar name={item.name} imageUrl={item.avatarUrl} />
+                    <p className="text-sm font-medium">{item.name}</p>
+                  </div>
                   <p className="text-xs text-muted-foreground">Gestor: {item.managerName}</p>
                 </div>
               ))
@@ -297,9 +309,12 @@ export default function AdminHomePage() {
                   key={manager.id}
                   className="flex items-center justify-between rounded-[12px] border border-border/60 px-4 py-3"
                 >
-                  <div>
-                    <p className="text-sm font-medium">{manager.name}</p>
-                    <p className="text-xs text-muted-foreground">{manager.title}</p>
+                  <div className="flex items-center gap-3">
+                    <PersonAvatar name={manager.name} imageUrl={manager.avatarUrl} />
+                    <div>
+                      <p className="text-sm font-medium">{manager.name}</p>
+                      <p className="text-xs text-muted-foreground">{manager.title}</p>
+                    </div>
                   </div>
                   <Badge variant="outline">{manager.reports} liderado(s)</Badge>
                 </div>

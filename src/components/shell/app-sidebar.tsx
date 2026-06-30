@@ -74,7 +74,12 @@ const gestaoNavItems: NavItem[] = [
 const adminNavItems: NavItem[] = [
   { label: "Resumo", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Gestores", href: "/admin/gestores", icon: UserCog },
-  { label: "Colaboradores", href: "/admin/colaboradores", icon: Users },
+  {
+    label: "Colaboradores",
+    href: "/admin/colaboradores",
+    icon: Users,
+    activePaths: ["/gestao/liderados"],
+  },
   { label: "PDIs", href: "/admin/pdis", icon: Target },
   { label: "Competências", href: "/admin/soft-skills", icon: Radar },
   { label: "Permissões", href: "/admin/permissoes", icon: Shield },

@@ -6,7 +6,7 @@ import HeroGeometric from "@/components/ui/hero-geometric"
 
 export function LoginHeroPanel() {
   return (
-    <div className="relative flex h-full min-h-full w-full flex-1 flex-col overflow-hidden rounded-[24px]">
+    <div className="relative flex h-full min-h-full w-full flex-1 flex-col overflow-hidden rounded-[16px]">
       <HeroGeometric
         className="absolute inset-0 min-h-0 h-full bg-transparent"
         color1="#2f3fc3"

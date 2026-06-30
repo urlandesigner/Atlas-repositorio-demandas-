@@ -506,9 +506,9 @@ function ObjectiveCard({
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-[20px] border border-dashed border-border/60 bg-muted/15 py-16">
-      <div className="flex size-10 items-center justify-center rounded-full bg-muted">
-        <Target className="size-5 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-dashed border-border/60 bg-muted/15 py-16">
+      <div className="icon-well flex size-10 items-center justify-center rounded-full">
+        <Target className="size-5" />
       </div>
       <p className="text-center text-sm text-muted-foreground">
         Nenhum objetivo ainda. Defina uma intenção para o ciclo.
@@ -777,8 +777,8 @@ export default function ObjectivesPage() {
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Card>
             <CardContent className="flex items-center gap-3 p-4">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-muted">
-                <Target className="size-4 text-muted-foreground" />
+              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
+                <Target className="size-4" />
               </div>
               <div>
                 <p className="text-2xl font-semibold tracking-tight">{objectives.length}</p>
@@ -788,8 +788,8 @@ export default function ObjectivesPage() {
           </Card>
           <Card>
             <CardContent className="flex items-center gap-3 p-4">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-muted">
-                <Clock3 className="size-4 text-muted-foreground" />
+              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
+                <Clock3 className="size-4" />
               </div>
               <div>
                 <p className="text-2xl font-semibold tracking-tight">{stats.active}</p>
@@ -799,8 +799,8 @@ export default function ObjectivesPage() {
           </Card>
           <Card>
             <CardContent className="flex items-center gap-3 p-4">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-muted">
-                <FileText className="size-4 text-muted-foreground" />
+              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
+                <FileText className="size-4" />
               </div>
               <div>
                 <p className="text-2xl font-semibold tracking-tight">{stats.evidence}</p>
@@ -810,8 +810,8 @@ export default function ObjectivesPage() {
           </Card>
           <Card>
             <CardContent className="flex items-center gap-3 p-4">
-              <div className="flex size-9 items-center justify-center rounded-lg bg-muted">
-                <Flag className="size-4 text-muted-foreground" />
+              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
+                <Flag className="size-4" />
               </div>
               <div>
                 <p className="text-2xl font-semibold tracking-tight">{stats.dueSoon}</p>

@@ -340,7 +340,7 @@ function buildFeaturedScore(item: StoryItem, pinnedIds: string[]) {
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="rounded-[32px] border border-dashed border-border/80 bg-muted/15 px-6 py-16">
+    <div className="rounded-[12px] border border-dashed border-border/80 bg-muted/15 px-6 py-16">
       <div className="mx-auto flex max-w-lg flex-col items-center text-center">
         <div className="flex size-14 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-700 dark:text-violet-300">
           <FolderKanbanIcon className="size-7" />
@@ -375,7 +375,7 @@ function FeaturedStoryCard({
   onOpen: (record: RecordEntry) => void
 }) {
   return (
-    <article className="flex h-full flex-col rounded-[20px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_28px_rgba(15,23,42,0.06)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_18px_42px_rgba(15,23,42,0.09)]">
+    <article className="flex h-full flex-col rounded-[12px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_28px_rgba(15,23,42,0.06)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_18px_42px_rgba(15,23,42,0.09)]">
       <div className="flex items-start justify-between gap-3">
         <p className="min-w-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
           {item.projectName || item.areaLabel}
@@ -447,7 +447,7 @@ function StoryCard({
         </div>
       </div>
 
-      <article className="rounded-[20px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
+      <article className="rounded-[12px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 space-y-1">
@@ -577,7 +577,7 @@ export default function TimelinePage() {
           )}
 
           {groupedStories.length === 0 ? (
-            <section className="rounded-[32px] border border-dashed border-border/80 bg-muted/15 px-6 py-16 text-center">
+            <section className="rounded-[12px] border border-dashed border-border/80 bg-muted/15 px-6 py-16 text-center">
               <div className="mx-auto max-w-lg">
                 <h2 className="text-lg font-semibold tracking-tight">Nenhuma entrega registrada ainda</h2>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">

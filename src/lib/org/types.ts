@@ -13,6 +13,7 @@ export interface OrgUser {
   id: string
   email: string
   name: string
+  avatarUrl?: string | null
   role: UserRole
   areaId: string | null
   /** Legado/display — use `role: gestor` para líderes com painel de gestão */

@@ -66,7 +66,7 @@ export default function EvolutionHighlightsPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-border/80 px-6 py-12 text-center">
+          <div className="rounded-[12px] border border-dashed border-border/80 px-6 py-12 text-center">
             <p className="text-sm text-muted-foreground">
               Nenhum destaque neste período. Registre entregas com impacto para alimentar o feed.
             </p>

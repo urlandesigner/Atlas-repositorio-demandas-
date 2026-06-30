@@ -24,6 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Textarea } from "@/components/ui/textarea"
 import {
   computeFrameworkReadiness,
@@ -263,7 +264,12 @@ export function AdminPdiPanel() {
               <CardListRows>
                 {filteredRows.map((row) => (
                   <CardListRow key={row.id}>
-                    <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 flex-1 items-start gap-3">
+                      <PersonAvatar
+                        name={row.collaboratorName}
+                        imageUrl={getOrgUserById(row.type === "pending" ? row.request.userId : row.userId)?.avatarUrl}
+                      />
+                      <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <CardListRowTitle>{row.collaboratorName}</CardListRowTitle>
                         <Badge variant={row.type === "pending" ? "secondary" : "outline"}>
@@ -282,6 +288,7 @@ export function AdminPdiPanel() {
                           {row.request.managerNotes}
                         </p>
                       ) : null}
+                    </div>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 lg:justify-end">
                       {row.type === "pending" ? (
@@ -349,13 +356,19 @@ export function AdminPdiPanel() {
 
                 return (
                   <CardListRow key={request.id} className="py-3 sm:flex-row sm:items-center sm:justify-between">
-                    <div>
-                      <CardListRowTitle>{user?.name ?? "Colaborador"}</CardListRowTitle>
-                      <CardListRowMeta>
-                        {framework?.name ? `${framework.name} · ` : ""}
-                        {fromName} → {toName}
-                        {request.adminNotes ? ` - ${request.adminNotes}` : ""}
-                      </CardListRowMeta>
+                    <div className="flex items-start gap-3">
+                      <PersonAvatar
+                        name={user?.name ?? "Colaborador"}
+                        imageUrl={user?.avatarUrl}
+                      />
+                      <div>
+                        <CardListRowTitle>{user?.name ?? "Colaborador"}</CardListRowTitle>
+                        <CardListRowMeta>
+                          {framework?.name ? `${framework.name} · ` : ""}
+                          {fromName} → {toName}
+                          {request.adminNotes ? ` - ${request.adminNotes}` : ""}
+                        </CardListRowMeta>
+                      </div>
                     </div>
                     <Badge
                       variant={

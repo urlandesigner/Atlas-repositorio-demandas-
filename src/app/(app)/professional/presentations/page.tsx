@@ -202,9 +202,9 @@ function PresentationCard({
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center py-16 gap-3 rounded-[20px] border border-dashed border-border/60 bg-muted/15">
-      <div className="size-10 rounded-full bg-muted flex items-center justify-center">
-        <Presentation className="size-5 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-dashed border-border/60 bg-muted/15 py-16">
+      <div className="icon-well flex size-10 items-center justify-center rounded-full">
+        <Presentation className="size-5" />
       </div>
       <p className="text-sm text-muted-foreground text-center">
         Nenhuma apresentação registrada ainda.

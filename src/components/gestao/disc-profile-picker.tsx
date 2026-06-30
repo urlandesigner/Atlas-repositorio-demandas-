@@ -51,7 +51,7 @@ export function DiscProfilePicker({
               type="button"
               onClick={() => toggle(profile.id)}
               className={cn(
-                "rounded-xl border px-3 py-3 text-left transition-colors",
+                "rounded-[12px] border px-3 py-3 text-left transition-colors",
                 selected ? profile.accentClass : "border-border hover:bg-muted/40"
               )}
             >
@@ -70,7 +70,7 @@ export function DiscProfilePicker({
       </div>
 
       {value.length > 1 ? (
-        <div className="rounded-lg border bg-muted/20 p-3">
+        <div className="rounded-[12px] border bg-muted/20 p-3">
           <p className="text-xs font-medium text-muted-foreground">Ordem de predominância</p>
           <ul className="mt-2 space-y-2">
             {value.map((id, index) => {

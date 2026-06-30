@@ -27,7 +27,7 @@ export function HighlightCard({
   const scope = SCOPES.find((s) => s.value === item.impactScope)?.label ?? item.impactScope
 
   return (
-    <article className="rounded-2xl border border-border/60 bg-card/[0.98] p-4 transition-all duration-200 hover:border-foreground/12 hover:shadow-sm">
+    <article className="rounded-[12px] border border-border/60 bg-card/[0.98] p-4 transition-all duration-200 hover:border-foreground/12 hover:shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
         {item.projectName ? (
           <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">

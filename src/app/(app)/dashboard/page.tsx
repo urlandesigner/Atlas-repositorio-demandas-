@@ -160,9 +160,9 @@ function EmptyPanel({
   action?: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-[20px] border border-dashed border-border/60 bg-muted/15 px-4 py-10 text-center">
-      <div className="flex size-10 items-center justify-center rounded-full bg-muted">
-        <Icon className="size-5 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-dashed border-border/60 bg-muted/15 px-4 py-10 text-center">
+      <div className="icon-well flex size-10 items-center justify-center rounded-full">
+        <Icon className="size-5" />
       </div>
       <p className="max-w-sm text-sm text-muted-foreground">{title}</p>
       {action}
@@ -177,7 +177,7 @@ function ObjectiveRow({ objective }: { objective: ObjectiveEntry }) {
   return (
     <Link
       href="/professional/objectives"
-      className="flex items-start justify-between gap-4 rounded-[20px] border border-border/60 bg-card/[0.98] px-3 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
+      className="flex items-start justify-between gap-4 rounded-[12px] border border-border/60 bg-card/[0.98] px-3 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
     >
       <div className="min-w-0">
         <p className="line-clamp-1 text-sm font-medium">{objective.title}</p>
@@ -212,8 +212,8 @@ function ActivityRow({ item }: { item: ActivityItem }) {
       href={item.href}
       className="flex items-start gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-muted/45"
     >
-      <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg bg-muted">
-        <item.icon className="size-4 text-muted-foreground" />
+      <div className="icon-well mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg">
+        <item.icon className="size-4" />
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">

@@ -100,8 +100,8 @@ function ProjectCard({ project }: { project: ProjectEntry }) {
 function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center gap-3 py-16">
-      <div className="flex size-10 items-center justify-center rounded-full bg-muted">
-        <FolderOpen className="size-5 text-muted-foreground" />
+      <div className="icon-well flex size-10 items-center justify-center rounded-full">
+        <FolderOpen className="size-5" />
       </div>
       <p className="text-center text-sm text-muted-foreground">
         Nenhum projeto ainda. Cadastre onde você está atuando.

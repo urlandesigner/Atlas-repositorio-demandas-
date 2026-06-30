@@ -217,7 +217,7 @@ export default function EvolutionOneOnOnePage() {
               ))}
             </div>
           ) : (
-            <div className="rounded-2xl border border-dashed border-border/80 px-6 py-12 text-center text-sm text-muted-foreground">
+            <div className="rounded-[12px] border border-dashed border-border/80 px-6 py-12 text-center text-sm text-muted-foreground">
               Nenhum 1:1 registrado ainda. Adicione a data e escreva um resumo da conversa.
             </div>
           )}

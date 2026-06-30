@@ -7,7 +7,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 export default function GestaoLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <RequireRole roles={["gestor"]}>
+      <RequireRole roles={["gestor", "admin"]}>
         <SidebarProvider>
           <AppSidebar />
           <AppShellContent>{children}</AppShellContent>

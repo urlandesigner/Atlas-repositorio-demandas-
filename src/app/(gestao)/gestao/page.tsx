@@ -8,6 +8,7 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { buttonVariants } from "@/components/ui/button"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   getGestaoObjectivesServerSnapshot,
   getGestaoObjectivesSnapshot,
@@ -139,9 +140,12 @@ export default function GestaoHomePage() {
                   key={user.id}
                   className="flex flex-col gap-2 rounded-[12px] border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
+                  <div className="flex min-w-0 items-start gap-3">
+                    <PersonAvatar name={user.name} imageUrl={user.avatarUrl} />
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium">{user.name}</p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </div>
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline">
@@ -196,10 +200,17 @@ export default function GestaoHomePage() {
                       <p className="text-sm font-medium">{objective.title}</p>
                       <Badge variant="outline">{OBJECTIVE_STATUS_LABEL[objective.status]}</Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground">
-                      {user?.name ?? "Colaborador"}
-                      {objective.deadline ? ` · prazo ${objective.deadline}` : " · sem prazo definido"}
-                    </p>
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <PersonAvatar
+                        name={user?.name ?? "Colaborador"}
+                        imageUrl={user?.avatarUrl}
+                        size="sm"
+                      />
+                      <p>
+                        {user?.name ?? "Colaborador"}
+                        {objective.deadline ? ` · prazo ${objective.deadline}` : " · sem prazo definido"}
+                      </p>
+                    </div>
                   </div>
                 )
               })

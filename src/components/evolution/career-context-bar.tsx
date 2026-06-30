@@ -26,7 +26,7 @@ export function CareerContextBar({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]",
+        "rounded-[12px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]",
         className
       )}
     >

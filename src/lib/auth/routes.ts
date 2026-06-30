@@ -14,6 +14,6 @@ export function getHomeRouteForRole(role: UserRole): string {
 
 export function roleCanAccessPath(role: UserRole, pathname: string): boolean {
   if (pathname.startsWith("/admin")) return role === "admin"
-  if (pathname.startsWith("/gestao")) return role === "gestor"
+  if (pathname.startsWith("/gestao")) return role === "gestor" || role === "admin"
   return true
 }

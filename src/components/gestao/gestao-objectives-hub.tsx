@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   CardList,
   CardListBody,
@@ -94,7 +95,12 @@ export function GestaoObjectivesHub() {
                 key={objective.id}
                 className="border-t border-border/60 first:border-t-0"
               >
-                <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 items-start gap-3">
+                  <PersonAvatar
+                    name={user?.name ?? "Colaborador"}
+                    imageUrl={user?.avatarUrl}
+                  />
+                  <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <CardListRowTitle>{objective.title}</CardListRowTitle>
                     <Badge variant="outline">{OBJECTIVE_STATUS_LABEL[objective.status]}</Badge>
@@ -112,6 +118,7 @@ export function GestaoObjectivesHub() {
                       ))}
                     </div>
                   ) : null}
+                </div>
                 </div>
                 <div className="flex items-center gap-2 lg:justify-end">
                   {user ? (

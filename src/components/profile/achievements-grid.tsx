@@ -33,7 +33,7 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-2xl border p-4 transition-colors",
+        "flex flex-col gap-3 rounded-[12px] border p-4 transition-colors",
         unlocked ? "border-border/60 bg-card/[0.98]" : "border-dashed border-border/60 bg-muted/20"
       )}
     >

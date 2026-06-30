@@ -161,7 +161,7 @@ export default function EvolutionPromotionPage() {
             regenerating={regenerating}
           />
         ) : (
-          <div className="rounded-2xl border border-dashed border-border/80 px-6 py-12 text-center text-sm text-muted-foreground">
+          <div className="rounded-[12px] border border-dashed border-border/80 px-6 py-12 text-center text-sm text-muted-foreground">
             Consolide suas evidências em um material profissional para conversas de progressão.
           </div>
         )}

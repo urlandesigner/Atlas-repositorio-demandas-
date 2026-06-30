@@ -28,8 +28,6 @@ import {
   computeFrameworkReadiness,
 } from "@/lib/gestao/pdi/types"
 import {
-  getActiveAssignmentForUser,
-  getFrameworkById,
   getGestaoPdiServerSnapshot,
   getGestaoPdiSnapshot,
   subscribeGestaoPdiStore,
@@ -45,6 +43,11 @@ import {
   getProfileSnapshot,
   subscribeProfileStore,
 } from "@/lib/profile/store"
+import {
+  getOrgServerSnapshot,
+  getOrgSnapshot,
+  subscribeOrgStore,
+} from "@/lib/org/store"
 import { useRecords } from "@/components/shell/records-provider"
 
 export default function ProfilePage() {
@@ -61,6 +64,7 @@ export default function ProfilePage() {
     getObjectivesSnapshot,
     getObjectivesServerSnapshot
   )
+  const org = useSyncExternalStore(subscribeOrgStore, getOrgSnapshot, getOrgServerSnapshot)
   const gestaoPdi = useSyncExternalStore(
     subscribeGestaoPdiStore,
     getGestaoPdiSnapshot,
@@ -69,11 +73,13 @@ export default function ProfilePage() {
 
   const assigned = useMemo(() => {
     if (!session?.userId) return undefined
-    return getActiveAssignmentForUser(session.userId)
-  }, [session?.userId, gestaoPdi.assignments])
+    return gestaoPdi.assignments.find(
+      (assignment) => assignment.userId === session.userId && assignment.status === "active"
+    )
+  }, [gestaoPdi.assignments, session])
 
   const assignedFramework = useMemo(
-    () => (assigned ? getFrameworkById(assigned.frameworkId) : undefined),
+    () => (assigned ? gestaoPdi.frameworks.find((framework) => framework.id === assigned.frameworkId) : undefined),
     [assigned, gestaoPdi.frameworks]
   )
 
@@ -118,6 +124,10 @@ export default function ProfilePage() {
   }, [assignedCurrent, assignedExpected, assignedFramework, pdiBaseline, pdi.expected])
 
   const currentLevel = findLevel(profile.ladder, profile.identity.levelId)
+  const currentUser = useMemo(
+    () => org.users.find((user) => user.id === session?.userId),
+    [org.users, session?.userId]
+  )
 
   return (
     <EvolutionShell
@@ -125,7 +135,11 @@ export default function ProfilePage() {
       description="Identidade, PDI e objetivo de carreira no mesmo lugar."
     >
       <div className="flex flex-col gap-6">
-      <ProfileHeader identity={profile.identity} levelName={currentLevel?.name ?? ""} />
+      <ProfileHeader
+        identity={profile.identity}
+        levelName={currentLevel?.name ?? ""}
+        avatarUrl={currentUser?.avatarUrl}
+      />
 
       <ImpactSummarySection summary={summary} />
 

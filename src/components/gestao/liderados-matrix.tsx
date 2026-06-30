@@ -5,6 +5,7 @@ import { useMemo, useSyncExternalStore } from "react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   getGestaoProfilesServerSnapshot,
   getGestaoProfilesSnapshot,
@@ -12,7 +13,6 @@ import {
 } from "@/lib/gestao/profiles-store"
 import { DISC_PROFILES, type DiscProfileId } from "@/lib/gestao/types"
 import {
-  getDirectReports,
   getOrgServerSnapshot,
   getOrgSnapshot,
   subscribeOrgStore,
@@ -34,8 +34,8 @@ export function LideradosMatrix() {
 
   const reports = useMemo(() => {
     if (!session?.userId) return []
-    return getDirectReports(session.userId)
-  }, [org, session?.userId])
+    return org.users.filter((user) => user.managerId === session.userId)
+  }, [org.users, session])
 
   const { byDominant, semPerfil } = useMemo(() => {
     const byDominant = new Map<DiscProfileId, OrgUser[]>()
@@ -107,9 +107,10 @@ export function LideradosMatrix() {
                       <Link
                         key={user.id}
                         href={`/gestao/liderados/${user.id}`}
-                        className="rounded-full bg-background/70 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-background"
+                        className="inline-flex items-center gap-2 rounded-full bg-background/70 px-2 py-1 text-xs font-medium text-foreground shadow-sm transition-colors hover:bg-background"
                       >
-                        {user.name}
+                        <PersonAvatar name={user.name} imageUrl={user.avatarUrl} size="sm" />
+                        <span className="truncate">{user.name}</span>
                       </Link>
                     ))
                   ) : (
@@ -141,9 +142,10 @@ export function LideradosMatrix() {
               <Link
                 key={user.id}
                 href={`/gestao/liderados/${user.id}`}
-                className="rounded-full border bg-background px-2.5 py-1 text-xs font-medium transition-colors hover:bg-muted/40"
+                className="inline-flex items-center gap-2 rounded-full border bg-background px-2 py-1 text-xs font-medium transition-colors hover:bg-muted/40"
               >
-                {user.name}
+                <PersonAvatar name={user.name} imageUrl={user.avatarUrl} size="sm" />
+                <span className="truncate">{user.name}</span>
               </Link>
             ))}
           </div>

@@ -15,6 +15,7 @@ import { SoftSkillsEditor } from "@/components/gestao/soft-skills-editor"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { logAudit } from "@/lib/gestao/audit/store"
 import {
@@ -28,7 +29,6 @@ import type { BehavioralProfile, SoftSkillsRadar } from "@/lib/gestao/types"
 import {
   getOrgServerSnapshot,
   getOrgSnapshot,
-  getOrgUserById,
   subscribeOrgStore,
 } from "@/lib/org/store"
 import { cn } from "@/lib/utils"
@@ -44,7 +44,7 @@ function LideradoDetailContent({ userId }: { userId: string }) {
 
   const org = useSyncExternalStore(subscribeOrgStore, getOrgSnapshot, getOrgServerSnapshot)
 
-  const user = useMemo(() => getOrgUserById(userId), [org.users, userId])
+  const user = useMemo(() => org.users.find((entry) => entry.id === userId), [org.users, userId])
 
   const [behavioral, setBehavioral] = useState<BehavioralProfile>(() =>
     getBehavioralProfile(userId)
@@ -102,7 +102,9 @@ function LideradoDetailContent({ userId }: { userId: string }) {
   return (
     <div className="flex max-w-4xl flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
+        <div className="flex items-start gap-4">
+          <PersonAvatar name={user.name} imageUrl={user.avatarUrl} size="lg" className="mt-7 size-14" />
+          <div>
           <Link
             href="/gestao/liderados"
             className={cn(
@@ -120,6 +122,7 @@ function LideradoDetailContent({ userId }: { userId: string }) {
             {user.managementTitle ? (
               <Badge variant="secondary">{user.managementTitle}</Badge>
             ) : null}
+          </div>
           </div>
         </div>
         {saved ? <p className="text-sm text-brand">{saved}</p> : null}

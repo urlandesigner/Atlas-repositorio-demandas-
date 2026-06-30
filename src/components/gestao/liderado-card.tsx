@@ -8,6 +8,7 @@ import { DiscProfileBadges } from "@/components/gestao/disc-profile-picker"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   getBehavioralProfile,
   getGestaoProfilesServerSnapshot,
@@ -47,9 +48,12 @@ export function LideradoCard({
   return (
     <Card>
       <CardHeader className="flex flex-row items-start justify-between gap-3 pb-2">
-        <div className="min-w-0">
-          <CardTitle className="text-base">{user.name}</CardTitle>
-          <p className="text-sm text-muted-foreground">{user.email}</p>
+        <div className="flex min-w-0 items-start gap-3">
+          <PersonAvatar name={user.name} imageUrl={user.avatarUrl} />
+          <div className="min-w-0">
+            <CardTitle className="text-base">{user.name}</CardTitle>
+            <p className="text-sm text-muted-foreground">{user.email}</p>
+          </div>
         </div>
         <Badge variant="secondary">{getUserRoleLabel(user)}</Badge>
       </CardHeader>

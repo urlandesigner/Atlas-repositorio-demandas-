@@ -354,7 +354,7 @@ function SidebarSeparator({
       data-slot="sidebar-separator"
       data-sidebar="separator"
       className={cn(
-        "mx-4 bg-sidebar-border data-horizontal:w-auto",
+        "mx-4 bg-border/70 data-horizontal:w-auto",
         className
       )}
       {...props}
@@ -478,7 +478,7 @@ const sidebarMenuButtonVariants = cva(
       variant: {
         default: "hover:bg-sidebar-accent hover:text-sidebar-foreground",
         outline:
-          "border border-sidebar-border bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+          "border border-border/70 bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
       },
       size: {
         default: "h-11",
@@ -638,7 +638,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<"ul">) {
       data-slot="sidebar-menu-sub"
       data-sidebar="menu-sub"
       className={cn(
-        "mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-sidebar-border px-2.5 py-0.5 group-data-[collapsible=icon]:hidden",
+        "mx-3.5 flex min-w-0 translate-x-px flex-col gap-1 border-l border-border/70 px-2.5 py-0.5 group-data-[collapsible=icon]:hidden",
         className
       )}
       {...props}

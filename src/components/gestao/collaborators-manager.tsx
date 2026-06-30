@@ -19,6 +19,7 @@ import {
   CardListRowTitle,
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Dialog,
   DialogContent,
@@ -212,7 +213,9 @@ export function CollaboratorsManager({
 
                   return (
                     <CardListRow key={user.id}>
-                      <div className="min-w-0 flex-1">
+                      <div className="flex min-w-0 flex-1 items-start gap-3">
+                        <PersonAvatar name={user.name} imageUrl={user.avatarUrl} />
+                        <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
                           <CardListRowTitle>{user.name}</CardListRowTitle>
                           <Badge variant="outline">{roleLabel}</Badge>
@@ -224,6 +227,7 @@ export function CollaboratorsManager({
                         <div className="mt-3">
                           <DiscProfileBadges profiles={behavioral?.discProfiles ?? []} />
                         </div>
+                      </div>
                       </div>
 
                       <div className="flex flex-wrap items-center gap-2 lg:justify-end">
