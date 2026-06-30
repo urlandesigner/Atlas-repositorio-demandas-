@@ -213,18 +213,10 @@ export function AdminPdiPanel() {
   return (
     <div className="flex flex-col gap-8">
       <section className="space-y-3">
-        <div className="flex flex-col gap-3">
-          <div>
-            <h2 className="text-sm font-medium">PDIs da área</h2>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Acompanhe a fila de decisão e o andamento real dos ciclos ativos.
-            </p>
-          </div>
-          <div className="grid gap-3 md:grid-cols-3">
-            <PanelMetric label="Em análise" value={pending.length} helper="Solicitações aguardando decisão" />
-            <PanelMetric label="Ativos" value={activeAssignments.length} helper="PDIs em andamento na área" />
-            <PanelMetric label="Histórico recente" value={resolved.length} helper="Movimentos já concluídos" />
-          </div>
+        <div className="grid gap-3 md:grid-cols-3">
+          <PanelMetric label="Em análise" value={pending.length} />
+          <PanelMetric label="Ativos" value={activeAssignments.length} />
+          <PanelMetric label="Histórico recente" value={resolved.length} />
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -263,7 +255,7 @@ export function AdminPdiPanel() {
         <CardList>
           <CardListHeader
             title="Fila e acompanhamento"
-            description="Decisões pendentes primeiro, depois os PDIs já ativos da área."
+            description="Pendentes primeiro, depois PDIs ativos da área."
             action={<Badge variant="outline">{filteredRows.length} registros</Badge>}
           />
           <CardListBody>
@@ -339,7 +331,7 @@ export function AdminPdiPanel() {
           <CardList>
             <CardListHeader
               title="Histórico recente"
-              description="Últimas decisões concluídas pela administração da área."
+              description="Últimas decisões concluídas pela administração."
               action={<Badge variant="outline">{resolved.length}</Badge>}
             />
             <CardListBody className="divide-y">
@@ -435,22 +427,13 @@ export function AdminPdiPanel() {
   )
 }
 
-function PanelMetric({
-  label,
-  value,
-  helper,
-}: {
-  label: string
-  value: number
-  helper: string
-}) {
+function PanelMetric({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
       <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </p>
       <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
     </div>
   )
 }

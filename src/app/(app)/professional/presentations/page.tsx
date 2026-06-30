@@ -360,7 +360,7 @@ export default function PresentationsPage() {
     <>
       <EvolutionShell
         title="Conhecimento compartilhado"
-        description="Materiais e apresentações que você compartilhou com o time."
+        description="Apresentações e materiais que você compartilhou com o time."
       >
         <div className="flex flex-col gap-4">
           <div className="flex justify-end">

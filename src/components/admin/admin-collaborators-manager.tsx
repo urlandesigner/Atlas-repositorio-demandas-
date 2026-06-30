@@ -118,7 +118,7 @@ export function AdminCollaboratorsManager() {
           <CardContent className="p-4">
             <EmptyStateCard
               title="Cadastre um gestor antes de criar colaboradores"
-              description="Toda pessoa da área precisa sair do cadastro já vinculada a um gestor para acompanhamento, PDI e visão do time."
+              description="Cada pessoa precisa de um gestor para PDI e acompanhamento."
               action={
                 <Link
                   href="/admin/gestores"
@@ -135,7 +135,7 @@ export function AdminCollaboratorsManager() {
         <CardList>
           <CardListHeader
             title="Lista de colaboradores"
-            description="Base atual da área com vínculo de gestor e acesso rápido à ficha individual."
+            description="Base da área com gestor e acesso à ficha."
             action={<Badge variant="outline">{collaborators.length}</Badge>}
           />
           <CardListBody className="divide-y divide-border/60">
@@ -180,7 +180,7 @@ export function AdminCollaboratorsManager() {
               <div className="px-4 py-4">
                 <EmptyStateCard
                   title="Nenhum colaborador cadastrado ainda"
-                  description="Monte a base da área para começar os vínculos com gestores, o acompanhamento e os ciclos de desenvolvimento."
+                  description="Cadastre a primeira pessoa para vincular gestores e iniciar os ciclos."
                   action={
                     <Button size="sm" onClick={openCreate}>
                       <Plus data-icon="inline-start" />

@@ -35,7 +35,7 @@ export default function EvolutionRecognitionsPage() {
   return (
     <EvolutionShell
       title="Reconhecimentos"
-      description="Feedbacks e validações recebidos — tratados como evidência profissional."
+      description="Feedbacks e validações recebidos como evidência de carreira."
     >
       <div className="flex max-w-3xl flex-col gap-6">
         <div className="flex justify-end">

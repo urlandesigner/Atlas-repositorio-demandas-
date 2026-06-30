@@ -113,7 +113,7 @@ function getObjectiveActivity(objective: ObjectiveEntry): ActivityItem {
   return {
     id: `objective-${objective.id}`,
     title: objective.title,
-    description: objective.motivation ?? "Objetivo profissional registrado.",
+    description: objective.motivation ?? objective.title,
     href: "/professional/objectives",
     date: objective.updated_at || objective.created_at,
     icon: Target,
@@ -233,7 +233,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
 export default function DashboardPage() {
   const { session } = useAuth()
   const { records, openCapture } = useRecords()
-  const firstName = session?.name?.trim().split(/\s+/)[0]
+  const displayName = session?.name?.trim()
   const projects = useSyncExternalStore(
     subscribeProjectsStore,
     getProjectsSnapshot,
@@ -287,7 +287,11 @@ export default function DashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            {firstName ? `Olá, ${firstName}` : "Olá"}
+            {session?.role === "gestor"
+              ? "Visão geral"
+              : displayName
+                ? `Olá, ${displayName}`
+                : "Olá"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             O que está em andamento, o que virou evidência e onde vale focar agora.
@@ -308,28 +312,28 @@ export default function DashboardPage() {
           value={recordsThisMonth.length}
           icon={Zap}
           href="/professional/timeline"
-          description={`${records.length} registro(s) no histórico`}
+          description={`${records.length} no histórico`}
         />
         <MetricCard
           label="Objetivos ativos"
           value={activeObjectives.length}
           icon={Target}
           href="/professional/objectives"
-          description={`${objectives.filter((item) => item.status === "done").length} concluído(s)`}
+          description={`${objectives.filter((item) => item.status === "done").length} concluídos`}
         />
         <MetricCard
           label="Projetos ativos"
           value={activeProjects.length}
           icon={FolderOpen}
           href="/projects"
-          description={`${flatProjects.length} projeto(s) cadastrados`}
+          description={`${flatProjects.length} cadastrados`}
         />
         <MetricCard
           label="Apresentações"
           value={presentations.length}
           icon={Presentation}
           href="/professional/presentations"
-          description={`${completedPresentations.length} realizada(s)`}
+          description={`${completedPresentations.length} realizadas`}
         />
       </div>
 
@@ -337,10 +341,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
-              <CardTitle className="text-sm font-medium">Atividade recente</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Registros e objetivos atualizados por último.
-              </p>
+              <CardTitle className="text-sm font-medium">Últimas movimentações</CardTitle>
             </div>
             <Link
               href="/professional/timeline"
@@ -360,7 +361,7 @@ export default function DashboardPage() {
             ) : (
               <EmptyPanel
                 icon={Zap}
-                title="Nenhuma atividade registrada ainda. Comece documentando uma atuação ou criando um objetivo."
+                title="Ainda sem registros nem objetivos. Documente uma entrega ou defina uma meta para o ciclo."
                 action={
                   <Button size="sm" onClick={() => openCapture()}>
                     <Zap data-icon="inline-start" />
@@ -376,9 +377,6 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
               <CardTitle className="text-sm font-medium">Foco do ciclo</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Objetivos ativos ordenados por prazo.
-              </p>
             </div>
             <Link
               href="/professional/objectives"
@@ -398,7 +396,7 @@ export default function DashboardPage() {
             ) : (
               <EmptyPanel
                 icon={Target}
-                title="Nenhum objetivo ativo. Defina o que você quer construir no próximo ciclo."
+                title="Nenhum objetivo ativo. Escolha o que quer avançar neste ciclo."
                 action={
                   <Link
                     href="/professional/objectives"
@@ -419,9 +417,6 @@ export default function DashboardPage() {
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
               <CardTitle className="text-sm font-medium">Projetos recentes</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Últimos projetos atualizados.
-              </p>
             </div>
             <FolderOpen className="size-4 text-muted-foreground" />
           </CardHeader>
@@ -445,7 +440,7 @@ export default function DashboardPage() {
                 ))}
               </div>
             ) : (
-              <EmptyPanel icon={FolderOpen} title="Nenhum projeto encontrado." />
+              <EmptyPanel icon={FolderOpen} title="Nenhum projeto cadastrado." />
             )}
           </CardContent>
         </Card>
@@ -453,10 +448,7 @@ export default function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
-              <CardTitle className="text-sm font-medium">Conhecimento compartilhado</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Apresentações registradas no ciclo.
-              </p>
+              <CardTitle className="text-sm font-medium">Apresentações</CardTitle>
             </div>
             <Presentation className="size-4 text-muted-foreground" />
           </CardHeader>

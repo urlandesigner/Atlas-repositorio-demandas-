@@ -345,9 +345,9 @@ function EmptyState({ onOpen }: { onOpen: () => void }) {
         <div className="flex size-14 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-700 dark:text-violet-300">
           <FolderKanbanIcon className="size-7" />
         </div>
-        <h2 className="mt-5 text-lg font-semibold tracking-tight">Sua vitrine estratégica começa nos registros</h2>
+        <h2 className="mt-5 text-lg font-semibold tracking-tight">Comece pelo primeiro registro</h2>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          A nova timeline é alimentada pelos registros profissionais, porque é ali que contexto, solução, impacto e senioridade ficam claros.
+          Cada entrega documentada alimenta sua trajetória — contexto, impacto e senioridade ficam claros nos registros.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Button className="gap-1.5" onClick={onOpen}>
@@ -539,9 +539,9 @@ export default function TimelinePage() {
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Trajetória</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Registro estratégico das entregas, sistemas e iniciativas desenvolvidas ao longo da trajetória.
-          </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Onde você concentrou energia e entrega.
+            </p>
         </div>
 
         <PageHeaderActions>
@@ -581,7 +581,7 @@ export default function TimelinePage() {
               <div className="mx-auto max-w-lg">
                 <h2 className="text-lg font-semibold tracking-tight">Nenhuma entrega registrada ainda</h2>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Registre uma nova história de impacto para começar a montar sua vitrine estratégica.
+                  Registre uma entrega para começar a montar sua trajetória.
                 </p>
               </div>
             </section>
@@ -589,7 +589,7 @@ export default function TimelinePage() {
             <section className="space-y-4">
               <div className="flex items-center gap-2">
                 <TargetIcon className="size-4 text-muted-foreground" />
-                <h2 className="text-lg font-semibold tracking-tight">Histórico profissional vivo</h2>
+                <h2 className="text-lg font-semibold tracking-tight">Por ano</h2>
               </div>
 
               {groupedStories.map((group) => (

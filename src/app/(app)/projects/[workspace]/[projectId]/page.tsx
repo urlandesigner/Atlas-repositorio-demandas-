@@ -630,7 +630,7 @@ function ProjectDetailSurface({
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_420px]">
         <div className="space-y-6">
-          <DetailSection title="Visão geral" description="Contexto principal e histórico contínuo do projeto.">
+          <DetailSection title="Contexto" description="Nome, status e descrição do projeto.">
             <div className="grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_180px]">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Nome do projeto</label>
@@ -700,7 +700,7 @@ function ProjectDetailSurface({
 
           <DetailSection
             title={`Entregas registradas${linkedRecords.length > 0 ? ` (${linkedRecords.length})` : ""}`}
-            description="Contribuições e impactos documentados vinculados a este projeto. Aparecem no histórico profissional."
+            description="Entregas documentadas neste projeto — aparecem na trajetória."
             action={
               linkedRecords.length > 0 ? (
                 <Button
@@ -752,10 +752,10 @@ function ProjectDetailSurface({
             )}
           </DetailSection>
 
-          <DetailSection title="Histórico do projeto" description="Feed histórico gerado automaticamente conforme você atualiza status, links, observações, período e pagamentos do projeto.">
+          <DetailSection title="Histórico" description="Mudanças de status, links, período e pagamentos.">
             <div className="rounded-2xl border border-border/70 bg-muted/10">
               {groupedTimeline.length === 0 ? (
-                <div className="px-4 py-5 text-sm text-muted-foreground">Nenhum evento registrado ainda nesta timeline.</div>
+                <div className="px-4 py-5 text-sm text-muted-foreground">Nenhum evento registrado ainda.</div>
               ) : (
                 <ScrollArea className="max-h-[52rem]">
                   <div className="space-y-6 p-4 sm:p-5">
@@ -912,7 +912,7 @@ function ProjectDetailSurface({
           </DetailSection>
 
           {showFreelancerFields && (
-            <DetailSection title="Financeiro" description="Receitas e despesas registradas diretamente no histórico do projeto.">
+            <DetailSection title="Financeiro" description="Valor do projeto e histórico de pagamentos.">
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Valor do projeto (R$)</label>
                 <Input

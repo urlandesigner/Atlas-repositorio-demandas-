@@ -66,7 +66,7 @@ function ProjectCard({ project }: { project: ProjectEntry }) {
   return (
     <Link href={createProjectPath(WORKSPACE, project.id)} className="block">
       <Card className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
-        <CardHeader className="pb-0">
+        <CardHeader>
           <div className="flex items-center justify-between gap-2">
             <h3 className="truncate text-sm font-medium">{project.name}</h3>
             <Badge variant="outline" className={cn("shrink-0 font-normal", STATUS_BADGE_CLASS[project.status])}>
@@ -75,7 +75,7 @@ function ProjectCard({ project }: { project: ProjectEntry }) {
           </div>
         </CardHeader>
 
-        <CardContent className="grid gap-3 pt-3">
+        <CardContent className="grid gap-3 pt-0">
           <p
             className={`truncate text-xs ${
               project.description?.trim() ? "text-muted-foreground" : "text-muted-foreground/60"
@@ -103,7 +103,9 @@ function EmptyState() {
       <div className="flex size-10 items-center justify-center rounded-full bg-muted">
         <FolderOpen className="size-5 text-muted-foreground" />
       </div>
-      <p className="text-center text-sm text-muted-foreground">Nenhum projeto aqui ainda.</p>
+      <p className="text-center text-sm text-muted-foreground">
+        Nenhum projeto ainda. Cadastre onde você está atuando.
+      </p>
     </div>
   )
 }
@@ -233,7 +235,7 @@ export default function ProjectsPage() {
         <div className="flex items-start justify-between">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Projetos</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Projetos profissionais</p>
+            <p className="mt-1 text-sm text-muted-foreground">Entregas e iniciativas em andamento</p>
           </div>
           <Button size="sm" onClick={() => setIsAdding(true)}>
             <Plus className="size-4" />

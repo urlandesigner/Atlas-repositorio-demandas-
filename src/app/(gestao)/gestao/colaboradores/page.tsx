@@ -4,7 +4,7 @@ export default function GestaoColaboradoresPage() {
   return (
     <CollaboratorsManager
       title="Cadastro do time"
-      description="Cadastre e edite pessoas do time. Defina se a atuação é individual ou de gestão."
+      description="Cadastro do time — atuação individual ou de gestão."
     />
   )
 }

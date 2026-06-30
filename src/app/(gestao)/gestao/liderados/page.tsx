@@ -7,7 +7,7 @@ export default function GestaoLideradosPage() {
       <LideradosMatrix />
       <CollaboratorsManager
         title="Meu time"
-        description="Pessoas que respondem diretamente a você, com acesso rápido ao perfil comportamental, PDI e acompanhamento do ciclo."
+        description="Quem responde a você — ficha, PDI e ciclo em um clique."
       />
     </div>
   )

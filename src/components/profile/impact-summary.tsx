@@ -18,8 +18,8 @@ export function ImpactSummarySection({ summary }: { summary: ImpactSummary }) {
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         <Stat value={summary.totalRecords} label="Registros" />
         <Stat value={summary.projectCount} label="Projetos" />
-        <Stat value={summary.strategicCount} label="Iniciativas estr." />
-        <Stat value={summary.leadershipCount} label="Ações de lider." />
+        <Stat value={summary.strategicCount} label="Iniciativas estratégicas" />
+        <Stat value={summary.leadershipCount} label="Ações de liderança" />
         <Stat value={summary.mentorshipCount} label="Mentorias" />
       </div>
     </section>

@@ -118,7 +118,7 @@ export default function EvolutionOneOnOnePage() {
   return (
     <EvolutionShell
       title="Relatório de 1:1"
-      description="Registre cada conversa de 1:1 com data e um único texto descritivo."
+      description="Registre cada 1:1 com data e o que ficou combinado."
     >
       <div className="flex max-w-3xl flex-col gap-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

@@ -91,49 +91,36 @@ export default function GestaoHomePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-[18px] border border-border/55 bg-card px-6 py-6">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-          <div className="max-w-3xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Gestão
-            </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">Visão geral do time</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Veja quem precisa de acompanhamento, quais metas estão ativas e onde vale agir
-              primeiro nesta semana.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">{directReports.length} pessoa(s)</Badge>
-            <Badge variant="outline">{teamObjectives.length} meta(s)</Badge>
-            <Badge variant={pendingRequests ? "secondary" : "outline"}>
-              {pendingRequests} pendência(s)
-            </Badge>
-          </div>
-        </div>
-      </section>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Visão geral</h1>
+        {pendingRequests > 0 ? (
+          <p className="mt-1 text-sm text-muted-foreground">
+            {pendingRequests}{" "}
+            {pendingRequests === 1 ? "pendência de PDI" : "pendências de PDI"}
+          </p>
+        ) : null}
+      </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
         <GestaoMetric
           label="Pessoas do time"
           value={directReports.length}
-          helper="Base que você acompanha"
+          helper="Sob sua gestão direta"
         />
         <GestaoMetric
           label="PDIs ativos"
           value={activePdis}
-          helper="Pessoas com desenvolvimento em andamento"
+          helper="Com trilha em andamento"
         />
         <GestaoMetric
           label="Metas ativas"
           value={teamObjectives.filter((objective) => objective.status === "in_progress").length}
-          helper="Objetivos em execução agora"
+          helper="Em execução agora"
         />
         <GestaoMetric
           label="Prazo próximo"
           value={dueSoonGoals}
-          helper="Metas que vencem em até 30 dias"
+          helper="Vencem em até 30 dias"
         />
       </div>
 
@@ -142,9 +129,6 @@ export default function GestaoHomePage() {
           <CardHeader className="flex flex-row items-start justify-between gap-4">
             <div>
               <CardTitle className="text-sm font-medium">Meu time</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Pessoas sob sua gestão e acesso rápido para abrir cada ficha.
-              </p>
             </div>
             <Users className="size-4 text-muted-foreground" />
           </CardHeader>
@@ -178,7 +162,7 @@ export default function GestaoHomePage() {
               ))
             ) : (
               <p className="px-1 py-10 text-center text-sm text-muted-foreground">
-                Nenhuma pessoa vinculada ao seu time ainda.
+                Nenhuma pessoa no seu time ainda.
               </p>
             )}
             <div className="flex flex-wrap gap-2 pt-2">
@@ -196,9 +180,6 @@ export default function GestaoHomePage() {
           <CardHeader className="flex flex-row items-start justify-between gap-4">
             <div>
               <CardTitle className="text-sm font-medium">Metas do time</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                O que está em andamento e o que pede atenção mais perto do prazo.
-              </p>
             </div>
             <Flag className="size-4 text-muted-foreground" />
           </CardHeader>
@@ -249,10 +230,7 @@ export default function GestaoHomePage() {
       <Card className="border-border/60">
         <CardHeader className="flex flex-row items-start justify-between gap-4">
           <div>
-            <CardTitle className="text-sm font-medium">Ações do dia</CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Atalhos úteis para atualizar cadastros, PDIs e o acompanhamento do time.
-            </p>
+            <CardTitle className="text-sm font-medium">Por onde começar</CardTitle>
           </div>
           <Target className="size-4 text-muted-foreground" />
         </CardHeader>

@@ -62,7 +62,7 @@ const workspaceNavItems: NavItem[] = [
 ]
 
 const gestaoNavItems: NavItem[] = [
-  { label: "Visão geral", href: "/gestao", icon: LayoutDashboard, exact: true },
+  { label: "Resumo", href: "/gestao", icon: LayoutDashboard, exact: true },
   { label: "Meu time", href: "/gestao/liderados", icon: Users },
   { label: "Cadastro do time", href: "/gestao/colaboradores", icon: UserRound },
   { label: "PDIs", href: "/gestao/pdi", icon: Target },
@@ -72,7 +72,7 @@ const gestaoNavItems: NavItem[] = [
 ]
 
 const adminNavItems: NavItem[] = [
-  { label: "Visão geral", href: "/admin", icon: LayoutDashboard, exact: true },
+  { label: "Resumo", href: "/admin", icon: LayoutDashboard, exact: true },
   { label: "Gestores", href: "/admin/gestores", icon: UserCog },
   { label: "Colaboradores", href: "/admin/colaboradores", icon: Users },
   { label: "PDIs", href: "/admin/pdis", icon: Target },

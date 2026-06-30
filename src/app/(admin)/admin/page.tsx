@@ -40,11 +40,6 @@ export default function AdminHomePage() {
 
   const areaId = session?.areaId ?? null
 
-  const area = useMemo(() => {
-    if (!areaId) return null
-    return org.areas.find((entry) => entry.id === areaId) ?? null
-  }, [areaId, org.areas])
-
   const managers = useMemo(() => {
     if (!areaId) return []
     return org.users.filter((user) => user.areaId === areaId && user.role === "gestor")
@@ -139,34 +134,19 @@ export default function AdminHomePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-[18px] border border-border/55 bg-card px-6 py-6">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
-          <div className="max-w-3xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-              Administração
-            </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight">
-              {area ? `${area.name} em foco` : "Visão geral da área"}
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Acompanhe a cobertura de PDI, a capacidade da liderança e o que precisa de decisão
-              agora na sua área.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="outline">{managers.length} gestor(es)</Badge>
-            <Badge variant="outline">{collaborators.length} colaborador(es)</Badge>
-            <Badge variant={pendingRequests.length ? "secondary" : "outline"}>
-              {pendingRequests.length} pendência(s)
-            </Badge>
-          </div>
-        </div>
-      </section>
+      <div>
+        <h1 className="text-2xl font-semibold tracking-tight">Visão geral</h1>
+        {pendingRequests.length > 0 ? (
+          <p className="mt-1 text-sm text-muted-foreground">
+            {pendingRequests.length}{" "}
+            {pendingRequests.length === 1 ? "aprovação aguardando" : "aprovações aguardando"}
+          </p>
+        ) : null}
+      </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Metric icon={UserCog} label="Gestores" value={managers.length} hint="Responsáveis pela operação da área" />
-        <Metric icon={Users} label="Colaboradores" value={collaborators.length} hint="Profissionais vinculados à área" />
+        <Metric icon={UserCog} label="Gestores" value={managers.length} hint="Quem opera a área" />
+        <Metric icon={Users} label="Colaboradores" value={collaborators.length} hint="Vinculados à área" />
         <Metric icon={Target} label="PDIs ativos" value={activePdis} hint={`${coverage}% da base acompanhada`} />
         <Metric
           icon={CheckSquare}
@@ -179,7 +159,7 @@ export default function AdminHomePage() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
         <Card className="border-border/60">
           <CardHeader>
-            <CardTitle className="text-sm font-medium">Saúde da operação</CardTitle>
+            <CardTitle className="text-sm font-medium">Indicadores da área</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <HealthRow
@@ -191,7 +171,7 @@ export default function AdminHomePage() {
             <HealthRow
               label="Estrutura de liderança"
               value={`${managersWithReports.filter((item) => item.reports > 0).length}/${managers.length || 0}`}
-              description="Gestores com time efetivamente atribuído"
+              description="Gestores com pessoas atribuídas"
               progress={
                 managers.length
                   ? Math.round(
@@ -203,7 +183,7 @@ export default function AdminHomePage() {
             <HealthRow
               label="Trilhas disponíveis"
               value={`${frameworksCount}`}
-              description="Trilhas globais e da área prontas para uso"
+              description="Trilhas globais e da área disponíveis"
               progress={Math.min(100, frameworksCount * 20)}
             />
           </CardContent>
@@ -211,7 +191,7 @@ export default function AdminHomePage() {
 
         <Card className="border-border/60">
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium">Atalhos do admin</CardTitle>
+            <CardTitle className="text-sm font-medium">Acesso rápido</CardTitle>
             <ShieldCheck className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent className="flex flex-wrap gap-2">

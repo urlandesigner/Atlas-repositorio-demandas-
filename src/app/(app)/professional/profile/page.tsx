@@ -122,7 +122,7 @@ export default function ProfilePage() {
   return (
     <EvolutionShell
       title="Meu Perfil"
-      description="Sua identidade, evolução de PDI e objetivo de carreira em um só lugar."
+      description="Identidade, PDI e objetivo de carreira no mesmo lugar."
     >
       <div className="flex flex-col gap-6">
       <ProfileHeader identity={profile.identity} levelName={currentLevel?.name ?? ""} />

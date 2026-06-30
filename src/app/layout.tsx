@@ -10,7 +10,7 @@ const jetBrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Atlas",
-  description: "Seu sistema pessoal de registro profissional e impacto.",
+  description: "Registros profissionais, evidências de impacto e desenvolvimento de carreira.",
 }
 
 export default function RootLayout({

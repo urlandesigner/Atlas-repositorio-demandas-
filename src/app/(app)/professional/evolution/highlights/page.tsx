@@ -26,7 +26,7 @@ export default function EvolutionHighlightsPage() {
   return (
     <EvolutionShell
       title="Feed de destaques"
-      description="Principais impactos do período — sem precisar navegar toda a timeline."
+      description="Impactos do período sem precisar percorrer toda a trajetória."
     >
       <div className="flex max-w-3xl flex-col gap-6">
         <CareerContextBar

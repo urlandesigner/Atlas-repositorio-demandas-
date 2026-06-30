@@ -300,7 +300,7 @@ function ObjectiveSheet({
 
               {records.length === 0 ? (
                 <div className="rounded-lg border border-dashed bg-muted/20 px-3 py-4 text-xs text-muted-foreground">
-                  Nenhum registro disponível ainda. Crie registros para transformar ações em evidências.
+                  Nenhum registro ainda. Documente entregas para vincular como evidência.
                 </div>
               ) : (
                 <div className="max-h-56 overflow-auto rounded-lg border bg-background">
@@ -356,8 +356,7 @@ function ObjectiveSheet({
 
               {presentations.length === 0 ? (
                 <div className="rounded-lg border border-dashed bg-muted/20 px-3 py-4 text-xs text-muted-foreground">
-                  Nenhuma apresentação cadastrada ainda. Registre em Apresentações e volte para
-                  vincular aqui.
+                  Nenhuma apresentação cadastrada. Crie em Apresentações e volte para vincular.
                 </div>
               ) : (
                 <div className="max-h-56 overflow-auto rounded-lg border bg-background">
@@ -512,9 +511,7 @@ function EmptyState({ onOpen }: { onOpen: () => void }) {
         <Target className="size-5 text-muted-foreground" />
       </div>
       <p className="text-center text-sm text-muted-foreground">
-        Nenhum objetivo registrado ainda.
-        <br />
-        Defina uma intenção para transformar o próximo ciclo em evidências.
+        Nenhum objetivo ainda. Defina uma intenção para o ciclo.
       </p>
       <Button size="sm" onClick={onOpen}>
         <Plus data-icon="inline-start" />
@@ -767,7 +764,7 @@ export default function ObjectivesPage() {
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Objetivos</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Planeje ações do ciclo e conecte cada avanço a evidências reais.
+              Metas do ciclo ligadas a evidências reais.
             </p>
           </div>
 

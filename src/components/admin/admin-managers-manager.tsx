@@ -103,7 +103,7 @@ export function AdminManagersManager() {
       <CardList>
         <CardListHeader
           title="Lista de gestores"
-          description="Quem lidera o time hoje e como a carga de pessoas está distribuída."
+          description="Quem lidera o time e como a carga está distribuída."
           action={<Badge variant="outline">{managers.length}</Badge>}
         />
         <CardListBody className="divide-y divide-border/60">
@@ -140,7 +140,7 @@ export function AdminManagersManager() {
             <div className="px-4 py-4">
               <EmptyStateCard
                 title="Nenhum gestor cadastrado ainda"
-                description="Crie o primeiro gestor da área para começar a distribuir pessoas e organizar o acompanhamento do time."
+                description="Crie o primeiro gestor para distribuir pessoas e organizar o acompanhamento."
                 action={
                   <Button size="sm" onClick={openCreate}>
                     <Plus data-icon="inline-start" />

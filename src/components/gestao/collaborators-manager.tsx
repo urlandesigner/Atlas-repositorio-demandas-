@@ -193,7 +193,7 @@ export function CollaboratorsManager({
         <CardList>
           <CardListHeader
             title="Base do time"
-            description="Pessoas do seu time com acesso rápido à ficha individual e ao perfil de acompanhamento."
+            description="Acesso rápido à ficha e ao acompanhamento."
             action={<Badge variant="outline">{directReports.length}</Badge>}
           />
           <CardListBody>
@@ -254,7 +254,7 @@ export function CollaboratorsManager({
               <div className="px-4 py-4">
                 <EmptyStateCard
                   title="Nenhuma pessoa cadastrada no seu time ainda"
-                  description="Adicione os primeiros nomes para começar os registros de acompanhamento, perfil comportamental e desenvolvimento."
+                  description="Adicione as primeiras pessoas para começar PDI e acompanhamento."
                   action={
                     <Button
                       size="sm"

@@ -171,7 +171,7 @@ export function GestaoPdiHub() {
         <CardList>
           <CardListHeader
             title="Trilhas disponíveis"
-            description="Bases prontas para aplicar ou revisar no desenvolvimento do time."
+            description="Trilhas prontas para aplicar no time."
             action={<Badge variant="outline">{pdiData.frameworks.length}</Badge>}
           />
           <CardListBody>
@@ -237,7 +237,7 @@ export function GestaoPdiHub() {
         <CardList>
           <CardListHeader
             title="PDIs ativos do time"
-            description="Pessoas em acompanhamento com trilha, nível atual e prontidão consolidada."
+            description="Trilha, nível atual e prontidão de cada pessoa."
             action={<Badge variant="outline">{activeAssignments.length}</Badge>}
           />
           <CardListBody className="divide-y divide-border/60">

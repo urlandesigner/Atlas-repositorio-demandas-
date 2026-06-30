@@ -36,7 +36,7 @@ export default function EvolutionRadarPage() {
   return (
     <EvolutionShell
       title="Evolução Profissional"
-      description="Reflexão sobre competências e evidências para o próximo nível de carreira."
+      description="Competências e evidências para o próximo nível."
     >
       <div className="flex max-w-3xl flex-col gap-6">
         <CareerContextBar

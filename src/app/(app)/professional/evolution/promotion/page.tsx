@@ -131,7 +131,7 @@ export default function EvolutionPromotionPage() {
   return (
     <EvolutionShell
       title="Dossiê de evolução"
-      description="Narrativa executiva baseada em evidências — seu material para conversas de progressão."
+      description="Narrativa executiva com evidências para conversas de progressão."
     >
       <div className="flex max-w-3xl flex-col gap-6">
         <CareerContextBar

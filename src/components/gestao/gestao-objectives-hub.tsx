@@ -83,7 +83,7 @@ export function GestaoObjectivesHub() {
       <CardList>
         <CardListHeader
           title="Lista de acompanhamento"
-          description="Status, prazo e vínculo com a ficha de cada pessoa do time."
+          description="Status, prazo e vínculo com a ficha de cada pessoa."
           action={<Badge variant="outline">{objectives.length} registros</Badge>}
         />
         <CardListBody>
@@ -131,7 +131,7 @@ export function GestaoObjectivesHub() {
             <div className="px-4 py-4">
               <EmptyStateCard
                 title="Nenhuma meta do time cadastrada ainda"
-                description="As metas aparecem aqui depois que você cria objetivos dentro da ficha de cada pessoa do time."
+                description="Metas aparecem aqui depois de criadas na ficha de cada pessoa."
                 action={
                   <Link
                     href="/gestao/liderados"
