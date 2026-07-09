@@ -20,6 +20,9 @@ export type AuditAction =
   | "user.created"
   | "user.updated"
   | "user.deleted"
+  | "hr_notice.created"
+  | "hr_notice.updated"
+  | "hr_notice.deleted"
 
 export interface AuditEntry {
   id: string
@@ -140,4 +143,7 @@ export const AUDIT_ACTION_LABEL: Record<AuditAction, string> = {
   "user.created": "Colaborador cadastrado",
   "user.updated": "Colaborador atualizado",
   "user.deleted": "Colaborador removido",
+  "hr_notice.created": "Aviso do RH criado",
+  "hr_notice.updated": "Aviso do RH atualizado",
+  "hr_notice.deleted": "Aviso do RH removido",
 }

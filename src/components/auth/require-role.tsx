@@ -14,11 +14,15 @@ export function RequireRole({
   roles: UserRole[]
   children: React.ReactNode
 }) {
-  const { session, isAuthenticated } = useAuth()
+  const { session, isAuthenticated, ready } = useAuth()
   const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
+    // Aguarda a restauração da sessão (hidratação + cookie) antes de decidir —
+    // redirecionar cedo demais derrubava sessões válidas em reloads completos.
+    if (!ready) return
+
     if (!isAuthenticated || !session) {
       router.replace("/login")
       return
@@ -28,7 +32,7 @@ export function RequireRole({
     if (!roles.includes(session.role) || !roleCanAccessPath(session.role, pathname)) {
       router.replace(getHomeRouteForRole(session.role))
     }
-  }, [isAuthenticated, pathname, roles, router, session])
+  }, [isAuthenticated, pathname, ready, roles, router, session])
 
   if (!session || !roles.includes(session.role)) {
     return null

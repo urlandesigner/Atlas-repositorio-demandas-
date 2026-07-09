@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils"
 import { getClientsServerSnapshot, getClientsSnapshot, subscribeClientsStore } from "@/lib/clients/store"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -575,14 +576,14 @@ function ProjectDetailSurface({
           </p>
         </div>
 
-        <div className="flex w-full flex-wrap gap-2 sm:w-auto">
+        <PageHeaderActions>
           <Button variant="ghost" className="flex-1 sm:flex-none" onClick={handleReset}>
             Desfazer
           </Button>
           <Button className="flex-1 sm:flex-none" onClick={handleSave} disabled={!editName.trim()}>
             Salvar alterações
           </Button>
-        </div>
+        </PageHeaderActions>
       </div>
 
       <Card className="border-border/70 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_32px_rgba(15,23,42,0.06)]">

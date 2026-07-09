@@ -6,6 +6,7 @@ import { Pencil, Plus, Trash2 } from "lucide-react"
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import {
   CardList,
   CardListBody,
@@ -89,10 +90,12 @@ export function AdminManagersManager() {
             Pessoas responsáveis por liderar times e operar o fluxo de acompanhamento da área.
           </p>
         </div>
-        <Button onClick={openCreate}>
-          <Plus data-icon="inline-start" />
-          Novo gestor
-        </Button>
+        <PageHeaderActions>
+          <Button onClick={openCreate}>
+            <Plus data-icon="inline-start" />
+            Novo gestor
+          </Button>
+        </PageHeaderActions>
       </div>
 
       <div className="grid gap-3 md:grid-cols-3">

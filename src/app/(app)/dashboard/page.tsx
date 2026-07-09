@@ -16,6 +16,7 @@ import {
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
+import { HrNoticesPanel } from "@/components/hr/hr-notices-panel"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { useRecords } from "@/components/shell/records-provider"
 import { Badge } from "@/components/ui/badge"
@@ -336,6 +337,8 @@ export default function DashboardPage() {
           description={`${completedPresentations.length} realizadas`}
         />
       </div>
+
+      <HrNoticesPanel />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
         <Card>

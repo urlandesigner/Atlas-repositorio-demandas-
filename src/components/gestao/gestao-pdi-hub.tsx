@@ -7,6 +7,7 @@ import { ArrowUpRight, Copy, Layers, Plus, Trash2 } from "lucide-react"
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import {
   CardList,
   CardListBody,
@@ -146,17 +147,19 @@ export function GestaoPdiHub() {
             Organize trilhas da área e acompanhe quem já está evoluindo no ciclo atual.
           </p>
         </div>
-        <Link
-          href="/gestao/pdi/frameworks/novo"
-          className={cn(buttonVariants(), "gap-1.5", !canEditFrameworks && "pointer-events-none opacity-50")}
-          aria-disabled={!canEditFrameworks}
-          onClick={(event) => {
-            if (!canEditFrameworks) event.preventDefault()
-          }}
-        >
-          <Plus className="size-4" />
-          Nova trilha
-        </Link>
+        <PageHeaderActions>
+          <Link
+            href="/gestao/pdi/frameworks/novo"
+            className={cn(buttonVariants(), "gap-1.5", !canEditFrameworks && "pointer-events-none opacity-50")}
+            aria-disabled={!canEditFrameworks}
+            onClick={(event) => {
+              if (!canEditFrameworks) event.preventDefault()
+            }}
+          >
+            <Plus className="size-4" />
+            Nova trilha
+          </Link>
+        </PageHeaderActions>
       </div>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}

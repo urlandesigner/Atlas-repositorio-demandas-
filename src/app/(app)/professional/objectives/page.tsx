@@ -23,6 +23,7 @@ import { AssignedObjectivesSection } from "@/components/gestao/assigned-objectiv
 import { useOptionalSession } from "@/hooks/use-optional-session"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -768,10 +769,12 @@ export default function ObjectivesPage() {
             </p>
           </div>
 
-          <Button size="sm" className="shrink-0" onClick={() => setIsAdding(true)}>
-            <Plus data-icon="inline-start" />
-            Novo objetivo
-          </Button>
+          <PageHeaderActions>
+            <Button size="sm" className="shrink-0" onClick={() => setIsAdding(true)}>
+              <Plus data-icon="inline-start" />
+              Novo objetivo
+            </Button>
+          </PageHeaderActions>
         </div>
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

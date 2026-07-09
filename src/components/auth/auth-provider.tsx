@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useState,
   useSyncExternalStore,
 } from "react"
 import { useRouter } from "next/navigation"
@@ -24,6 +25,8 @@ import {
 interface AuthContextValue {
   session: AuthSession | null
   isAuthenticated: boolean
+  /** true depois de hidratar e tentar restaurar a sessão (localStorage/cookie). */
+  ready: boolean
   login: (email: string, password: string) => Promise<{ error?: string }>
   logout: () => Promise<void>
 }
@@ -31,6 +34,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue>({
   session: null,
   isAuthenticated: false,
+  ready: false,
   login: async () => ({ error: "AuthProvider ausente" }),
   logout: async () => {},
 })
@@ -47,9 +51,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     getSessionServerSnapshot
   )
 
-  useEffect(() => {
-    if (getSessionSnapshot()) return
+  const [ready, setReady] = useState(false)
 
+  useEffect(() => {
+    // Sessão já no localStorage — pronto imediatamente.
+    if (getSessionSnapshot()) {
+      setReady(true)
+      return
+    }
+
+    // Sem sessão local: tenta restaurar pelo cookie antes de liberar guards.
     fetch("/api/auth/session")
       .then((response) => response.json())
       .then((payload: { session?: AuthSession | null }) => {
@@ -59,6 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       })
       .catch(() => {})
+      .finally(() => setReady(true))
   }, [])
 
   const login = useCallback(async (email: string, password: string) => {
@@ -98,10 +110,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     () => ({
       session,
       isAuthenticated: Boolean(session),
+      ready,
       login,
       logout,
     }),
-    [session, login, logout]
+    [session, ready, login, logout]
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

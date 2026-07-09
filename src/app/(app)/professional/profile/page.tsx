@@ -6,6 +6,7 @@ import { AiInsightsPanel } from "@/components/profile/ai-insights-panel"
 import { CareerGoalCard } from "@/components/profile/career-goal-card"
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
 import { ImpactSummarySection } from "@/components/profile/impact-summary"
+import { NextPdiHighlight } from "@/components/profile/next-pdi-highlight"
 import { PdiCompactCard } from "@/components/profile/pdi-compact-card"
 import { ProfileHeader } from "@/components/profile/profile-header"
 import { AssignedPdiSection } from "@/components/gestao/assign-pdi-sheet"
@@ -140,6 +141,8 @@ export default function ProfilePage() {
         levelName={currentLevel?.name ?? ""}
         avatarUrl={currentUser?.avatarUrl}
       />
+
+      <NextPdiHighlight baselineAt={pdi.baselineAt} />
 
       <ImpactSummarySection summary={summary} />
 

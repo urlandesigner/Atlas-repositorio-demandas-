@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { useMemo, useSyncExternalStore } from "react"
 import {
   CheckSquare,
+  Megaphone,
   ShieldCheck,
   Target,
   UserCog,
@@ -17,6 +18,11 @@ import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PersonAvatar } from "@/components/ui/person-avatar"
+import {
+  getHrNoticesServerSnapshot,
+  getHrNoticesSnapshot,
+  subscribeHrNoticesStore,
+} from "@/lib/hr/store"
 import {
   getGestaoPdiServerSnapshot,
   getGestaoPdiSnapshot,
@@ -37,6 +43,11 @@ export default function AdminHomePage() {
     subscribeGestaoPdiStore,
     getGestaoPdiSnapshot,
     getGestaoPdiServerSnapshot
+  )
+  const hrNotices = useSyncExternalStore(
+    subscribeHrNoticesStore,
+    getHrNoticesSnapshot,
+    getHrNoticesServerSnapshot
   )
 
   const areaId = session?.areaId ?? null
@@ -82,6 +93,10 @@ export default function AdminHomePage() {
   )
 
   const coverage = collaborators.length ? Math.round((activePdis / collaborators.length) * 100) : 0
+  const hrNoticesCount = useMemo(
+    () => hrNotices.filter((notice) => notice.areaId === areaId).length,
+    [areaId, hrNotices]
+  )
 
   const managersWithReports = useMemo(() => {
     const directReportCount = new Map<string, number>()
@@ -129,6 +144,7 @@ export default function AdminHomePage() {
         { href: "/admin/pdis", label: "Revisar PDIs" },
         { href: "/admin/colaboradores", label: "Colaboradores" },
         { href: "/admin/gestores", label: "Gestores" },
+        { href: "/admin/avisos-rh", label: "Avisos RH" },
         { href: "/admin/permissoes", label: "Permissões" },
         { href: "/admin/auditoria", label: "Auditoria" },
       ].filter((item) => item.href !== pathname),
@@ -157,6 +173,7 @@ export default function AdminHomePage() {
           value={pendingRequests.length}
           hint={pendingRequests.length ? "Subidas aguardando decisão" : "Sem fila de aprovação"}
         />
+        <Metric icon={Megaphone} label="Avisos RH" value={hrNoticesCount} hint="Publicados na home da área" />
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">

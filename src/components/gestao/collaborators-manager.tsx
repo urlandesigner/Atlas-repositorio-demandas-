@@ -9,6 +9,7 @@ import { CollaboratorFormSheet } from "@/components/gestao/collaborator-form-she
 import { DiscProfileBadges } from "@/components/gestao/disc-profile-picker"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import {
   CardList,
   CardListBody,
@@ -173,16 +174,18 @@ export function CollaboratorsManager({
             <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
             <p className="mt-1 text-sm text-muted-foreground">{description}</p>
           </div>
-          <Button
-            size="sm"
-            onClick={() => {
-              setEditing(null)
-              setSheetOpen(true)
-            }}
-          >
-            <Plus data-icon="inline-start" />
-            Novo colaborador
-          </Button>
+          <PageHeaderActions>
+            <Button
+              size="sm"
+              onClick={() => {
+                setEditing(null)
+                setSheetOpen(true)
+              }}
+            >
+              <Plus data-icon="inline-start" />
+              Novo colaborador
+            </Button>
+          </PageHeaderActions>
         </div>
 
         <div className="grid gap-3 md:grid-cols-3">

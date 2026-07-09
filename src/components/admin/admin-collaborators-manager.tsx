@@ -7,6 +7,7 @@ import { ArrowUpRight, Pencil, Plus, Trash2 } from "lucide-react"
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   CardList,
@@ -102,10 +103,12 @@ export function AdminCollaboratorsManager() {
             Pessoas da área vinculadas a um gestor, prontas para acompanhamento e PDI.
           </p>
         </div>
-        <Button onClick={openCreate} disabled={!managers.length}>
-          <Plus data-icon="inline-start" />
-          Novo colaborador
-        </Button>
+        <PageHeaderActions>
+          <Button onClick={openCreate} disabled={!managers.length}>
+            <Plus data-icon="inline-start" />
+            Novo colaborador
+          </Button>
+        </PageHeaderActions>
       </div>
 
       <div className="grid gap-3 md:grid-cols-3">

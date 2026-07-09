@@ -11,8 +11,11 @@ import {
   History,
   LayoutDashboard,
   LogOut,
+  Megaphone,
+  MoreHorizontal,
   PanelLeft,
   Radar,
+  Search,
   Shield,
   Target,
   UserCog,
@@ -24,6 +27,8 @@ import {
 import { useAuth } from "@/components/auth/auth-provider"
 import { shellHeaderClassName } from "@/components/shell/shell-header-styles"
 import { Button } from "@/components/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { PersonAvatar } from "@/components/ui/person-avatar"
 import { cn } from "@/lib/utils"
 import {
   Sidebar,
@@ -56,6 +61,7 @@ const workspaceNavItems: NavItem[] = [
     icon: UserRound,
     activePaths: ["/professional/evolution", "/professional/presentations"],
   },
+  { label: "Pessoas", href: "/people", icon: Search },
   { label: "Projetos", href: "/projects", icon: FolderOpen },
   { label: "Trajetória", href: "/professional/timeline", icon: CircleDot },
   { label: "Objetivos", href: "/professional/objectives", icon: Target },
@@ -82,6 +88,7 @@ const adminNavItems: NavItem[] = [
   },
   { label: "PDIs", href: "/admin/pdis", icon: Target },
   { label: "Competências", href: "/admin/soft-skills", icon: Radar },
+  { label: "Avisos RH", href: "/admin/avisos-rh", icon: Megaphone },
   { label: "Permissões", href: "/admin/permissoes", icon: Shield },
   { label: "Auditoria", href: "/admin/auditoria", icon: History },
   { label: "Exportar dados", href: "/admin/exportacao", icon: Download },
@@ -193,31 +200,63 @@ export function AppSidebar() {
 
       <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
         <SidebarSeparator />
-        <div className="flex flex-col gap-3 px-4 group-data-[collapsible=icon]:items-center">
-          <div className="flex items-center gap-3 rounded-xl group-data-[collapsible=icon]:justify-center">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-brand-muted">
-              <span className="text-xs font-semibold text-brand-muted-foreground">
-                {session?.name?.charAt(0)?.toUpperCase() ?? "U"}
-              </span>
-            </div>
-            <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
-              <p className="truncate text-xs font-medium text-sidebar-foreground/90">
-                {session?.name ?? "Usuário"}
-              </p>
-              <p className="truncate text-[11px] text-sidebar-foreground/45">
-                {session?.email ?? "—"}
-              </p>
+        <div className="px-4">
+          <div className="rounded-[12px] border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
+            <div className="flex items-start gap-3">
+              <PersonAvatar name={session?.name ?? "Usuário"} size="lg" className="size-10" />
+
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-sidebar-foreground/92">
+                  {session?.name ?? "Usuário"}
+                </p>
+                <p className="truncate text-xs text-sidebar-foreground/50">
+                  {session?.email ?? "—"}
+                </p>
+              </div>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  render={
+                    <Button
+                      variant="ghost"
+                      size="icon-sm"
+                      className="shrink-0 rounded-[10px] text-sidebar-foreground/62 hover:bg-muted hover:text-sidebar-foreground"
+                    />
+                  }
+                >
+                  <MoreHorizontal className="size-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-44">
+                  <DropdownMenuItem variant="destructive" onClick={() => logout()}>
+                    <LogOut className="size-4" />
+                    Sair
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full gap-1.5 group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:rounded-xl group-data-[collapsible=icon]:p-0"
-            onClick={() => logout()}
-          >
-            <LogOut className="size-3.5" />
-            <span className="group-data-[collapsible=icon]:hidden">Sair</span>
-          </Button>
+
+          <div className="hidden justify-center group-data-[collapsible=icon]:flex">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button
+                    variant="outline"
+                    size="icon-lg"
+                    className="rounded-[12px] border-border/70 bg-card/90"
+                  />
+                }
+              >
+                <PersonAvatar name={session?.name ?? "Usuário"} />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="center" className="w-44">
+                <DropdownMenuItem variant="destructive" onClick={() => logout()}>
+                  <LogOut className="size-4" />
+                  Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>

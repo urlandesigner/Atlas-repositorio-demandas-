@@ -6,6 +6,7 @@ import { FolderOpen, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -237,10 +238,12 @@ export default function ProjectsPage() {
             <h1 className="text-2xl font-semibold tracking-tight">Projetos</h1>
             <p className="mt-1 text-sm text-muted-foreground">Entregas e iniciativas em andamento</p>
           </div>
-          <Button size="sm" onClick={() => setIsAdding(true)}>
-            <Plus className="size-4" />
-            Novo projeto
-          </Button>
+          <PageHeaderActions>
+            <Button size="sm" onClick={() => setIsAdding(true)}>
+              <Plus className="size-4" />
+              Novo projeto
+            </Button>
+          </PageHeaderActions>
         </div>
 
         <div className="flex flex-wrap gap-2">
