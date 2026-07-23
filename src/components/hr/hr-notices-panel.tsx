@@ -24,7 +24,7 @@ import {
   subscribeHrNoticesStore,
 } from "@/lib/hr/store"
 
-export function HrNoticesPanel() {
+export function HrNoticesPanel({ hideWhenEmpty = false }: { hideWhenEmpty?: boolean }) {
   const { session } = useAuth()
   const noticesData = useSyncExternalStore(
     subscribeHrNoticesStore,
@@ -46,6 +46,9 @@ export function HrNoticesPanel() {
       notices.filter((notice) => isHrNoticeUnread(session?.userId, notice.id, reads)).length,
     [notices, reads, session?.userId]
   )
+
+  // No dashboard o painel só ocupa espaço quando há comunicado; sem avisos ele some.
+  if (hideWhenEmpty && notices.length === 0) return null
 
   return (
     <CardList>

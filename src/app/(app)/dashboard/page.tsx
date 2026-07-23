@@ -19,25 +19,17 @@ import {
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { HrNoticesPanel } from "@/components/hr/hr-notices-panel"
+import { useEvolutionData } from "@/hooks/use-evolution-data"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
-import { useRecords } from "@/components/shell/records-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import {
-  getObjectivesServerSnapshot,
-  getObjectivesSnapshot,
   OBJECTIVE_STATUS_LABEL,
   PDI_DIMENSION_LABEL,
-  subscribeObjectivesStore,
   type ObjectiveEntry,
 } from "@/lib/objectives/store"
-import {
-  getPresentationsServerSnapshot,
-  getPresentationsSnapshot,
-  subscribePresentationsStore,
-} from "@/lib/presentations/store"
 import {
   getProjectsServerSnapshot,
   getProjectsSnapshot,
@@ -343,32 +335,63 @@ function WorkFlowGuide({
   )
 }
 
-function CareerLoopCard() {
+function CareerProgressCard({
+  currentLevelName,
+  targetRole,
+  targetYear,
+  readiness,
+  recordCount,
+  strongCount,
+}: {
+  currentLevelName: string
+  targetRole?: string
+  targetYear?: number | null
+  readiness: number
+  recordCount: number
+  strongCount: number
+}) {
+  const evidenceLabel =
+    recordCount === 0
+      ? "Registre entregas para construir evidência para o próximo nível."
+      : `${recordCount} ${recordCount === 1 ? "evidência sustenta" : "evidências sustentam"} sua evolução${
+          strongCount ? ` · ${strongCount} ${strongCount === 1 ? "competência forte" : "competências fortes"}` : ""
+        }.`
+
   return (
     <Card className="overflow-hidden">
-      <CardContent className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3.5">
-          <div className="icon-well flex size-10 shrink-0 items-center justify-center rounded-full">
-            <TrendingUp className="size-5" />
+      <CardContent className="flex flex-col gap-5 py-5">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex min-w-0 items-start gap-3.5">
+            <div className="icon-well flex size-10 shrink-0 items-center justify-center rounded-full">
+              <TrendingUp className="size-5" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+                Progresso de carreira
+              </p>
+              <h2 className="mt-1 text-sm font-medium tracking-tight">
+                {currentLevelName || "Seu nível atual"}
+                {targetRole ? (
+                  <span className="text-muted-foreground"> → {targetRole}</span>
+                ) : null}
+                {targetYear ? (
+                  <span className="text-xs font-normal text-muted-foreground"> · meta {targetYear}</span>
+                ) : null}
+              </h2>
+              <p className="mt-1 max-w-xl text-xs leading-relaxed text-muted-foreground">
+                {evidenceLabel}
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
-              Loop de carreira
-            </p>
-            <h2 className="mt-1 text-sm font-medium tracking-tight">
-              Seus registros viram evidência para o próximo nível
-            </h2>
-            <p className="mt-1 max-w-xl text-xs leading-relaxed text-muted-foreground">
-              O que você documenta no dia a dia vira evidência das suas competências e alimenta o
-              dossiê de promoção. Veja como sua evolução vem tomando forma.
-            </p>
+          <div className="shrink-0 text-right">
+            <div className="text-2xl font-semibold tabular-nums text-brand-muted-foreground">
+              {readiness}%
+            </div>
+            <p className="text-[11px] text-muted-foreground/70">prontidão no PDI</p>
           </div>
         </div>
-        <div className="flex shrink-0 flex-wrap gap-2">
-          <Link
-            href="/professional/evolution/radar"
-            className={buttonVariants({ size: "sm" })}
-          >
+        <div className="flex flex-wrap gap-2">
+          <Link href="/professional/evolution/radar" className={buttonVariants({ size: "sm" })}>
             <TrendingUp data-icon="inline-start" />
             Ver evolução
           </Link>
@@ -388,22 +411,21 @@ function CareerLoopCard() {
 
 export default function DashboardPage() {
   const { session } = useAuth()
-  const { records, openCapture } = useRecords()
+  const {
+    records,
+    openCapture,
+    objectives,
+    presentations,
+    readiness,
+    currentLevel,
+    profile,
+    strongCount,
+  } = useEvolutionData()
   const displayName = session?.name?.trim()
   const projects = useSyncExternalStore(
     subscribeProjectsStore,
     getProjectsSnapshot,
     getProjectsServerSnapshot
-  )
-  const objectives = useSyncExternalStore(
-    subscribeObjectivesStore,
-    getObjectivesSnapshot,
-    getObjectivesServerSnapshot
-  )
-  const presentations = useSyncExternalStore(
-    subscribePresentationsStore,
-    getPresentationsSnapshot,
-    getPresentationsServerSnapshot
   )
 
   const flatProjects = useMemo(() => flattenProjects(projects), [projects])
@@ -462,16 +484,18 @@ export default function DashboardPage() {
         </PageHeaderActions>
       </div>
 
-      <WorkFlowGuide
-        projectCount={activeProjects.length}
-        objectiveCount={activeObjectives.length}
-        recordCount={records.length}
-        onRecord={() => openCapture()}
-      />
+      <HrNoticesPanel hideWhenEmpty />
 
-      <CareerLoopCard />
+      {records.length === 0 ? (
+        <WorkFlowGuide
+          projectCount={activeProjects.length}
+          objectiveCount={activeObjectives.length}
+          recordCount={records.length}
+          onRecord={() => openCapture()}
+        />
+      ) : null}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <MetricCard
           label="Registros este mês"
           value={recordsThisMonth.length}
@@ -486,60 +510,9 @@ export default function DashboardPage() {
           href="/professional/objectives"
           description={`${objectives.filter((item) => item.status === "done").length} concluídos`}
         />
-        <MetricCard
-          label="Projetos ativos"
-          value={activeProjects.length}
-          icon={FolderOpen}
-          href="/projects"
-          description={`${flatProjects.length} cadastrados`}
-        />
-        <MetricCard
-          label="Apresentações"
-          value={presentations.length}
-          icon={Presentation}
-          href="/professional/presentations"
-          description={`${completedPresentations.length} realizadas`}
-        />
       </div>
 
-      <HrNoticesPanel />
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between gap-4">
-            <div>
-              <CardTitle className="text-sm font-medium">Últimas movimentações</CardTitle>
-            </div>
-            <Link
-              href="/professional/timeline"
-              className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-              Ver registros
-              <ArrowUpRight data-icon="inline-end" />
-            </Link>
-          </CardHeader>
-          <CardContent>
-            {recentActivity.length ? (
-              <div className="flex flex-col gap-1">
-                {recentActivity.map((item) => (
-                  <ActivityRow key={item.id} item={item} />
-                ))}
-              </div>
-            ) : (
-              <EmptyPanel
-                icon={Zap}
-                title="Ainda sem registros nem objetivos. Documente uma entrega ou defina uma meta para o ciclo."
-                action={
-                  <Button size="sm" onClick={() => openCapture()}>
-                    <Zap data-icon="inline-start" />
-                    Criar registro
-                  </Button>
-                }
-              />
-            )}
-          </CardContent>
-        </Card>
-
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[0.85fr_1.15fr]">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between gap-4">
             <div>
@@ -577,7 +550,51 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-4">
+            <div>
+              <CardTitle className="text-sm font-medium">Últimas movimentações</CardTitle>
+            </div>
+            <Link
+              href="/professional/timeline"
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+            >
+              Ver registros
+              <ArrowUpRight data-icon="inline-end" />
+            </Link>
+          </CardHeader>
+          <CardContent>
+            {recentActivity.length ? (
+              <div className="flex flex-col gap-1">
+                {recentActivity.map((item) => (
+                  <ActivityRow key={item.id} item={item} />
+                ))}
+              </div>
+            ) : (
+              <EmptyPanel
+                icon={Zap}
+                title="Ainda sem registros nem objetivos. Documente uma entrega ou defina uma meta para o ciclo."
+                action={
+                  <Button size="sm" onClick={() => openCapture()}>
+                    <Zap data-icon="inline-start" />
+                    Criar registro
+                  </Button>
+                }
+              />
+            )}
+          </CardContent>
+        </Card>
       </div>
+
+      <CareerProgressCard
+        currentLevelName={currentLevel?.name ?? ""}
+        targetRole={profile.goal.targetRole}
+        targetYear={profile.goal.targetYear}
+        readiness={readiness}
+        recordCount={records.length}
+        strongCount={strongCount}
+      />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <Card>
