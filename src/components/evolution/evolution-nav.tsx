@@ -15,12 +15,42 @@ import { cn } from "@/lib/utils"
 
 // Nav unificada da seção "Meu Perfil": visão geral + evolução de carreira + conhecimento.
 const NAV_ITEMS = [
-  { href: "/professional/profile", label: "Resumo", icon: LayoutDashboard },
-  { href: "/professional/evolution/radar", label: "Competências", icon: Radar },
-  { href: "/professional/evolution/recognitions", label: "Reconhecimentos", icon: Award },
-  { href: "/professional/evolution/one-on-one", label: "1:1", icon: FileText },
-  { href: "/professional/evolution/promotion", label: "Dossiê", icon: Sparkles },
-  { href: "/professional/presentations", label: "Conhecimento", icon: Presentation },
+  {
+    href: "/professional/profile",
+    label: "Resumo",
+    description: "Identidade, PDI e objetivo de carreira",
+    icon: LayoutDashboard,
+  },
+  {
+    href: "/professional/evolution/radar",
+    label: "Competências",
+    description: "Evidências para o próximo nível",
+    icon: Radar,
+  },
+  {
+    href: "/professional/evolution/recognitions",
+    label: "Reconhecimentos",
+    description: "Feedbacks e kudos recebidos",
+    icon: Award,
+  },
+  {
+    href: "/professional/evolution/one-on-one",
+    label: "1:1",
+    description: "Notas das conversas com seu gestor",
+    icon: FileText,
+  },
+  {
+    href: "/professional/evolution/promotion",
+    label: "Dossiê",
+    description: "Narrativa para conversas de promoção",
+    icon: Sparkles,
+  },
+  {
+    href: "/professional/presentations",
+    label: "Conhecimento",
+    description: "O que você compartilhou com o time",
+    icon: Presentation,
+  },
 ] as const
 
 export function EvolutionNav({ className }: { className?: string }) {
@@ -35,14 +65,24 @@ export function EvolutionNav({ className }: { className?: string }) {
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              "flex items-start gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
               active
                 ? "bg-brand-muted/60 text-brand-muted-foreground"
                 : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
             )}
           >
-            <item.icon className="size-4 shrink-0" />
-            {item.label}
+            <item.icon className="mt-0.5 size-4 shrink-0" />
+            <span className="flex flex-col">
+              {item.label}
+              <span
+                className={cn(
+                  "text-xs font-normal",
+                  active ? "text-brand-muted-foreground/70" : "text-muted-foreground/70"
+                )}
+              >
+                {item.description}
+              </span>
+            </span>
           </Link>
         )
       })}
