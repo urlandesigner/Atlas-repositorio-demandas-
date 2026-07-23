@@ -172,7 +172,7 @@ export function buildPromotionBaseline(params: {
     },
     {
       id: "goal",
-      title: "Objetivo de evolução",
+      title: "Objetivo de carreira",
       source: "baseline",
       content: params.goal.notes?.trim() || `Consolidar evidências para ${params.goal.targetRole}, demonstrando impacto organizacional e maturidade nas competências esperadas.`,
     },

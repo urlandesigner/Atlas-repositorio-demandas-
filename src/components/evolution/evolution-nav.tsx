@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils"
 // Nav unificada da seção "Meu Perfil": visão geral + evolução de carreira + conhecimento.
 const NAV_ITEMS = [
   { href: "/professional/profile", label: "Resumo", icon: LayoutDashboard },
-  { href: "/professional/evolution/radar", label: "Radar", icon: Radar },
+  { href: "/professional/evolution/radar", label: "Competências", icon: Radar },
   { href: "/professional/evolution/highlights", label: "Destaques", icon: Star },
   { href: "/professional/evolution/recognitions", label: "Reconhecimentos", icon: Award },
   { href: "/professional/evolution/one-on-one", label: "1:1", icon: FileText },

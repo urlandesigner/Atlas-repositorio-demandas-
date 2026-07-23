@@ -130,6 +130,16 @@ export default function ProfilePage() {
     [org.users, session?.userId]
   )
 
+  // A identidade exibida deriva do usuário logado (mesma fonte da saudação do
+  // dashboard); o restante (cargo, área, trilha) segue o perfil até haver edição.
+  const displayIdentity = useMemo(
+    () =>
+      currentUser?.name
+        ? { ...profile.identity, name: currentUser.name }
+        : profile.identity,
+    [currentUser?.name, profile.identity]
+  )
+
   return (
     <EvolutionShell
       title="Meu Perfil"
@@ -137,7 +147,7 @@ export default function ProfilePage() {
     >
       <div className="flex flex-col gap-6">
       <ProfileHeader
-        identity={profile.identity}
+        identity={displayIdentity}
         levelName={currentLevel?.name ?? ""}
         avatarUrl={currentUser?.avatarUrl}
       />
@@ -150,7 +160,7 @@ export default function ProfilePage() {
         <CollaboratorGestaoInsights userId={session.userId} areaId={session.areaId} />
       ) : null}
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.5fr_1fr]">
+      <div id="pdi" className="grid scroll-mt-24 grid-cols-1 gap-4 lg:grid-cols-[1.5fr_1fr]">
         {assigned && assignedFramework && assignedCurrent && assignedExpected ? (
           <AssignedPdiSection
             framework={assignedFramework}

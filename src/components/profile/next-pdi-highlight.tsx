@@ -1,4 +1,3 @@
-import Link from "next/link"
 import { ArrowUpRight, CalendarDays } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -66,13 +65,13 @@ export function NextPdiHighlight({
         </div>
       </div>
 
-      <Link
-        href="/professional/evolution/radar"
+      <a
+        href="#pdi"
         className={buttonVariants({ variant: "outline", size: "sm" })}
       >
         Ver PDI
         <ArrowUpRight data-icon="inline-end" />
-      </Link>
+      </a>
     </div>
   )
 }

@@ -539,6 +539,7 @@ function ObjectiveDrawer({
   onDelete,
   onClose,
   onOpenRecord,
+  onCreateRecord,
 }: {
   item: ObjectiveEntry | null
   records: RecordEntry[]
@@ -547,6 +548,7 @@ function ObjectiveDrawer({
   onDelete: (item: ObjectiveEntry) => void
   onClose: () => void
   onOpenRecord: (record: RecordEntry) => void
+  onCreateRecord: (item: ObjectiveEntry) => void
 }) {
   const linkedRecords = item ? findLinkedRecords(records, item) : []
   const linkedPresentations = item ? findLinkedPresentations(presentations, item) : []
@@ -681,7 +683,11 @@ function ObjectiveDrawer({
               </div>
             </ScrollArea>
 
-            <div className="flex gap-2 border-t px-5 py-4">
+            <div className="grid grid-cols-2 gap-2 border-t px-5 py-4">
+              <Button className="col-span-2" onClick={() => onCreateRecord(item)}>
+                <Plus data-icon="inline-start" />
+                Registrar avanço
+              </Button>
               <Button variant="outline" className="flex-1" onClick={() => onEdit(item)}>
                 <Pencil data-icon="inline-start" />
                 Editar
@@ -699,7 +705,7 @@ function ObjectiveDrawer({
 }
 
 export default function ObjectivesPage() {
-  const { records, openDetail } = useRecords()
+  const { records, openCapture, openDetail } = useRecords()
   const session = useOptionalSession()
   const [isAdding, setIsAdding] = useState(false)
   const [editing, setEditing] = useState<ObjectiveEntry | null>(null)
@@ -785,7 +791,7 @@ export default function ObjectivesPage() {
               </div>
               <div>
                 <p className="text-2xl font-semibold tracking-tight">{objectives.length}</p>
-                <p className="text-xs text-muted-foreground">Objetivos</p>
+                <p className="text-xs text-muted-foreground">Meus objetivos</p>
               </div>
             </CardContent>
           </Card>
@@ -875,6 +881,10 @@ export default function ObjectivesPage() {
         onOpenRecord={(record) => {
           setSelected(null)
           openDetail(record)
+        }}
+        onCreateRecord={(item) => {
+          setSelected(null)
+          openCapture({ objective: { id: item.id, title: item.title } })
         }}
       />
     </>

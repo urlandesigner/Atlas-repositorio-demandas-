@@ -352,7 +352,7 @@ function EmptyState({ onOpen }: { onOpen: () => void }) {
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Button className="gap-1.5" onClick={onOpen}>
             <SparklesIcon className="size-4" />
-            Novo registro
+            Registrar progresso
           </Button>
           <Link href="/projects" className={buttonVariants({ variant: "outline" })}>
             Ver projetos
@@ -538,16 +538,16 @@ export default function TimelinePage() {
     <div className="flex flex-col gap-5">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Trajetória</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Registros</h1>
             <p className="mt-1 text-sm text-muted-foreground">
-              Onde você concentrou energia e entrega.
+              Histórico das suas entregas, decisões e impactos.
             </p>
         </div>
 
         <PageHeaderActions>
           <Button size="sm" className="gap-1.5" onClick={() => openCapture()}>
             <SparklesIcon className="size-3.5" />
-            Novo registro
+            Registrar progresso
           </Button>
         </PageHeaderActions>
       </div>

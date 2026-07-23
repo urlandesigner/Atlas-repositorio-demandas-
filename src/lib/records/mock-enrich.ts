@@ -4,14 +4,22 @@ export function deriveTitleFromRaw(raw: string): string {
   const cleaned = raw.trim().replace(/\s+/g, " ")
   if (!cleaned) return "Registro profissional"
 
+  // Quebra apenas em pontuação forte e conectivos que iniciam uma nova oração.
+  // "com/para/que/como" foram deixados de fora de propósito: eles costumam
+  // continuar a frase principal e cortá-los mutila o título no meio de um
+  // substantivo (ex.: "...design system para tokens").
   const firstChunk =
     cleaned
-      .split(/[,;.!?]|\s+(?:com|para|que|mas|porque|quando|onde|como|–|-)(?:\s+|$)/i)[0]
+      .split(/[,;.!?]|\s+(?:mas|porque|portanto|quando|onde|–|-)(?:\s+|$)/i)[0]
       ?.trim() ?? cleaned
 
   const words = firstChunk.split(/\s+/)
-  let title = words.slice(0, 5).join(" ")
-  title = title.replace(/\s+(?:de|da|do|dos|das|um|uma|o|a|os|as)$/i, "").trim()
+  let title = words.slice(0, 9).join(" ")
+  // Remove artigos/preposições/conectivos soltos quando o corte cai num deles,
+  // evitando títulos que terminam de forma dependente (ex.: "...design system para").
+  title = title
+    .replace(/\s+(?:de|da|do|dos|das|um|uma|o|a|os|as|e|em|no|na|nos|nas|com|para|que|como)$/i, "")
+    .trim()
   title = title.charAt(0).toUpperCase() + title.slice(1)
 
   return title || "Registro profissional"

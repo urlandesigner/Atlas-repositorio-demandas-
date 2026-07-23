@@ -20,7 +20,7 @@ export const ENGINEERING_FRAMEWORK: PdiFramework = {
 
 export const PRODUCT_FRAMEWORK: PdiFramework = {
   ...createFrameworkDraft({
-    name: "Product Ladder",
+    name: "Trilha de Produto & Design",
     description: "Trilha adaptada para Produto & Design — ênfase em domínio e influência.",
     areaId: "area-tecnologia",
     managerId: null,

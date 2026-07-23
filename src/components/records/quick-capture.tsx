@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useMemo, useRef, useSyncExternalStore } from "react"
 import {
   SparklesIcon,
   CheckIcon,
@@ -9,6 +9,8 @@ import {
   Loader2Icon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  FolderOpenIcon,
+  TargetIcon,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
@@ -18,7 +20,19 @@ import { AtuacaoPicker, ATUACOES } from "./atuacao-picker"
 import { AreaPicker } from "./area-picker"
 import { ImpactSelector } from "./impact-selector"
 import { getMatchingCompetencies } from "@/lib/evolution/competencies"
+import {
+  getObjectivesServerSnapshot,
+  getObjectivesSnapshot,
+  subscribeObjectivesStore,
+} from "@/lib/objectives/store"
+import {
+  getProjectsServerSnapshot,
+  getProjectsSnapshot,
+  subscribeProjectsStore,
+  type WorkspaceTab,
+} from "@/lib/projects/store"
 import type {
+  CaptureContext,
   RecordEntry,
   EnrichedFields,
   AtuacaoType,
@@ -248,11 +262,11 @@ function detectLocal(text: string): Detection {
 interface QuickCaptureProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSave: (record: RecordEntry) => void
-  initialProject?: { id: string; name: string }
+  onSave: (record: RecordEntry, context?: CaptureContext) => void
+  initialContext?: CaptureContext
 }
 
-export function QuickCapture({ open, onOpenChange, onSave, initialProject }: QuickCaptureProps) {
+export function QuickCapture({ open, onOpenChange, onSave, initialContext }: QuickCaptureProps) {
   const [step, setStep] = useState<Step>("input")
   const [raw, setRaw] = useState("")
   const [enriched, setEnriched] = useState<EnrichedFields | null>(null)
@@ -264,10 +278,45 @@ export function QuickCapture({ open, onOpenChange, onSave, initialProject }: Qui
   const [error, setError] = useState(false)
   const [detection, setDetection] = useState<Detection | null>(null)
   const [detecting, setDetecting] = useState(false)
+  const [selectedProjectId, setSelectedProjectId] = useState("")
+  const [selectedObjectiveId, setSelectedObjectiveId] = useState("")
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const projects = useSyncExternalStore(
+    subscribeProjectsStore,
+    getProjectsSnapshot,
+    getProjectsServerSnapshot
+  )
+  const objectives = useSyncExternalStore(
+    subscribeObjectivesStore,
+    getObjectivesSnapshot,
+    getObjectivesServerSnapshot
+  )
+
+  const projectOptions = useMemo(
+    () =>
+      (Object.keys(projects) as WorkspaceTab[])
+        .flatMap((workspace) => projects[workspace])
+        .filter((project) => project.status !== "inactive" && project.status !== "closed")
+        .sort((a, b) => a.name.localeCompare(b.name, "pt-BR")),
+    [projects]
+  )
+  const objectiveOptions = useMemo(
+    () =>
+      objectives
+        .filter((objective) => objective.status === "planned" || objective.status === "in_progress")
+        .sort((a, b) => a.title.localeCompare(b.title, "pt-BR")),
+    [objectives]
+  )
 
   // Reset on dialog close
+  useEffect(() => {
+    if (open) {
+      setSelectedProjectId(initialContext?.project?.id ?? "")
+      setSelectedObjectiveId(initialContext?.objective?.id ?? "")
+    }
+  }, [initialContext, open])
+
   useEffect(() => {
     if (!open) {
       const t = setTimeout(() => {
@@ -282,6 +331,8 @@ export function QuickCapture({ open, onOpenChange, onSave, initialProject }: Qui
         setArea("produto")
         setImpactScope("team")
         setImpactLevel(3)
+        setSelectedProjectId("")
+        setSelectedObjectiveId("")
       }, 300)
       return () => clearTimeout(t)
     }
@@ -360,6 +411,18 @@ export function QuickCapture({ open, onOpenChange, onSave, initialProject }: Qui
 
   function handleSave() {
     if (!enriched) return
+    const selectedProject = projectOptions.find((project) => project.id === selectedProjectId)
+    const selectedObjective = objectiveOptions.find(
+      (objective) => objective.id === selectedObjectiveId
+    )
+    const context: CaptureContext = {
+      ...(selectedProject
+        ? { project: { id: selectedProject.id, name: selectedProject.name } }
+        : {}),
+      ...(selectedObjective
+        ? { objective: { id: selectedObjective.id, title: selectedObjective.title } }
+        : {}),
+    }
     const record: RecordEntry = {
       id: crypto.randomUUID(),
       raw,
@@ -369,11 +432,13 @@ export function QuickCapture({ open, onOpenChange, onSave, initialProject }: Qui
       impactScope,
       impactLevel,
       tags: [],
-      ...(initialProject ? { projectId: initialProject.id, projectName: initialProject.name } : {}),
+      ...(selectedProject
+        ? { projectId: selectedProject.id, projectName: selectedProject.name }
+        : {}),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
-    onSave(record)
+    onSave(record, context)
   }
 
   function updateField(key: keyof EnrichedFields, value: string) {
@@ -395,7 +460,14 @@ export function QuickCapture({ open, onOpenChange, onSave, initialProject }: Qui
             error={error}
             detection={detection}
             detecting={detecting}
-            projectName={initialProject?.name}
+            projectOptions={projectOptions}
+            objectiveOptions={objectiveOptions}
+            selectedProjectId={selectedProjectId}
+            selectedObjectiveId={selectedObjectiveId}
+            onProjectChange={setSelectedProjectId}
+            onObjectiveChange={setSelectedObjectiveId}
+            lockedProjectName={initialContext?.project?.name}
+            lockedObjectiveTitle={initialContext?.objective?.title}
           />
         )}
         {step === "processing" && (
@@ -433,7 +505,14 @@ function InputStep({
   error,
   detection,
   detecting,
-  projectName,
+  projectOptions,
+  objectiveOptions,
+  selectedProjectId,
+  selectedObjectiveId,
+  onProjectChange,
+  onObjectiveChange,
+  lockedProjectName,
+  lockedObjectiveTitle,
 }: {
   raw: string
   setRaw: (v: string) => void
@@ -442,10 +521,18 @@ function InputStep({
   error: boolean
   detection: Detection | null
   detecting: boolean
-  projectName?: string
+  projectOptions: Array<{ id: string; name: string }>
+  objectiveOptions: Array<{ id: string; title: string }>
+  selectedProjectId: string
+  selectedObjectiveId: string
+  onProjectChange: (value: string) => void
+  onObjectiveChange: (value: string) => void
+  lockedProjectName?: string
+  lockedObjectiveTitle?: string
 }) {
   const canAnalyze = raw.trim().length >= 20
   const showDetection = raw.trim().length >= 60 && (!!detection || detecting)
+  const hasLockedContext = !!lockedProjectName || !!lockedObjectiveTitle
   const atuacaoInfo = detection
     ? ATUACOES.find((a) => a.value === detection.atuacao)
     : null
@@ -453,19 +540,93 @@ function InputStep({
   return (
     <div className="flex flex-col gap-0">
       {/* Header */}
-      <div className="flex items-center gap-2.5 border-b px-5 py-4 bg-gradient-to-b from-violet-50/30 to-transparent">
-        <div className="flex size-8 items-center justify-center rounded-lg bg-violet-100">
-          <SparklesIcon className="size-4 text-violet-600" />
+      <div className="flex items-center gap-2.5 border-b bg-gradient-to-b from-primary/5 to-transparent px-5 py-4">
+        <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
+          <SparklesIcon className="size-4 text-primary" />
         </div>
         <div>
-          <p className="text-sm font-semibold">Novo Registro</p>
+          <p className="text-sm font-semibold">Registrar progresso</p>
           <p className="text-xs text-muted-foreground">
-            {projectName ? (
-              <>Vinculado ao projeto <span className="font-medium text-foreground">{projectName}</span></>
-            ) : (
-              "Registre decisões, impactos e conquistas — a IA estrutura sua trajetória."
-            )}
+            Conte o que avançou. O Atlas transforma isso em evidência da sua trajetória.
           </p>
+        </div>
+      </div>
+
+      <div className="border-b bg-muted/15 px-5 py-4">
+        <div className="mb-3 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-medium text-foreground">Onde esse progresso aconteceu?</p>
+            <p className="mt-0.5 text-[11px] text-muted-foreground">
+              {hasLockedContext
+                ? "O contexto atual já está definido. Adicione outro vínculo apenas se fizer sentido."
+                : "Vincule a um projeto, a um objetivo ou aos dois."}
+            </p>
+          </div>
+          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+            {hasLockedContext ? "Contexto atual" : "Opcional"}
+          </span>
+        </div>
+
+        <div className="grid gap-2.5 sm:grid-cols-2">
+          <label className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
+            <FolderOpenIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-primary" />
+            <span className="min-w-0 flex-1">
+              <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                Projeto
+              </span>
+              {lockedProjectName ? (
+                <span className="mt-0.5 flex items-center justify-between gap-2 text-xs font-medium">
+                  <span className="truncate">{lockedProjectName}</span>
+                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-primary">
+                    Fixo
+                  </span>
+                </span>
+              ) : (
+                <select
+                  value={selectedProjectId}
+                  onChange={(event) => onProjectChange(event.target.value)}
+                  className="mt-0.5 w-full appearance-none bg-transparent text-xs font-medium outline-none"
+                >
+                  <option value="">Sem projeto</option>
+                  {projectOptions.map((project) => (
+                    <option key={project.id} value={project.id}>
+                      {project.name}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </span>
+          </label>
+
+          <label className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
+            <TargetIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-primary" />
+            <span className="min-w-0 flex-1">
+              <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                Objetivo
+              </span>
+              {lockedObjectiveTitle ? (
+                <span className="mt-0.5 flex items-center justify-between gap-2 text-xs font-medium">
+                  <span className="truncate">{lockedObjectiveTitle}</span>
+                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-primary">
+                    Fixo
+                  </span>
+                </span>
+              ) : (
+                <select
+                  value={selectedObjectiveId}
+                  onChange={(event) => onObjectiveChange(event.target.value)}
+                  className="mt-0.5 w-full appearance-none bg-transparent text-xs font-medium outline-none"
+                >
+                  <option value="">Sem objetivo</option>
+                  {objectiveOptions.map((objective) => (
+                    <option key={objective.id} value={objective.id}>
+                      {objective.title}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </span>
+          </label>
         </div>
       </div>
 
@@ -497,7 +658,7 @@ function InputStep({
         >
           {detecting ? (
             <div className="flex items-center gap-1.5">
-              <Loader2Icon className="size-3 text-violet-400 animate-spin" />
+              <Loader2Icon className="size-3 animate-spin text-primary/70" />
               <span className="text-[11px] text-muted-foreground">Interpretando...</span>
             </div>
           ) : atuacaoInfo ? (
@@ -576,8 +737,8 @@ function InputStep({
 function ProcessingStep({ visibleSteps }: { visibleSteps: number }) {
   return (
     <div className="flex flex-col items-center justify-center gap-6 px-8 py-12">
-      <div className="flex size-12 items-center justify-center rounded-xl bg-violet-100">
-        <Loader2Icon className="size-6 text-violet-600 animate-spin" />
+      <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
+        <Loader2Icon className="size-6 animate-spin text-primary" />
       </div>
 
       <div className="text-center">
@@ -607,7 +768,7 @@ function ProcessingStep({ visibleSteps }: { visibleSteps: number }) {
                 {done ? (
                   <CheckIcon className="size-4 text-emerald-500" />
                 ) : active ? (
-                  <Loader2Icon className="size-4 text-violet-500 animate-spin" />
+                  <Loader2Icon className="size-4 animate-spin text-primary" />
                 ) : (
                   <div className="size-4 rounded-full border-2 border-muted" />
                 )}

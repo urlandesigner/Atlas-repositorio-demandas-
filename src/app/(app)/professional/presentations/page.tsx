@@ -162,6 +162,10 @@ function PresentationCard({
   item: PresentationEntry
   onClick: () => void
 }) {
+  const dateLabel = formatDate(item.date)
+  const hasMeta = Boolean(item.sharedWith || dateLabel || item.link)
+  const hasAnyDetail = Boolean(item.description) || hasMeta
+
   return (
     <Card
       className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
@@ -177,24 +181,36 @@ function PresentationCard({
       </CardHeader>
 
       <CardContent className="space-y-3">
-        <p className={`line-clamp-2 text-xs ${item.description ? "text-muted-foreground" : "text-muted-foreground/60"}`}>
-          {item.description || "Sem descrição registrada"}
-        </p>
+        {item.description ? (
+          <p className="line-clamp-2 text-xs text-muted-foreground">{item.description}</p>
+        ) : null}
 
-        <div className="space-y-2 text-xs text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <UsersRound className="size-3.5" />
-            <span className="truncate">{item.sharedWith || "Compartilhamento não informado"}</span>
+        {hasMeta ? (
+          <div className="space-y-2 text-xs text-muted-foreground">
+            {item.sharedWith ? (
+              <div className="flex items-center gap-2">
+                <UsersRound className="size-3.5" />
+                <span className="truncate">{item.sharedWith}</span>
+              </div>
+            ) : null}
+            {dateLabel ? (
+              <div className="flex items-center gap-2">
+                <CalendarDays className="size-3.5" />
+                <span>{dateLabel}</span>
+              </div>
+            ) : null}
+            {item.link ? (
+              <div className="flex items-center gap-2">
+                <ExternalLink className="size-3.5" />
+                <span className="truncate">{item.link}</span>
+              </div>
+            ) : null}
           </div>
-          <div className="flex items-center gap-2">
-            <CalendarDays className="size-3.5" />
-            <span>{formatDate(item.date) || "Data não informada"}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <ExternalLink className="size-3.5" />
-            <span className="truncate">{item.link || "Link não informado"}</span>
-          </div>
-        </div>
+        ) : null}
+
+        {!hasAnyDetail ? (
+          <p className="text-xs text-muted-foreground/60">Sem detalhes adicionais</p>
+        ) : null}
       </CardContent>
     </Card>
   )

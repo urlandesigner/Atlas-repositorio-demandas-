@@ -39,9 +39,13 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
         {assigned.map((objective) => (
           <Card key={objective.id}>
             <CardHeader className="pb-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <CardTitle className="text-base">{objective.title}</CardTitle>
-                <Badge variant="secondary">Definido pelo gestor</Badge>
+              <div className="flex items-start justify-between gap-2">
+                <CardTitle className="line-clamp-2 min-w-0 text-base leading-snug">
+                  {objective.title}
+                </CardTitle>
+                <Badge variant="secondary" className="shrink-0">
+                  Definido pelo gestor
+                </Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-2 text-sm text-muted-foreground">

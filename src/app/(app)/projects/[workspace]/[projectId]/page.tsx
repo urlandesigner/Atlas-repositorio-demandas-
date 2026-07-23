@@ -701,14 +701,16 @@ function ProjectDetailSurface({
 
           <DetailSection
             title={`Entregas registradas${linkedRecords.length > 0 ? ` (${linkedRecords.length})` : ""}`}
-            description="Entregas documentadas neste projeto — aparecem na trajetória."
+            description="Entregas documentadas neste projeto — aparecem em Registros."
             action={
               linkedRecords.length > 0 ? (
                 <Button
                   size="sm"
                   variant="outline"
                   className="gap-1.5"
-                  onClick={() => openCapture({ id: project.id, name: project.name })}
+                  onClick={() =>
+                    openCapture({ project: { id: project.id, name: project.name } })
+                  }
                 >
                   <Plus className="size-4" />
                   Registrar entrega
@@ -723,7 +725,9 @@ function ProjectDetailSurface({
                   size="sm"
                   variant="outline"
                   className="gap-1.5"
-                  onClick={() => openCapture({ id: project.id, name: project.name })}
+                  onClick={() =>
+                    openCapture({ project: { id: project.id, name: project.name } })
+                  }
                 >
                   <Plus className="size-4" />
                   Registrar primeira entrega

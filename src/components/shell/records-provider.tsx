@@ -1,19 +1,22 @@
 "use client"
 
 import { createContext, useContext, useState, useEffect, useCallback } from "react"
-import type { RecordEntry } from "@/lib/records/types"
+import type { CaptureContext, RecordEntry } from "@/lib/records/types"
 import { loadRecords, addRecord, updateRecord, deleteRecord } from "@/lib/records/storage"
 import { QuickCapture } from "@/components/records/quick-capture"
 import { RecordDetail } from "@/components/records/record-detail"
-
-export interface CaptureProjectContext {
-  id: string
-  name: string
-}
+import { useToast } from "@/components/ui/toast"
+import {
+  emitObjectivesChange,
+  getObjectivesSnapshot,
+  linkRecordToObjective,
+  saveObjectives,
+  unlinkRecordFromObjectives,
+} from "@/lib/objectives/store"
 
 interface RecordsContextValue {
   records: RecordEntry[]
-  openCapture: (project?: CaptureProjectContext) => void
+  openCapture: (context?: CaptureContext) => void
   addNewRecord: (record: RecordEntry) => void
   openDetail: (record: RecordEntry) => void
   updateExistingRecord: (id: string, updates: Partial<RecordEntry>) => void
@@ -34,9 +37,10 @@ export function useRecords() {
 }
 
 export function RecordsProvider({ children }: { children: React.ReactNode }) {
+  const { toast } = useToast()
   const [records, setRecords] = useState<RecordEntry[]>([])
   const [open, setOpen] = useState(false)
-  const [captureProject, setCaptureProject] = useState<CaptureProjectContext | undefined>(undefined)
+  const [captureContext, setCaptureContext] = useState<CaptureContext | undefined>(undefined)
   const [detailRecord, setDetailRecord] = useState<RecordEntry | null>(null)
 
   // Load from localStorage on mount
@@ -55,6 +59,7 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
         const tag = (e.target as HTMLElement)?.tagName
         if (tag === "TEXTAREA" || tag === "INPUT") return
         e.preventDefault()
+        setCaptureContext(undefined)
         setOpen(true)
       }
     }
@@ -62,16 +67,25 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [])
 
-  const openCapture = useCallback((project?: CaptureProjectContext) => {
-    setCaptureProject(project)
+  const openCapture = useCallback((context?: CaptureContext) => {
+    setCaptureContext(context)
     setOpen(true)
   }, [])
 
-  const addNewRecord = useCallback((record: RecordEntry) => {
+  const addNewRecord = useCallback((record: RecordEntry, context?: CaptureContext) => {
     addRecord(record)
     setRecords((prev) => [record, ...prev])
+
+    if (context?.objective) {
+      const objectives = getObjectivesSnapshot()
+      saveObjectives(linkRecordToObjective(objectives, context.objective.id, record.id))
+      emitObjectivesChange()
+    }
+
     setOpen(false)
-  }, [])
+    setCaptureContext(undefined)
+    toast("Registro salvo", { variant: "success" })
+  }, [toast])
 
   const openDetail = useCallback((record: RecordEntry) => {
     setDetailRecord(record)
@@ -93,6 +107,10 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
   const deleteExistingRecord = useCallback((id: string) => {
     deleteRecord(id)
     setRecords((prev) => prev.filter((r) => r.id !== id))
+
+    const objectives = getObjectivesSnapshot()
+    saveObjectives(unlinkRecordFromObjectives(objectives, id))
+    emitObjectivesChange()
     setDetailRecord(null)
   }, [])
 
@@ -108,7 +126,15 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-      <QuickCapture open={open} onOpenChange={setOpen} onSave={addNewRecord} initialProject={captureProject} />
+      <QuickCapture
+        open={open}
+        onOpenChange={(nextOpen) => {
+          setOpen(nextOpen)
+          if (!nextOpen) setCaptureContext(undefined)
+        }}
+        onSave={addNewRecord}
+        initialContext={captureContext}
+      />
       <RecordDetail
         record={detailRecord}
         onOpenChange={(o) => {

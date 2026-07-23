@@ -47,3 +47,18 @@ export interface RecordEntry {
   createdAt: string
   updatedAt: string
 }
+
+export interface CaptureProjectContext {
+  id: string
+  name: string
+}
+
+export interface CaptureObjectiveContext {
+  id: string
+  title: string
+}
+
+export interface CaptureContext {
+  project?: CaptureProjectContext
+  objective?: CaptureObjectiveContext
+}

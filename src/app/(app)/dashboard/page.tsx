@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useMemo, useSyncExternalStore } from "react"
 import {
+  ArrowRight,
   ArrowUpRight,
   CalendarDays,
   CheckCircle2,
@@ -11,6 +12,7 @@ import {
   FolderOpen,
   Presentation,
   Target,
+  TrendingUp,
   Zap,
   type LucideIcon,
 } from "lucide-react"
@@ -230,6 +232,159 @@ function ActivityRow({ item }: { item: ActivityItem }) {
   )
 }
 
+function WorkFlowGuide({
+  projectCount,
+  objectiveCount,
+  recordCount,
+  onRecord,
+}: {
+  projectCount: number
+  objectiveCount: number
+  recordCount: number
+  onRecord: () => void
+}) {
+  return (
+    <section className="overflow-hidden rounded-[12px] border border-border bg-card">
+      <div className="flex flex-col gap-2 border-b border-border px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+            Seu fluxo no Atlas
+          </p>
+          <h2 className="mt-1 text-lg font-medium tracking-tight">Do trabalho à evidência</h2>
+        </div>
+        <p className="max-w-xl text-xs leading-relaxed text-muted-foreground sm:text-right">
+          Escolha onde está atuando, registre o que avançou e acompanhe tudo em um só histórico.
+        </p>
+      </div>
+
+      <div className="grid gap-0 md:grid-cols-[1fr_auto_1.12fr_auto_1fr]">
+        <div className="group px-5 py-5">
+          <div className="flex items-start gap-3">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-full border bg-background text-xs font-semibold text-muted-foreground">
+              1
+            </span>
+            <div className="min-w-0">
+              <p className="text-sm font-medium">Escolha o contexto</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                Organize seu trabalho antes de registrar o avanço.
+              </p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Link
+                  href="/projects"
+                  className="rounded-md border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:border-primary/30 hover:text-primary"
+                >
+                  {projectCount} projeto(s)
+                </Link>
+                <Link
+                  href="/professional/objectives"
+                  className="rounded-md border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:border-primary/30 hover:text-primary"
+                >
+                  {objectiveCount} objetivo(s)
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="hidden items-center text-border md:flex">
+          <ArrowRight className="size-4" />
+        </div>
+
+        <button
+          type="button"
+          onClick={onRecord}
+          className="group relative m-2 overflow-hidden rounded-[10px] bg-primary px-5 py-4 text-left text-primary-foreground transition-colors hover:bg-primary/92 md:m-3"
+        >
+          <div className="absolute -right-6 -top-8 size-28 rounded-full border border-white/15" />
+          <div className="relative flex items-start gap-3">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-white/25 bg-white/10 text-xs font-semibold">
+              2
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-sm font-medium">Registre o progresso</p>
+                <Zap className="size-4 transition-transform group-hover:scale-110" />
+              </div>
+              <p className="mt-1 text-xs leading-relaxed text-primary-foreground/75">
+                Conte o que entregou. Projeto e objetivo podem ser vinculados na mesma ação.
+              </p>
+              <span className="mt-3 inline-flex items-center gap-1.5 text-xs font-medium">
+                Criar registro
+                <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          </div>
+        </button>
+
+        <div className="hidden items-center text-border md:flex">
+          <ArrowRight className="size-4" />
+        </div>
+
+        <Link href="/professional/timeline" className="group px-5 py-5">
+          <div className="flex items-start gap-3">
+            <span className="flex size-7 shrink-0 items-center justify-center rounded-full border bg-background text-xs font-semibold text-muted-foreground">
+              3
+            </span>
+            <div className="min-w-0">
+              <p className="flex items-center gap-2 text-sm font-medium">
+                Acompanhe os registros
+                <ArrowUpRight className="size-3.5 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
+                {recordCount === 1
+                  ? "1 evidência já faz parte do seu histórico."
+                  : `${recordCount} evidências já fazem parte do seu histórico.`}
+              </p>
+            </div>
+          </div>
+        </Link>
+      </div>
+    </section>
+  )
+}
+
+function CareerLoopCard() {
+  return (
+    <Card className="overflow-hidden">
+      <CardContent className="flex flex-col gap-4 py-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3.5">
+          <div className="icon-well flex size-10 shrink-0 items-center justify-center rounded-full">
+            <TrendingUp className="size-5" />
+          </div>
+          <div className="min-w-0">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-primary">
+              Loop de carreira
+            </p>
+            <h2 className="mt-1 text-sm font-medium tracking-tight">
+              Seus registros viram evidência para o próximo nível
+            </h2>
+            <p className="mt-1 max-w-xl text-xs leading-relaxed text-muted-foreground">
+              O que você documenta no dia a dia vira evidência das suas competências e alimenta o
+              dossiê de promoção. Veja como sua evolução vem tomando forma.
+            </p>
+          </div>
+        </div>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <Link
+            href="/professional/evolution/radar"
+            className={buttonVariants({ size: "sm" })}
+          >
+            <TrendingUp data-icon="inline-start" />
+            Ver evolução
+          </Link>
+          <Link
+            href="/professional/evolution/promotion"
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+          >
+            Montar dossiê
+            <ArrowUpRight data-icon="inline-end" />
+          </Link>
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
+
 
 export default function DashboardPage() {
   const { session } = useAuth()
@@ -302,10 +457,19 @@ export default function DashboardPage() {
         <PageHeaderActions>
           <Button size="sm" onClick={() => openCapture()}>
             <Zap data-icon="inline-start" />
-            Novo registro
+            Registrar progresso
           </Button>
         </PageHeaderActions>
       </div>
+
+      <WorkFlowGuide
+        projectCount={activeProjects.length}
+        objectiveCount={activeObjectives.length}
+        recordCount={records.length}
+        onRecord={() => openCapture()}
+      />
+
+      <CareerLoopCard />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard
@@ -350,7 +514,7 @@ export default function DashboardPage() {
               href="/professional/timeline"
               className={buttonVariants({ variant: "outline", size: "sm" })}
             >
-              Trajetória
+              Ver registros
               <ArrowUpRight data-icon="inline-end" />
             </Link>
           </CardHeader>

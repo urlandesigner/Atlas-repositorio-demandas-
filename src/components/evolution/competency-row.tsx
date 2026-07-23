@@ -29,7 +29,7 @@ export function CompetencyRow({
     <article
       className={cn(
         "rounded-[12px] border p-4 transition-colors",
-        view.status === "forte" ? "border-border/60 bg-card/[0.98]" : "border-border/50 bg-muted/10"
+        view.status === "forte" ? "border-border/60 bg-card/[0.98]" : "border-border bg-card/60"
       )}
     >
       <div className="flex flex-wrap items-start justify-between gap-3">

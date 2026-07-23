@@ -33,7 +33,7 @@ export function CareerContextBar({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
           <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
-            Objetivo de evolução
+            Objetivo de carreira
           </p>
           <p className="mt-1 text-lg font-semibold tracking-tight">{goal.targetRole}</p>
           <p className="mt-0.5 text-sm text-muted-foreground">
@@ -44,7 +44,7 @@ export function CareerContextBar({
         <div className="flex shrink-0 gap-6">
           <div className="text-right">
             <p className="text-2xl font-semibold tabular-nums text-brand-muted-foreground">{readiness}%</p>
-            <p className="text-[11px] text-muted-foreground">temas PDI no nível</p>
+            <p className="text-[11px] text-muted-foreground">prontidão no PDI</p>
           </div>
           {strongCompetencies !== undefined && totalCompetencies !== undefined ? (
             <div className="text-right">

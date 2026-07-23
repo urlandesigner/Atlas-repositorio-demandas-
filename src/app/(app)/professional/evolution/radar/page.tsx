@@ -52,7 +52,7 @@ export default function EvolutionRadarPage() {
         <section>
           <div className="mb-3 flex items-baseline justify-between gap-3">
             <h2 className="text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
-              Radar de senioridade
+              Competências por evidência
             </h2>
             <span className="text-xs text-muted-foreground">
               {strongCount} de {competencyViews.length} bem evidenciadas
@@ -76,7 +76,7 @@ export default function EvolutionRadarPage() {
 
         <section>
           <h2 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
-            Matrizes PDI
+            PDI
           </h2>
           <EvolutionPanel
             ladder={profile.ladder}

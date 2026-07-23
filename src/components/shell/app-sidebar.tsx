@@ -55,16 +55,16 @@ type NavItem = {
 
 const workspaceNavItems: NavItem[] = [
   { label: "Início", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Projetos", href: "/projects", icon: FolderOpen },
+  { label: "Objetivos", href: "/professional/objectives", icon: Target },
+  { label: "Registros", href: "/professional/timeline", icon: CircleDot },
+  { label: "Pessoas", href: "/people", icon: Search },
   {
     label: "Perfil",
     href: "/professional/profile",
     icon: UserRound,
     activePaths: ["/professional/evolution", "/professional/presentations"],
   },
-  { label: "Pessoas", href: "/people", icon: Search },
-  { label: "Projetos", href: "/projects", icon: FolderOpen },
-  { label: "Trajetória", href: "/professional/timeline", icon: CircleDot },
-  { label: "Objetivos", href: "/professional/objectives", icon: Target },
 ]
 
 const gestaoNavItems: NavItem[] = [

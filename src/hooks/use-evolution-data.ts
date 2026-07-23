@@ -15,6 +15,16 @@ import {
   type PdiTheme,
 } from "@/lib/profile/pdi"
 import {
+  getGestaoPdiServerSnapshot,
+  getGestaoPdiSnapshot,
+  subscribeGestaoPdiStore,
+} from "@/lib/gestao/pdi/store"
+import {
+  computeFrameworkReadiness,
+  getFrameworkExpectations,
+} from "@/lib/gestao/pdi/types"
+import { useOptionalSession } from "@/hooks/use-optional-session"
+import {
   getBaselineLevels,
   getPdiServerSnapshot,
   getPdiSnapshot,
@@ -45,6 +55,7 @@ import { countStrongCompetencies, computeCompetencyEvidence } from "@/lib/evolut
 
 export function useEvolutionData() {
   const { records, openDetail, openCapture } = useRecords()
+  const session = useOptionalSession()
   const profile = useSyncExternalStore(
     subscribeProfileStore,
     getProfileSnapshot,
@@ -55,6 +66,11 @@ export function useEvolutionData() {
     subscribeObjectivesStore,
     getObjectivesSnapshot,
     getObjectivesServerSnapshot
+  )
+  const gestaoPdi = useSyncExternalStore(
+    subscribeGestaoPdiStore,
+    getGestaoPdiSnapshot,
+    getGestaoPdiServerSnapshot
   )
   const recognitions = useSyncExternalStore(
     subscribeRecognitionsStore,
@@ -88,10 +104,41 @@ export function useEvolutionData() {
     [pdi]
   )
 
-  const readiness = useMemo(
-    () => computePdiReadiness(pdiCurrent, pdi.expected),
-    [pdiCurrent, pdi.expected]
+  // Prontidão no PDI: quando há um PDI atribuído pelo gestor, usa o framework
+  // dele (mesma fonte da aba Resumo) para que Radar/Destaques/Dossiê mostrem o
+  // mesmo número do perfil. Sem PDI atribuído, cai no autoassessment (pdi-store).
+  const assigned = useMemo(() => {
+    if (!session?.userId) return undefined
+    return gestaoPdi.assignments.find(
+      (assignment) => assignment.userId === session.userId && assignment.status === "active"
+    )
+  }, [gestaoPdi.assignments, session])
+
+  const assignedFramework = useMemo(
+    () =>
+      assigned
+        ? gestaoPdi.frameworks.find((framework) => framework.id === assigned.frameworkId)
+        : undefined,
+    [assigned, gestaoPdi.frameworks]
   )
+
+  const readiness = useMemo(() => {
+    if (assigned && assignedFramework) {
+      const current = Object.fromEntries(
+        assignedFramework.themes.map((theme) => [
+          theme.id,
+          assigned.current[theme.id]?.level ?? 0,
+        ])
+      )
+      const expected = getFrameworkExpectations(assignedFramework, assigned.currentLevelId)
+      return computeFrameworkReadiness(
+        current,
+        expected,
+        assignedFramework.themes.map((theme) => theme.id)
+      )
+    }
+    return computePdiReadiness(pdiCurrent, pdi.expected)
+  }, [assigned, assignedFramework, pdiCurrent, pdi.expected])
 
   const projectedReadiness = useMemo(
     () => computePdiReadiness(pdiProjected, pdi.expected),

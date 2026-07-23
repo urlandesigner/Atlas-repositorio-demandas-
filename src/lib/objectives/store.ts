@@ -301,3 +301,31 @@ export function updateObjectiveInCollection(
 export function deleteObjectiveFromCollection(items: ObjectiveEntry[], objectiveId: string) {
   return items.filter((item) => item.id !== objectiveId)
 }
+
+export function linkRecordToObjective(
+  items: ObjectiveEntry[],
+  objectiveId: string,
+  recordId: string
+) {
+  return items.map((item) =>
+    item.id === objectiveId && !item.linkedRecordIds.includes(recordId)
+      ? {
+          ...item,
+          linkedRecordIds: [...item.linkedRecordIds, recordId],
+          updated_at: new Date().toISOString(),
+        }
+      : item
+  )
+}
+
+export function unlinkRecordFromObjectives(items: ObjectiveEntry[], recordId: string) {
+  return items.map((item) =>
+    item.linkedRecordIds.includes(recordId)
+      ? {
+          ...item,
+          linkedRecordIds: item.linkedRecordIds.filter((id) => id !== recordId),
+          updated_at: new Date().toISOString(),
+        }
+      : item
+  )
+}

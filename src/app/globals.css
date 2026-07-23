@@ -87,7 +87,7 @@
 :root {
   --font-editorial-sans:
     "CursorGothic", system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --background: oklch(0.9911 0 0);
+  --background: oklch(0.9650 0.0030 270);
   --foreground: oklch(0.1994 0.0470 270.6494);
   --card: oklch(1.0000 0 0);
   --card-foreground: oklch(0.1994 0.0470 270.6494);

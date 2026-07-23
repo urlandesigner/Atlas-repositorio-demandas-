@@ -2,12 +2,13 @@
 
 import Link from "next/link"
 import { useState, useSyncExternalStore } from "react"
-import { FolderOpen, Plus } from "lucide-react"
+import { ArrowUpRight, FileText, FolderOpen, LayoutGrid, List, Plus } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useRecords } from "@/components/shell/records-provider"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Textarea } from "@/components/ui/textarea"
@@ -63,10 +64,21 @@ function formatProjectPeriod(project: ProjectEntry) {
   return "Sem período definido"
 }
 
-function ProjectCard({ project }: { project: ProjectEntry }) {
+function ProjectCard({
+  project,
+  recordCount,
+  onRecord,
+}: {
+  project: ProjectEntry
+  recordCount: number
+  onRecord: () => void
+}) {
   return (
-    <Link href={createProjectPath(WORKSPACE, project.id)} className="block">
-      <Card className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
+    <Card className="h-full hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
+      <Link
+        href={createProjectPath(WORKSPACE, project.id)}
+        className="flex flex-1 cursor-pointer flex-col gap-4"
+      >
         <CardHeader>
           <div className="flex items-center justify-between gap-2">
             <h3 className="truncate text-sm font-medium">{project.name}</h3>
@@ -93,8 +105,110 @@ function ProjectCard({ project }: { project: ProjectEntry }) {
             {formatProjectPeriod(project)}
           </p>
         </CardContent>
-      </Card>
-    </Link>
+      </Link>
+
+      <CardFooter className="justify-between gap-3 py-2.5">
+        <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+          <FileText className="size-3.5" />
+          {recordCount === 1 ? "1 entrega" : `${recordCount} entregas`}
+        </span>
+        <Button size="sm" variant="ghost" onClick={onRecord}>
+          <Plus data-icon="inline-start" />
+          Registrar
+        </Button>
+      </CardFooter>
+    </Card>
+  )
+}
+
+function ProjectTable({
+  projects,
+  getRecordCount,
+  onRecord,
+}: {
+  projects: ProjectEntry[]
+  getRecordCount: (project: ProjectEntry) => number
+  onRecord: (project: ProjectEntry) => void
+}) {
+  return (
+    <div className="overflow-hidden rounded-[12px] border border-border bg-card">
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[760px] border-collapse text-left text-sm">
+          <thead>
+            <tr className="border-b border-border bg-muted/25 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+              <th className="w-[38%] px-4 py-3 font-semibold">Projeto</th>
+              <th className="w-[15%] px-4 py-3 font-semibold">Status</th>
+              <th className="w-[20%] px-4 py-3 font-semibold">Período</th>
+              <th className="w-[12%] px-4 py-3 font-semibold">Entregas</th>
+              <th className="w-[15%] px-4 py-3 text-right font-semibold">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {projects.map((project) => {
+              const recordCount = getRecordCount(project)
+
+              return (
+                <tr
+                  key={project.id}
+                  className="border-b border-border/70 transition-colors last:border-b-0 hover:bg-muted/20"
+                >
+                  <td className="px-4 py-3.5">
+                    <Link
+                      href={createProjectPath(WORKSPACE, project.id)}
+                      className="group flex min-w-0 items-center gap-3"
+                    >
+                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground transition-colors group-hover:border-primary/25 group-hover:text-primary">
+                        <FolderOpen className="size-4" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block truncate font-medium text-foreground transition-colors group-hover:text-primary">
+                          {project.name}
+                        </span>
+                        <span className="mt-0.5 block max-w-md truncate text-xs text-muted-foreground">
+                          {project.description?.trim() || "Sem descrição"}
+                        </span>
+                      </span>
+                    </Link>
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <Badge
+                      variant="outline"
+                      className={cn("shrink-0 font-normal", STATUS_BADGE_CLASS[project.status])}
+                    >
+                      {STATUS_LABEL[project.status]}
+                    </Badge>
+                  </td>
+                  <td className="px-4 py-3.5 text-xs text-muted-foreground">
+                    {formatProjectPeriod(project)}
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <FileText className="size-3.5" />
+                      {recordCount}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3.5">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button size="sm" variant="ghost" onClick={() => onRecord(project)}>
+                        <Plus data-icon="inline-start" />
+                        Registrar
+                      </Button>
+                      <Link
+                        href={createProjectPath(WORKSPACE, project.id)}
+                        aria-label={`Abrir ${project.name}`}
+                        className={buttonVariants({ variant: "ghost", size: "icon-sm" })}
+                      >
+                        <ArrowUpRight className="size-4" />
+                      </Link>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
   )
 }
 
@@ -211,6 +325,8 @@ function NewProjectSheet({
 export default function ProjectsPage() {
   const [isAdding, setIsAdding] = useState(false)
   const [statusFilter, setStatusFilter] = useState<"all" | ProjectStatus>("all")
+  const [viewMode, setViewMode] = useState<"grid" | "table">("grid")
+  const { records, openCapture } = useRecords()
   const allProjects = useSyncExternalStore(subscribeProjectsStore, getProjectsSnapshot, getProjectsServerSnapshot)
 
   const projects = [...allProjects[WORKSPACE]]
@@ -230,6 +346,19 @@ export default function ProjectsPage() {
     setIsAdding(false)
   }
 
+  function getRecordCount(project: ProjectEntry) {
+    return records.filter(
+      (record) =>
+        record.projectId === project.id ||
+        record.projectName?.trim().toLocaleLowerCase("pt-BR") ===
+          project.name.trim().toLocaleLowerCase("pt-BR")
+    ).length
+  }
+
+  function handleRecord(project: ProjectEntry) {
+    openCapture({ project: { id: project.id, name: project.name } })
+  }
+
   return (
     <>
       <div className="flex flex-col gap-6">
@@ -246,34 +375,82 @@ export default function ProjectsPage() {
           </PageHeaderActions>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            variant={statusFilter === "all" ? "default" : "outline"}
-            onClick={() => setStatusFilter("all")}
-          >
-            Todos
-          </Button>
-          {STATUS_OPTIONS.map((status) => (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">
             <Button
-              key={status}
               size="sm"
-              variant={statusFilter === status ? "default" : "outline"}
-              onClick={() => setStatusFilter(status)}
+              variant={statusFilter === "all" ? "default" : "outline"}
+              onClick={() => setStatusFilter("all")}
             >
-              {STATUS_LABEL[status]}
+              Todos
             </Button>
-          ))}
+            {STATUS_OPTIONS.map((status) => (
+              <Button
+                key={status}
+                size="sm"
+                variant={statusFilter === status ? "default" : "outline"}
+                onClick={() => setStatusFilter(status)}
+              >
+                {STATUS_LABEL[status]}
+              </Button>
+            ))}
+          </div>
+
+          <div
+            className="inline-flex w-fit items-center rounded-lg border border-border bg-card p-1"
+            role="group"
+            aria-label="Visualização dos projetos"
+          >
+            <button
+              type="button"
+              aria-pressed={viewMode === "grid"}
+              onClick={() => setViewMode("grid")}
+              className={cn(
+                "inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium transition-colors",
+                viewMode === "grid"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <LayoutGrid className="size-3.5" />
+              Blocos
+            </button>
+            <button
+              type="button"
+              aria-pressed={viewMode === "table"}
+              onClick={() => setViewMode("table")}
+              className={cn(
+                "inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium transition-colors",
+                viewMode === "table"
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <List className="size-3.5" />
+              Tabela
+            </button>
+          </div>
         </div>
 
         {projects.length === 0 ? (
           <EmptyState />
-        ) : (
+        ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (
-              <ProjectCard key={project.id} project={project} />
+              <ProjectCard
+                key={project.id}
+                project={project}
+                recordCount={getRecordCount(project)}
+                onRecord={() => handleRecord(project)}
+              />
             ))}
           </div>
+        ) : (
+          <ProjectTable
+            projects={projects}
+            getRecordCount={getRecordCount}
+            onRecord={handleRecord}
+          />
         )}
       </div>
 
