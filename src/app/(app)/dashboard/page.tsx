@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/components/auth/auth-provider"
 import { HrNoticesPanel } from "@/components/hr/hr-notices-panel"
 import { useEvolutionData } from "@/hooks/use-evolution-data"
+import { useHrNotices } from "@/hooks/use-hr-notices"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -421,6 +422,8 @@ export default function DashboardPage() {
     profile,
     strongCount,
   } = useEvolutionData()
+  const { notices: hrNotices } = useHrNotices()
+  const hasHrNotices = hrNotices.length > 0
   const displayName = session?.name?.trim()
   const projects = useSyncExternalStore(
     subscribeProjectsStore,
@@ -460,6 +463,25 @@ export default function DashboardPage() {
     [flatProjects]
   )
 
+  const kpiCards = (
+    <>
+      <MetricCard
+        label="Registros este mês"
+        value={recordsThisMonth.length}
+        icon={Zap}
+        href="/professional/timeline"
+        description={`${records.length} no histórico`}
+      />
+      <MetricCard
+        label="Objetivos ativos"
+        value={activeObjectives.length}
+        icon={Target}
+        href="/professional/objectives"
+        description={`${objectives.filter((item) => item.status === "done").length} concluídos`}
+      />
+    </>
+  )
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -484,8 +506,6 @@ export default function DashboardPage() {
         </PageHeaderActions>
       </div>
 
-      <HrNoticesPanel hideWhenEmpty />
-
       {records.length === 0 ? (
         <WorkFlowGuide
           projectCount={activeProjects.length}
@@ -495,22 +515,15 @@ export default function DashboardPage() {
         />
       ) : null}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <MetricCard
-          label="Registros este mês"
-          value={recordsThisMonth.length}
-          icon={Zap}
-          href="/professional/timeline"
-          description={`${records.length} no histórico`}
-        />
-        <MetricCard
-          label="Objetivos ativos"
-          value={activeObjectives.length}
-          icon={Target}
-          href="/professional/objectives"
-          description={`${objectives.filter((item) => item.status === "done").length} concluídos`}
-        />
-      </div>
+      {hasHrNotices ? (
+        // Avisos do RH divide a fileira com os KPIs em vez de ocupar a largura toda.
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1">{kpiCards}</div>
+          <HrNoticesPanel hideWhenEmpty compact />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">{kpiCards}</div>
+      )}
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[0.85fr_1.15fr]">
         <Card>
