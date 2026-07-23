@@ -4,6 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import { CalendarDays, Pencil, Plus, Save, Trash2 } from "lucide-react"
 
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
+import { useOptionalSession } from "@/hooks/use-optional-session"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -68,6 +69,7 @@ function EntryCard({
 }
 
 export default function EvolutionOneOnOnePage() {
+  const session = useOptionalSession()
   const entries = useSyncExternalStore(
     subscribeOneOnOneStore,
     getOneOnOneSnapshot,
@@ -98,7 +100,7 @@ export default function EvolutionOneOnOnePage() {
 
     const next = editing
       ? updateOneOnOneEntry(entries, editing.id, form)
-      : addOneOnOneEntry(entries, form)
+      : addOneOnOneEntry(entries, form, session?.userId)
 
     saveOneOnOneEntries(next)
     resetForm()

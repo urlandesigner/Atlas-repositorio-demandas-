@@ -9,7 +9,6 @@ import {
   Presentation,
   Radar,
   Sparkles,
-  Star,
 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
@@ -18,7 +17,6 @@ import { cn } from "@/lib/utils"
 const NAV_ITEMS = [
   { href: "/professional/profile", label: "Resumo", icon: LayoutDashboard },
   { href: "/professional/evolution/radar", label: "Competências", icon: Radar },
-  { href: "/professional/evolution/highlights", label: "Destaques", icon: Star },
   { href: "/professional/evolution/recognitions", label: "Reconhecimentos", icon: Award },
   { href: "/professional/evolution/one-on-one", label: "1:1", icon: FileText },
   { href: "/professional/evolution/promotion", label: "Dossiê", icon: Sparkles },

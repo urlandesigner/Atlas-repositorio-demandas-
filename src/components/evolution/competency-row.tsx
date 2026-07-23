@@ -4,8 +4,10 @@ import { ChevronRight } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { LEAD_COMPETENCY_LENSES } from "@/lib/evolution/competencies"
 import type { CompetencyEvidenceView } from "@/lib/evolution/types"
 import { EVIDENCE_STATUS_LABEL } from "@/lib/evolution/types"
+import { PDI_THEME_LABEL } from "@/lib/profile/pdi"
 import { cn } from "@/lib/utils"
 
 const STATUS_STYLE = {
@@ -24,6 +26,8 @@ export function CompetencyRow({
   onCreateObjective?: () => void
 }) {
   const progress = Math.min(100, Math.round((view.perceivedLevel / Math.max(view.expectedLevel, 1)) * 100))
+  const lens = LEAD_COMPETENCY_LENSES.find((lens) => lens.id === view.competencyId)
+  const themeLabels = lens?.themeIds.map((themeId) => PDI_THEME_LABEL[themeId]).join(", ")
 
   return (
     <article
@@ -41,6 +45,11 @@ export function CompetencyRow({
             </Badge>
           </div>
           <p className="mt-1 text-xs text-muted-foreground">{view.description}</p>
+          {themeLabels ? (
+            <p className="mt-1 text-[11px] text-muted-foreground/80">
+              Contribui para a matriz PDI: {themeLabels}
+            </p>
+          ) : null}
         </div>
         <Button variant="ghost" size="sm" className="shrink-0 gap-1" onClick={onOpenEvidence}>
           {view.evidenceCount} evidências

@@ -31,6 +31,14 @@ import {
   subscribeProjectsStore,
   type WorkspaceTab,
 } from "@/lib/projects/store"
+import {
+  addPresentationToCollection,
+  createPresentationFromForm,
+  emitPresentationsChange,
+  getPresentationsSnapshot,
+  savePresentations,
+  type PresentationForm,
+} from "@/lib/presentations/store"
 import type {
   CaptureContext,
   RecordEntry,
@@ -280,6 +288,7 @@ export function QuickCapture({ open, onOpenChange, onSave, initialContext }: Qui
   const [detecting, setDetecting] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState("")
   const [selectedObjectiveId, setSelectedObjectiveId] = useState("")
+  const [isKnowledgeShare, setIsKnowledgeShare] = useState(false)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const projects = useSyncExternalStore(
@@ -333,6 +342,7 @@ export function QuickCapture({ open, onOpenChange, onSave, initialContext }: Qui
         setImpactLevel(3)
         setSelectedProjectId("")
         setSelectedObjectiveId("")
+        setIsKnowledgeShare(false)
       }, 300)
       return () => clearTimeout(t)
     }
@@ -439,6 +449,25 @@ export function QuickCapture({ open, onOpenChange, onSave, initialContext }: Qui
       updatedAt: new Date().toISOString(),
     }
     onSave(record, context)
+
+    if (isKnowledgeShare) {
+      try {
+        const presentationForm: PresentationForm = {
+          title: enriched.title,
+          description: enriched.impact || "",
+          sharedWith: "",
+          date: new Date().toISOString().slice(0, 10),
+          link: "",
+          status: "done",
+        }
+        const entry = createPresentationFromForm(presentationForm)
+        const next = addPresentationToCollection(getPresentationsSnapshot(), entry)
+        savePresentations(next)
+        emitPresentationsChange()
+      } catch {
+        // Não bloqueia o salvamento do registro principal caso a criação da apresentação falhe.
+      }
+    }
   }
 
   function updateField(key: keyof EnrichedFields, value: string) {
@@ -481,11 +510,13 @@ export function QuickCapture({ open, onOpenChange, onSave, initialContext }: Qui
             area={area}
             impactScope={impactScope}
             impactLevel={impactLevel}
+            isKnowledgeShare={isKnowledgeShare}
             onFieldChange={updateField}
             onAtuacaoChange={setAtuacao}
             onAreaChange={setArea}
             onScopeChange={setImpactScope}
             onLevelChange={setImpactLevel}
+            onKnowledgeShareChange={setIsKnowledgeShare}
             onSave={handleSave}
             onBack={() => setStep("input")}
           />
@@ -808,11 +839,13 @@ function ReviewStep({
   area,
   impactScope,
   impactLevel,
+  isKnowledgeShare,
   onFieldChange,
   onAtuacaoChange,
   onAreaChange,
   onScopeChange,
   onLevelChange,
+  onKnowledgeShareChange,
   onSave,
   onBack,
 }: {
@@ -822,11 +855,13 @@ function ReviewStep({
   area: AreaType
   impactScope: ImpactScope
   impactLevel: ImpactLevel
+  isKnowledgeShare: boolean
   onFieldChange: (key: keyof EnrichedFields, value: string) => void
   onAtuacaoChange: (v: AtuacaoType) => void
   onAreaChange: (v: AreaType) => void
   onScopeChange: (v: ImpactScope) => void
   onLevelChange: (v: ImpactLevel) => void
+  onKnowledgeShareChange: (v: boolean) => void
   onSave: () => void
   onBack: () => void
 }) {
@@ -962,6 +997,22 @@ function ReviewStep({
               onScopeChange={onScopeChange}
               onLevelChange={onLevelChange}
             />
+
+            {/* Knowledge share */}
+            <div className="flex flex-col gap-2">
+              <SidebarLabel>Conhecimento</SidebarLabel>
+              <label className="flex items-start gap-2 rounded-lg border bg-muted/20 px-2.5 py-2 cursor-pointer hover:bg-muted/40 transition-colors">
+                <input
+                  type="checkbox"
+                  checked={isKnowledgeShare}
+                  onChange={(e) => onKnowledgeShareChange(e.target.checked)}
+                  className="mt-0.5 size-3.5 shrink-0 accent-primary"
+                />
+                <span className="text-[11px] leading-snug text-muted-foreground">
+                  Isso também foi uma apresentação ou compartilhamento de conhecimento?
+                </span>
+              </label>
+            </div>
 
             {/* Visibility score */}
             <div className="flex flex-col gap-2">

@@ -9,6 +9,7 @@ export interface OneOnOneEntry {
   notes: string
   createdAt: string
   updatedAt: string
+  userId?: string
 }
 
 export interface OneOnOneForm {
@@ -39,6 +40,7 @@ function normalizeEntry(value: Partial<OneOnOneEntry>): OneOnOneEntry | null {
     notes,
     createdAt,
     updatedAt: value.updatedAt ?? createdAt,
+    userId: typeof value.userId === "string" ? value.userId : undefined,
   }
 }
 
@@ -129,6 +131,10 @@ export function getOneOnOneServerSnapshot(): OneOnOneEntry[] {
   return []
 }
 
+export function getOneOnOneEntriesForUser(userId: string): OneOnOneEntry[] {
+  return getOneOnOneSnapshot().filter((entry) => entry.userId === userId)
+}
+
 export function emitOneOnOneChange(): void {
   if (typeof window === "undefined") return
   window.dispatchEvent(new Event(ONE_ON_ONE_STORAGE_EVENT))
@@ -149,13 +155,17 @@ export function subscribeOneOnOneStore(onChange: () => void): () => void {
   }
 }
 
-export function createOneOnOneEntry(form: OneOnOneForm): OneOnOneEntry | null {
+export function createOneOnOneEntry(
+  form: OneOnOneForm,
+  userId?: string
+): OneOnOneEntry | null {
   return normalizeEntry({
     id: crypto.randomUUID(),
     date: form.date,
     notes: form.notes,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
+    userId,
   })
 }
 
@@ -173,9 +183,10 @@ export function saveOneOnOneEntries(entries: OneOnOneEntry[]): void {
 
 export function addOneOnOneEntry(
   items: OneOnOneEntry[],
-  form: OneOnOneForm
+  form: OneOnOneForm,
+  userId?: string
 ): OneOnOneEntry[] {
-  const entry = createOneOnOneEntry(form)
+  const entry = createOneOnOneEntry(form, userId)
   return entry ? [entry, ...items] : items
 }
 

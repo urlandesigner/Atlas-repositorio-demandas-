@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo, useSyncExternalStore } from "react"
+import { useMemo, useState, useSyncExternalStore } from "react"
 import {
   ArrowUpRightIcon,
   FolderKanbanIcon,
@@ -28,6 +28,8 @@ import {
 } from "@/lib/timeline/pins-store"
 import type { ImpactLevel, RecordEntry } from "@/lib/records/types"
 import { HIGHLIGHT_DEFS, resolveHighlightTone, type HighlightTone } from "@/lib/records/highlights"
+import { isInPeriod } from "@/lib/evolution/periods"
+import { HIGHLIGHT_PERIOD_LABEL, type HighlightPeriod } from "@/lib/evolution/types"
 import { cn } from "@/lib/utils"
 
 type ImpactTypeFilter =
@@ -338,6 +340,16 @@ function buildFeaturedScore(item: StoryItem, pinnedIds: string[]) {
   return (pinnedIds.includes(item.id) ? 100 : 0) + item.impactLevel * 10 + item.highlights.length * 3 + item.weightBadges.length
 }
 
+type PeriodFilter = HighlightPeriod | "all"
+
+const PERIOD_FILTER_OPTIONS: Array<{ value: PeriodFilter; label: string }> = [
+  { value: "all", label: "Tudo" },
+  ...(Object.keys(HIGHLIGHT_PERIOD_LABEL) as HighlightPeriod[]).map((value) => ({
+    value,
+    label: HIGHLIGHT_PERIOD_LABEL[value],
+  })),
+]
+
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
     <div className="rounded-[12px] border border-dashed border-border/80 bg-muted/15 px-6 py-16">
@@ -509,24 +521,31 @@ export default function TimelinePage() {
   const allProjects = useSyncExternalStore(subscribeProjectsStore, getProjectsSnapshot, getProjectsServerSnapshot)
   const pinnedIds = useSyncExternalStore(subscribeTimelinePinsStore, getTimelinePinsSnapshot, getTimelinePinsServerSnapshot)
 
+  const [period, setPeriod] = useState<PeriodFilter>("all")
+
   const stories = useMemo(() => buildStoryItems(records, flattenProjects(allProjects)), [allProjects, records])
 
+  const filteredStories = useMemo(() => {
+    if (period === "all") return stories
+    return stories.filter((item) => isInPeriod(item.createdAt, period))
+  }, [period, stories])
+
   const featuredStories = useMemo(() => {
-    return [...stories]
+    return [...filteredStories]
       .sort((a, b) => buildFeaturedScore(b, pinnedIds) - buildFeaturedScore(a, pinnedIds))
       .slice(0, 3)
-  }, [pinnedIds, stories])
+  }, [filteredStories, pinnedIds])
 
   const groupedStories = useMemo(() => {
     const groups = new Map<string, StoryItem[]>()
-    for (const item of stories) {
+    for (const item of filteredStories) {
       const year = new Date(item.createdAt).getFullYear().toString()
       groups.set(year, [...(groups.get(year) ?? []), item])
     }
     return Array.from(groups.entries())
       .sort((a, b) => Number(b[0]) - Number(a[0]))
       .map(([year, items]) => ({ year, items }))
-  }, [stories])
+  }, [filteredStories])
 
   function togglePin(id: string) {
     const next = pinnedIds.includes(id) ? pinnedIds.filter((item) => item !== id) : [id, ...pinnedIds]
@@ -556,6 +575,24 @@ export default function TimelinePage() {
         <EmptyState onOpen={() => openCapture()} />
       ) : (
         <>
+          <div className="flex flex-wrap gap-1.5">
+            {PERIOD_FILTER_OPTIONS.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => setPeriod(option.value)}
+                className={cn(
+                  "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+                  period === option.value
+                    ? "border-brand/30 bg-brand-muted/50 text-brand-muted-foreground"
+                    : "border-border/60 text-muted-foreground hover:text-foreground"
+                )}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
+
           {featuredStories.length > 0 && (
             <section className="space-y-3">
               <div className="flex items-center gap-2">
