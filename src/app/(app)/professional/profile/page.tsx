@@ -146,13 +146,15 @@ export default function ProfilePage() {
       description="Identidade, PDI e objetivo de carreira no mesmo lugar."
     >
       <div className="flex flex-col gap-6">
-      <ProfileHeader
-        identity={displayIdentity}
-        levelName={currentLevel?.name ?? ""}
-        avatarUrl={currentUser?.avatarUrl}
-      />
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
+        <ProfileHeader
+          identity={displayIdentity}
+          levelName={currentLevel?.name ?? ""}
+          avatarUrl={currentUser?.avatarUrl}
+        />
 
-      <NextPdiHighlight baselineAt={pdi.baselineAt} />
+        <NextPdiHighlight baselineAt={pdi.baselineAt} className="h-full" />
+      </div>
 
       <ImpactSummarySection summary={summary} />
 
