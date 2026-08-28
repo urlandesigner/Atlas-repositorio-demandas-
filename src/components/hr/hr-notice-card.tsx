@@ -34,8 +34,8 @@ export function HrNoticeCard({
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
           <CardListRowTitle>{notice.title}</CardListRowTitle>
-          {isUnread ? <Badge variant="default">Novo</Badge> : null}
-          {notice.pinned ? <Badge variant="secondary">Destaque</Badge> : null}
+          {isUnread ? <Badge variant="primary-soft">Novo</Badge> : null}
+          {notice.pinned ? <Badge variant="outline">Destaque</Badge> : null}
           <Badge variant="outline">{notice.category}</Badge>
         </div>
         <CardListRowMeta className={compact ? "line-clamp-1" : undefined}>
@@ -45,27 +45,29 @@ export function HrNoticeCard({
 
       <div
         className={cn(
-          "flex flex-wrap items-center gap-2 lg:justify-end",
-          compact && "lg:justify-start"
+          "flex flex-col items-start gap-2",
+          !compact && "lg:items-end"
         )}
       >
-        <span className="text-xs text-muted-foreground">{formatNoticeDate(notice.publishedAt)}</span>
         {notice.ctaHref && notice.ctaLabel ? (
           <Link
             href={notice.ctaHref}
             onClick={onMarkRead}
-            className={buttonVariants({ variant: "outline", size: "sm" })}
+            className={buttonVariants({ variant: "outline", size: "xs" })}
           >
             {notice.ctaLabel}
             <ArrowUpRight data-icon="inline-end" />
           </Link>
         ) : null}
-        {!preview && !compact && isUnread ? (
-          <Button variant="ghost" size="sm" onClick={onMarkRead}>
-            <Check data-icon="inline-start" />
-            Marcar como lido
-          </Button>
-        ) : null}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-xs text-muted-foreground">{formatNoticeDate(notice.publishedAt)}</span>
+          {!preview && !compact && isUnread ? (
+            <Button variant="ghost" size="sm" onClick={onMarkRead}>
+              <Check data-icon="inline-start" />
+              Marcar como lido
+            </Button>
+          ) : null}
+        </div>
       </div>
     </CardListRow>
   )

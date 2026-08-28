@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { Field } from "@/components/ui/field"
+import { FilterPill, FilterPillGroup } from "@/components/ui/filter-pill"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -18,7 +20,6 @@ import {
   type RecognitionEntry,
   type RecognitionType,
 } from "@/lib/evolution/types"
-import { cn } from "@/lib/utils"
 
 const TYPES = Object.keys(RECOGNITION_TYPE_LABEL) as RecognitionType[]
 
@@ -89,62 +90,46 @@ export function RecognitionFormSheet({
         </SheetHeader>
 
         <div className="flex flex-col gap-4 p-4 pt-0">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Título</span>
+          <Field label="Título" size="sm">
             <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Destaque na entrega do projeto X" />
-          </label>
+          </Field>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Descrição</span>
+          <Field label="Descrição" size="sm">
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
               placeholder="O que foi reconhecido e por quê"
             />
-          </label>
+          </Field>
 
           <div className="grid grid-cols-2 gap-3">
-            <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium text-muted-foreground">Quem reconheceu</span>
+            <Field label="Quem reconheceu" size="sm">
               <Input value={recognizedBy} onChange={(e) => setRecognizedBy(e.target.value)} />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium text-muted-foreground">Data</span>
+            </Field>
+            <Field label="Data" size="sm">
               <Input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-            </label>
+            </Field>
           </div>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Área / squad</span>
+          <Field label="Área / squad" size="sm">
             <Input value={recognizerArea} onChange={(e) => setRecognizerArea(e.target.value)} placeholder="Opcional" />
-          </label>
+          </Field>
 
           <div>
             <span className="text-xs font-medium text-muted-foreground">Tipo</span>
-            <div className="mt-2 flex flex-wrap gap-1.5">
+            <FilterPillGroup aria-label="Tipo" className="mt-2">
               {TYPES.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setType(t)}
-                  className={cn(
-                    "rounded-full border px-2.5 py-1 text-xs transition-colors",
-                    type === t
-                      ? "border-brand/30 bg-brand-muted/50 text-brand-muted-foreground"
-                      : "border-border text-muted-foreground hover:text-foreground"
-                  )}
-                >
+                <FilterPill key={t} size="sm" active={type === t} onClick={() => setType(t)}>
                   {RECOGNITION_TYPE_LABEL[t]}
-                </button>
+                </FilterPill>
               ))}
-            </div>
+            </FilterPillGroup>
           </div>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Link de evidência</span>
+          <Field label="Link de evidência" size="sm">
             <Input value={evidenceUrl} onChange={(e) => setEvidenceUrl(e.target.value)} placeholder="Opcional — Slack, email, doc" />
-          </label>
+          </Field>
         </div>
 
         <SheetFooter className="border-t border-border/60">

@@ -8,6 +8,7 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import {
   CardList,
   CardListBody,
@@ -25,6 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { MetricCard } from "@/components/ui/metric-card"
 import {
   computeFrameworkReadiness,
   getFrameworkExpectations,
@@ -140,13 +142,10 @@ export function GestaoPdiHub() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">PDIs</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Organize trilhas da área e acompanhe quem já está evoluindo no ciclo atual.
-          </p>
-        </div>
+      <PageHeader
+        title="PDIs"
+        description="Organize trilhas da área e acompanhe quem já está evoluindo no ciclo atual."
+      >
         <PageHeaderActions>
           <Link
             href="/gestao/pdi/frameworks/novo"
@@ -160,14 +159,14 @@ export function GestaoPdiHub() {
             Nova trilha
           </Link>
         </PageHeaderActions>
-      </div>
+      </PageHeader>
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
       <div className="grid gap-3 md:grid-cols-3">
-        <HubMetric label="Trilhas disponíveis" value={pdiData.frameworks.length} helper="Bases prontas para aplicar no time" />
-        <HubMetric label="PDIs ativos" value={activeAssignments.length} helper="Pessoas com acompanhamento em andamento" />
-        <HubMetric label="Prontidão média" value={averageReadiness} helper="Média atual do time em %" suffix="%" />
+        <MetricCard label="Trilhas disponíveis" value={pdiData.frameworks.length} helper="Bases prontas para aplicar no time" />
+        <MetricCard label="PDIs ativos" value={activeAssignments.length} helper="Pessoas com acompanhamento em andamento" />
+        <MetricCard label="Prontidão média" value={averageReadiness} helper="Média atual do time em %" suffix="%" />
       </div>
 
       <section className="flex flex-col gap-3">
@@ -278,7 +277,7 @@ export function GestaoPdiHub() {
                     </CardListRowMeta>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant={readiness >= 80 ? "default" : "outline"}>
+                    <Badge variant={readiness >= 80 ? "primary-soft" : "outline"}>
                       {readiness}% pronto
                     </Badge>
                     <ArrowUpRight className="size-3.5 text-muted-foreground" />
@@ -314,31 +313,6 @@ export function GestaoPdiHub() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  )
-}
-
-function HubMetric({
-  label,
-  value,
-  helper,
-  suffix = "",
-}: {
-  label: string
-  value: number
-  helper: string
-  suffix?: string
-}) {
-  return (
-    <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
-        {value}
-        {suffix}
-      </p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { HrNoticeCard } from "@/components/hr/hr-notice-card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   CardList,
@@ -18,7 +19,10 @@ import {
   CardListRows,
   CardListRowTitle,
 } from "@/components/ui/card-list"
+import { Checkbox } from "@/components/ui/checkbox"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { Field } from "@/components/ui/field"
+import { MetricCard } from "@/components/ui/metric-card"
 import {
   Dialog,
   DialogContent,
@@ -69,26 +73,6 @@ function toDateInputValue(value: string) {
   return value.slice(0, 10)
 }
 
-function AdminMetric({
-  label,
-  value,
-  helper,
-}: {
-  label: string
-  value: number
-  helper: string
-}) {
-  return (
-    <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
-    </div>
-  )
-}
-
 export function AdminHrNoticesPanel() {
   const { session } = useAuth()
   const noticesData = useSyncExternalStore(
@@ -116,13 +100,10 @@ export function AdminHrNoticesPanel() {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Avisos do RH</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Cadastre comunicados que devem aparecer na home dos colaboradores e gestores da área.
-            </p>
-          </div>
+        <PageHeader
+          title="Avisos do RH"
+          description="Cadastre comunicados que devem aparecer na home dos colaboradores e gestores da área."
+        >
           <PageHeaderActions>
             <Button
               onClick={() => {
@@ -134,12 +115,12 @@ export function AdminHrNoticesPanel() {
               Novo aviso
             </Button>
           </PageHeaderActions>
-        </div>
+        </PageHeader>
 
         <div className="grid gap-3 md:grid-cols-3">
-          <AdminMetric label="Avisos ativos" value={areaNotices.length} helper="Comunicados visíveis na área" />
-          <AdminMetric label="Em destaque" value={pinnedCount} helper="Fixados no topo da leitura" />
-          <AdminMetric label="Segmentados" value={roleScopedCount} helper="Direcionados por público" />
+          <MetricCard label="Avisos ativos" value={areaNotices.length} helper="Comunicados visíveis na área" />
+          <MetricCard label="Em destaque" value={pinnedCount} helper="Fixados no topo da leitura" />
+          <MetricCard label="Segmentados" value={roleScopedCount} helper="Direcionados por público" />
         </div>
 
         <CardList>
@@ -156,7 +137,7 @@ export function AdminHrNoticesPanel() {
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <CardListRowTitle>{notice.title}</CardListRowTitle>
-                        {notice.pinned ? <Badge variant="secondary">Destaque</Badge> : null}
+                        {notice.pinned ? <Badge variant="outline">Destaque</Badge> : null}
                         <Badge variant="outline">{notice.category}</Badge>
                         <Badge variant="outline">
                           {AUDIENCE_OPTIONS.find((option) => option.value === notice.audience)?.label}
@@ -340,19 +321,16 @@ function HrNoticeFormSheet({
         </SheetHeader>
 
         <div className="flex flex-col gap-4 p-4 pt-0">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Título</span>
+          <Field label="Título">
             <Input value={title} onChange={(event) => setTitle(event.target.value)} />
-          </label>
+          </Field>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Recado</span>
+          <Field label="Recado">
             <Textarea value={body} onChange={(event) => setBody(event.target.value)} />
-          </label>
+          </Field>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Categoria</span>
+            <Field label="Categoria">
               <Select value={category} onValueChange={(value) => value && setCategory(value as HrNotice["category"])}>
                 <SelectTrigger className="w-full">
                   <SelectValue />
@@ -365,13 +343,14 @@ function HrNoticeFormSheet({
                   ))}
                 </SelectContent>
               </Select>
-            </label>
+            </Field>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Público</span>
+            <Field label="Público">
               <Select value={audience} onValueChange={(value) => value && setAudience(value as HrNotice["audience"])}>
                 <SelectTrigger className="w-full">
-                  <SelectValue />
+                  <SelectValue>
+                    {(value: HrNotice["audience"]) => AUDIENCE_OPTIONS.find((option) => option.value === value)?.label}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {AUDIENCE_OPTIONS.map((option) => (
@@ -381,44 +360,39 @@ function HrNoticeFormSheet({
                   ))}
                 </SelectContent>
               </Select>
-            </label>
+            </Field>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Publicação</span>
+            <Field label="Publicação">
               <Input
                 type="date"
                 value={publishedAt}
                 onChange={(event) => setPublishedAt(event.target.value)}
               />
-            </label>
+            </Field>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Texto do CTA</span>
+            <Field label="Texto do CTA">
               <Input
                 value={ctaLabel}
                 onChange={(event) => setCtaLabel(event.target.value)}
                 placeholder="Ex.: Abrir perfil"
               />
-            </label>
+            </Field>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Link do CTA</span>
+            <Field label="Link do CTA">
               <Input
                 value={ctaHref}
                 onChange={(event) => setCtaHref(event.target.value)}
                 placeholder="/professional/profile"
               />
-            </label>
+            </Field>
           </div>
 
           <label className="flex items-center gap-3 rounded-[12px] border border-border/70 bg-card px-3 py-3">
-            <input
-              type="checkbox"
+            <Checkbox
               checked={pinned}
-              onChange={(event) => setPinned(event.target.checked)}
-              className="size-4 rounded border-border"
+              onCheckedChange={(checked) => setPinned(checked)}
             />
             <div className="min-w-0">
               <p className="text-sm font-medium">Fixar em destaque</p>

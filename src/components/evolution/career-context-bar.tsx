@@ -1,6 +1,8 @@
 "use client"
 
 import { LadderStepper } from "@/components/profile/ladder-stepper"
+import { MetricCard } from "@/components/ui/metric-card"
+import { Overline } from "@/components/ui/overline"
 import type { CareerGoal, LevelDef } from "@/lib/profile/types"
 import { cn } from "@/lib/utils"
 
@@ -26,33 +28,29 @@ export function CareerContextBar({
   return (
     <div
       className={cn(
-        "rounded-[12px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]",
+        "rounded-[12px] border border-border/60 bg-card/[0.98] p-4 shadow-card",
         className
       )}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <p className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground/70">
+          <Overline className="text-muted-foreground/70">
             Objetivo de carreira
-          </p>
+          </Overline>
           <p className="mt-1 text-lg font-semibold tracking-tight">{goal.targetRole}</p>
           <p className="mt-0.5 text-sm text-muted-foreground">
             Hoje em {currentLevelName}
             {goal.targetYear ? ` · meta ${goal.targetYear}` : ""}
           </p>
         </div>
-        <div className="flex shrink-0 gap-6">
-          <div className="text-right">
-            <p className="text-2xl font-semibold tabular-nums text-brand-muted-foreground">{readiness}%</p>
-            <p className="text-[11px] text-muted-foreground">prontidão no PDI</p>
-          </div>
+        <div className="flex shrink-0 gap-3">
+          <MetricCard variant="tile" label="Prontidão no PDI" value={readiness} suffix="%" />
           {strongCompetencies !== undefined && totalCompetencies !== undefined ? (
-            <div className="text-right">
-              <p className="text-2xl font-semibold tabular-nums">
-                {strongCompetencies}/{totalCompetencies}
-              </p>
-              <p className="text-[11px] text-muted-foreground">competências evidenciadas</p>
-            </div>
+            <MetricCard
+              variant="tile"
+              label="Competências evidenciadas"
+              value={`${strongCompetencies}/${totalCompetencies}`}
+            />
           ) : null}
         </div>
       </div>

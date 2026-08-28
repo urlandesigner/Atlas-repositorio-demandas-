@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { ArrowUpRight, Plus, Target } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PdiLevelTrack } from "@/components/profile/pdi-level-track"
 import {
@@ -114,14 +115,14 @@ export function PdiObjectiveProgressMatrix({
                     : "Nenhum objetivo vinculado a este tema"}
                 </span>
                 {!progress.linkedObjectives ? (
-                  <button
-                    type="button"
+                  <Button
+                    variant="link"
                     onClick={() => onCreateObjective(theme)}
-                    className="inline-flex shrink-0 items-center gap-0.5 text-[11px] font-medium text-brand-muted-foreground underline-offset-2 hover:underline"
+                    className="h-auto shrink-0 gap-0.5 border-none p-0 text-[11px] font-medium text-brand-muted-foreground underline-offset-2"
                   >
                     <Plus className="size-3" />
                     criar objetivo
-                  </button>
+                  </Button>
                 ) : null}
               </div>
             </div>

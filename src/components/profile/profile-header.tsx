@@ -25,7 +25,7 @@ export function ProfileHeader({
   const tenure = formatTenure(identity.startDate)
 
   return (
-    <div className="flex flex-col gap-4 rounded-[12px] border border-border/60 bg-card p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] sm:flex-row sm:items-center">
+    <div className="flex flex-col gap-4 rounded-[12px] border border-border/60 bg-card p-5 shadow-card sm:flex-row sm:items-start">
       <PersonAvatar name={identity.name} imageUrl={avatarUrl} size="lg" className="size-14" />
 
       <div className="min-w-0 flex-1">

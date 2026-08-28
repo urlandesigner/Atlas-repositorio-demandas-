@@ -95,24 +95,25 @@ const adminNavItems: NavItem[] = [
 ]
 
 const brandMarkClassName =
-  "flex size-9 items-center justify-center rounded-lg bg-brand shadow-[0_8px_20px_color-mix(in_srgb,var(--color-brand)_24%,transparent)]"
+  "flex size-9 items-center justify-center rounded-lg bg-brand shadow-brand"
 
 function SidebarBrandMark() {
   const { state, toggleSidebar } = useSidebar()
 
   if (state === "collapsed") {
     return (
-      <button
-        type="button"
+      <Button
+        variant="ghost"
+        size="icon-sm"
         onClick={toggleSidebar}
         className={cn(
           brandMarkClassName,
-          "text-brand-foreground transition-colors hover:bg-primary/90"
+          "text-brand-foreground hover:bg-primary/90 hover:text-brand-foreground"
         )}
         aria-label="Expandir sidebar"
       >
         <PanelLeft className="size-3.5" />
-      </button>
+      </Button>
     )
   }
 

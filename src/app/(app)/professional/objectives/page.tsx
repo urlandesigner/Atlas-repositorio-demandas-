@@ -24,9 +24,22 @@ import { useOptionalSession } from "@/hooks/use-optional-session"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { Input } from "@/components/ui/input"
+import { ListRowButton } from "@/components/ui/list-row-button"
+import { MetricCard } from "@/components/ui/metric-card"
+import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
@@ -35,7 +48,9 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
+import { StatusBadge } from "@/components/ui/status-badge"
 import { Textarea } from "@/components/ui/textarea"
+import { OBJECTIVE_STATUS_TONE } from "@/lib/status-tone"
 import {
   addObjectiveToCollection,
   countObjectiveEvidence,
@@ -69,27 +84,11 @@ import type { RecordEntry } from "@/lib/records/types"
 import { getRecordImpactText } from "@/lib/records/display"
 import { cn } from "@/lib/utils"
 
-const STATUS_BADGE_CLASS: Record<ObjectiveStatus, string> = {
-  planned: "border-sky-500/20 bg-sky-500/10 text-sky-700 dark:text-sky-300",
-  in_progress: "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  done: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  paused: "border-muted-foreground/20 bg-muted text-muted-foreground",
-}
-
 const STATUS_ICON: Record<ObjectiveStatus, LucideIcon> = {
   planned: CircleDot,
   in_progress: Clock3,
   done: CheckCircle2,
   paused: PauseCircle,
-}
-
-const DIMENSION_CLASS: Record<PdiDimension, string> = {
-  tecnologia: "border-blue-500/15 bg-blue-500/10 text-blue-700 dark:text-blue-300",
-  dominio: "border-cyan-500/15 bg-cyan-500/10 text-cyan-700 dark:text-cyan-300",
-  pessoas: "border-emerald-500/15 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  processos: "border-stone-500/15 bg-stone-500/10 text-stone-700 dark:text-stone-300",
-  influencia: "border-violet-500/15 bg-violet-500/10 text-violet-700 dark:text-violet-300",
-  estudo: "border-orange-500/15 bg-orange-500/10 text-orange-700 dark:text-orange-300",
 }
 
 function formatDate(iso: string | null) {
@@ -215,17 +214,21 @@ function ObjectiveSheet({
 
               <div className="flex flex-col gap-1.5">
                 <label className="text-xs font-medium text-muted-foreground">Status</label>
-                <select
+                <Select
                   value={form.status}
-                  onChange={(event) => set("status", event.target.value as ObjectiveStatus)}
-                  className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none transition-[color,box-shadow] focus:border-ring focus:ring-[3px] focus:ring-ring/50"
+                  onValueChange={(value) => set("status", value as ObjectiveStatus)}
                 >
-                  {OBJECTIVE_STATUS_OPTIONS.map((status) => (
-                    <option key={status} value={status}>
-                      {OBJECTIVE_STATUS_LABEL[status]}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>{(status: ObjectiveStatus) => OBJECTIVE_STATUS_LABEL[status]}</SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {OBJECTIVE_STATUS_OPTIONS.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {OBJECTIVE_STATUS_LABEL[status]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
@@ -319,14 +322,7 @@ function ObjectiveSheet({
                           checked && "bg-muted/60"
                         )}
                       >
-                        <span
-                          className={cn(
-                            "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border",
-                            checked && "border-primary bg-primary text-primary-foreground"
-                          )}
-                        >
-                          {checked ? <CheckCircle2 className="size-3" /> : null}
-                        </span>
+                        <Checkbox checked={checked} className="mt-0.5 pointer-events-none" tabIndex={-1} />
                         <span className="min-w-0">
                           <span className="block truncate font-medium">
                             {record.enriched.title}
@@ -378,14 +374,7 @@ function ObjectiveSheet({
                           checked && "bg-muted/60"
                         )}
                       >
-                        <span
-                          className={cn(
-                            "mt-0.5 flex size-4 shrink-0 items-center justify-center rounded border",
-                            checked && "border-primary bg-primary text-primary-foreground"
-                          )}
-                        >
-                          {checked ? <CheckCircle2 className="size-3" /> : null}
-                        </span>
+                        <Checkbox checked={checked} className="mt-0.5 pointer-events-none" tabIndex={-1} />
                         <span className="min-w-0">
                           <span className="flex items-center gap-2">
                             <Presentation className="size-3.5 shrink-0 text-muted-foreground" />
@@ -438,34 +427,28 @@ function ObjectiveCard({
 
   return (
     <Card
-      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
+      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h3 className="line-clamp-2 text-sm font-medium leading-snug">{item.title}</h3>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {item.dimensions.slice(0, 3).map((dimension) => (
-                <Badge
-                  key={dimension}
-                  variant="outline"
-                  className={cn("font-normal", DIMENSION_CLASS[dimension])}
-                >
-                  {PDI_DIMENSION_LABEL[dimension]}
-                </Badge>
-              ))}
-              {item.dimensions.length > 3 ? (
-                <Badge variant="outline" className="font-normal">
-                  +{item.dimensions.length - 3}
-                </Badge>
-              ) : null}
-            </div>
-          </div>
-          <Badge variant="outline" className={cn("shrink-0 font-normal", STATUS_BADGE_CLASS[item.status])}>
+          <h3 className="min-w-0 flex-1 line-clamp-2 text-sm font-medium leading-snug">{item.title}</h3>
+          <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]} className="shrink-0 font-normal">
             <StatusIcon data-icon="inline-start" />
             {OBJECTIVE_STATUS_LABEL[item.status]}
-          </Badge>
+          </StatusBadge>
+        </div>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {item.dimensions.slice(0, 3).map((dimension) => (
+            <Badge key={dimension} variant="outline" className="font-normal">
+              {PDI_DIMENSION_LABEL[dimension]}
+            </Badge>
+          ))}
+          {item.dimensions.length > 3 ? (
+            <Badge variant="outline" className="font-normal">
+              +{item.dimensions.length - 3}
+            </Badge>
+          ) : null}
         </div>
       </CardHeader>
 
@@ -479,9 +462,7 @@ function ObjectiveCard({
             <span className="text-muted-foreground">Progresso estimado</span>
             <span className="font-medium">{progress}%</span>
           </div>
-          <div className="h-1.5 overflow-hidden rounded-full bg-muted">
-            <div className="h-full rounded-full bg-foreground" style={{ width: `${progress}%` }} />
-          </div>
+          <Progress value={progress} size="sm" tone="foreground" />
         </div>
 
         <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
@@ -507,22 +488,22 @@ function ObjectiveCard({
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-dashed border-border/60 bg-muted/15 py-16">
-      <div className="icon-well flex size-10 items-center justify-center rounded-full">
-        <Target className="size-5" />
-      </div>
-      <p className="text-center text-sm text-muted-foreground">
-        Nenhum objetivo ainda. Defina uma intenção para o ciclo.
-      </p>
-      <Button size="sm" onClick={onOpen}>
-        <Plus data-icon="inline-start" />
-        Novo objetivo
-      </Button>
-    </div>
+    <EmptyStateCard
+      size="page"
+      icon={Target}
+      title="Nenhum objetivo ainda"
+      description="Defina uma intenção para o ciclo."
+      action={
+        <Button size="sm" onClick={onOpen}>
+          <Plus data-icon="inline-start" />
+          Novo objetivo
+        </Button>
+      }
+    />
   )
 }
 
-function DetailSection({ label, children }: { label: string; children: React.ReactNode }) {
+function SectionBlock({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-1.5">
       <p className="text-xs font-medium text-muted-foreground">{label}</p>
@@ -562,9 +543,9 @@ function ObjectiveDrawer({
             <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
               <div className="flex flex-wrap items-center gap-2">
                 <SheetTitle className="text-base">{item.title}</SheetTitle>
-                <Badge variant="outline" className={cn("font-normal", STATUS_BADGE_CLASS[item.status])}>
+                <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]} className="font-normal">
                   {OBJECTIVE_STATUS_LABEL[item.status]}
-                </Badge>
+                </StatusBadge>
               </div>
               <p className="text-xs text-muted-foreground">
                 {formatDate(item.deadline) ? `Prazo: ${formatDate(item.deadline)}` : "Sem prazo definido"}
@@ -584,15 +565,11 @@ function ObjectiveDrawer({
                   </div>
                 </div>
 
-                <DetailSection label="Competências vinculadas">
+                <SectionBlock label="Competências vinculadas">
                   <div className="flex flex-wrap gap-1.5">
                     {item.dimensions.length ? (
                       item.dimensions.map((dimension) => (
-                        <Badge
-                          key={dimension}
-                          variant="outline"
-                          className={cn("font-normal", DIMENSION_CLASS[dimension])}
-                        >
+                        <Badge key={dimension} variant="outline" className="font-normal">
                           {PDI_DIMENSION_LABEL[dimension]}
                         </Badge>
                       ))
@@ -600,55 +577,52 @@ function ObjectiveDrawer({
                       "—"
                     )}
                   </div>
-                </DetailSection>
+                </SectionBlock>
 
                 <Separator />
 
-                <DetailSection label="Motivação">
+                <SectionBlock label="Motivação">
                   <p>{item.motivation ?? "—"}</p>
-                </DetailSection>
+                </SectionBlock>
 
                 <Separator />
 
-                <DetailSection label="Plano de ação">
+                <SectionBlock label="Plano de ação">
                   <p className="whitespace-pre-wrap">{item.actionPlan ?? "—"}</p>
-                </DetailSection>
+                </SectionBlock>
 
                 <Separator />
 
-                <DetailSection label="Evidências esperadas">
+                <SectionBlock label="Evidências esperadas">
                   <p className="whitespace-pre-wrap">{item.expectedEvidence ?? "—"}</p>
-                </DetailSection>
+                </SectionBlock>
 
                 <Separator />
 
-                <DetailSection label="Registros vinculados">
+                <SectionBlock label="Registros vinculados">
                   {linkedRecords.length ? (
                     <div className="flex flex-col gap-2">
                       {linkedRecords.map((record) => (
-                        <button
-                          key={record.id}
-                          type="button"
-                          onClick={() => onOpenRecord(record)}
-                          className="rounded-lg border bg-background px-3 py-2 text-left transition-colors hover:bg-muted/50"
-                        >
-                          <p className="line-clamp-1 text-sm font-medium text-foreground">
-                            {record.enriched.title}
-                          </p>
-                          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                            {getRecordImpactText(record) || record.raw}
-                          </p>
-                        </button>
+                        <ListRowButton key={record.id} onClick={() => onOpenRecord(record)}>
+                          <span className="min-w-0 flex-1">
+                            <span className="line-clamp-1 block text-sm font-medium text-foreground">
+                              {record.enriched.title}
+                            </span>
+                            <span className="mt-1 line-clamp-2 block text-xs text-muted-foreground">
+                              {getRecordImpactText(record) || record.raw}
+                            </span>
+                          </span>
+                        </ListRowButton>
                       ))}
                     </div>
                   ) : (
                     <p>Sem registros vinculados ainda.</p>
                   )}
-                </DetailSection>
+                </SectionBlock>
 
                 <Separator />
 
-                <DetailSection label="Apresentações vinculadas">
+                <SectionBlock label="Apresentações vinculadas">
                   {linkedPresentations.length ? (
                     <div className="flex flex-col gap-2">
                       {linkedPresentations.map((presentation) => (
@@ -679,7 +653,7 @@ function ObjectiveDrawer({
                   ) : (
                     <p>Sem apresentações vinculadas ainda.</p>
                   )}
-                </DetailSection>
+                </SectionBlock>
               </div>
             </ScrollArea>
 
@@ -767,85 +741,50 @@ export default function ObjectivesPage() {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Objetivos</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Metas do ciclo ligadas a evidências reais.
-            </p>
-          </div>
-
+        <PageHeader
+          title="Objetivos"
+          description="Metas do ciclo ligadas a evidências reais."
+        >
           <PageHeaderActions>
             <Button size="sm" className="shrink-0" onClick={() => setIsAdding(true)}>
               <Plus data-icon="inline-start" />
               Novo objetivo
             </Button>
           </PageHeaderActions>
-        </div>
+        </PageHeader>
 
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <Card>
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
-                <Target className="size-4" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold tracking-tight">{objectives.length}</p>
-                <p className="text-xs text-muted-foreground">Meus objetivos</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
-                <Clock3 className="size-4" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold tracking-tight">{stats.active}</p>
-                <p className="text-xs text-muted-foreground">Em andamento</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
-                <FileText className="size-4" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold tracking-tight">{stats.evidence}</p>
-                <p className="text-xs text-muted-foreground">Evidências</p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="icon-well flex size-9 items-center justify-center rounded-lg">
-                <Flag className="size-4" />
-              </div>
-              <div>
-                <p className="text-2xl font-semibold tracking-tight">{stats.dueSoon}</p>
-                <p className="text-xs text-muted-foreground">Até 30 dias</p>
-              </div>
-            </CardContent>
-          </Card>
+          <MetricCard variant="card" label="Meus objetivos" value={objectives.length} icon={Target} />
+          <MetricCard variant="card" label="Em andamento" value={stats.active} icon={Clock3} />
+          <MetricCard variant="card" label="Evidências" value={stats.evidence} icon={FileText} />
+          <MetricCard variant="card" label="Até 30 dias" value={stats.dueSoon} icon={Flag} />
         </div>
 
         {session?.userId ? <AssignedObjectivesSection userId={session.userId} /> : null}
 
-        {objectives.length === 0 ? (
-          <EmptyState onOpen={() => setIsAdding(true)} />
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {objectives.map((item) => (
-              <ObjectiveCard
-                key={item.id}
-                item={item}
-                evidenceCount={countObjectiveEvidence(item)}
-                onClick={() => setSelected(item)}
-              />
-            ))}
+        <section className="flex flex-col gap-3">
+          <div>
+            <h2 className="text-sm font-medium">Meus objetivos</h2>
+            <p className="text-xs text-muted-foreground">
+              Metas que você definiu para o ciclo atual.
+            </p>
           </div>
-        )}
+
+          {objectives.length === 0 ? (
+            <EmptyState onOpen={() => setIsAdding(true)} />
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {objectives.map((item) => (
+                <ObjectiveCard
+                  key={item.id}
+                  item={item}
+                  evidenceCount={countObjectiveEvidence(item)}
+                  onClick={() => setSelected(item)}
+                />
+              ))}
+            </div>
+          )}
+        </section>
       </div>
 
       <ObjectiveSheet

@@ -2,6 +2,7 @@ import type { ReactNode } from "react"
 import { TrendingUpIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { Overline } from "@/components/ui/overline"
 
 type ImpactCalloutSize = "default" | "sm"
 type ImpactCalloutLines = 1 | 2 | 3
@@ -39,15 +40,15 @@ export function ImpactCallout({
   return (
     <div
       className={cn(
-        "border border-brand/15 bg-brand-muted shadow-[0_6px_16px_oklch(0.6_0.12_162/0.08),inset_0_1px_0_rgba(255,255,255,0.45)]",
+        "border border-brand/15 bg-brand-muted shadow-card",
         sizeClass.container,
         className
       )}
     >
-      <div className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-muted-foreground">
+      <Overline size="sm" className="flex items-center gap-2 text-brand-muted-foreground">
         <TrendingUpIcon className="size-3.5" />
         {label}
-      </div>
+      </Overline>
       <p className={cn("mt-1.5 font-medium text-foreground", sizeClass.text, LINE_CLAMP[lines])}>
         {children}
       </p>

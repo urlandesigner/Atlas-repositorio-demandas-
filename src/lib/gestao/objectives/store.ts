@@ -23,6 +23,7 @@ export interface GestaoObjective {
   deadline: string | null
   status: ObjectiveStatus
   dimensions: PdiDimension[]
+  linkedRecordIds: string[]
   createdAt: string
   updatedAt: string
 }
@@ -63,6 +64,7 @@ const SEED: GestaoObjective[] = [
     deadline: "2026-09-30",
     status: "in_progress",
     dimensions: ["influencia", "pessoas", "dominio"],
+    linkedRecordIds: [],
     createdAt: "2026-06-01T00:00:00.000Z",
     updatedAt: "2026-06-01T00:00:00.000Z",
   },
@@ -99,6 +101,9 @@ function normalizeObjective(raw: Partial<GestaoObjective>): GestaoObjective {
       ? raw.dimensions.filter((item): item is PdiDimension =>
           PDI_DIMENSION_OPTIONS.includes(item as PdiDimension)
         )
+      : [],
+    linkedRecordIds: Array.isArray(raw.linkedRecordIds)
+      ? raw.linkedRecordIds.filter((item): item is string => typeof item === "string")
       : [],
     createdAt,
     updatedAt: raw.updatedAt ?? createdAt,
@@ -238,6 +243,36 @@ export function deleteGestaoObjective(id: string, actorId?: string) {
       })
     }
   }
+}
+
+export function countGestaoObjectiveEvidence(
+  objective: Pick<GestaoObjective, "linkedRecordIds">
+): number {
+  return objective.linkedRecordIds.length
+}
+
+export function linkRecordToGestaoObjective(objectiveId: string, recordId: string) {
+  const data = getGestaoObjectivesSnapshot()
+  save(
+    data.map((item) =>
+      item.id === objectiveId && !item.linkedRecordIds.includes(recordId)
+        ? { ...item, linkedRecordIds: [...item.linkedRecordIds, recordId] }
+        : item
+    )
+  )
+  emitGestaoObjectivesChange()
+}
+
+export function unlinkRecordFromGestaoObjectives(recordId: string) {
+  const data = getGestaoObjectivesSnapshot()
+  save(
+    data.map((item) =>
+      item.linkedRecordIds.includes(recordId)
+        ? { ...item, linkedRecordIds: item.linkedRecordIds.filter((id) => id !== recordId) }
+        : item
+    )
+  )
+  emitGestaoObjectivesChange()
 }
 
 export function createGestaoObjectiveForm(objective: GestaoObjective): GestaoObjectiveForm {

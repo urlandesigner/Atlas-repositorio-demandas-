@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react"
 
 import { buttonVariants } from "@/components/ui/button"
 import { PersonAvatar } from "@/components/ui/person-avatar"
+import { SegmentedProgress } from "@/components/ui/segmented-progress"
 import type { SocialProfile } from "@/lib/org/social"
 import type { OrgUser } from "@/lib/org/types"
 import { cn } from "@/lib/utils"
@@ -74,17 +75,7 @@ export function MyNetworkCard({
       </div>
 
       <div className="mt-3 flex items-center gap-2">
-        <div className="flex flex-1 gap-1">
-          {checklist.map((item) => (
-            <span
-              key={item.label}
-              className={cn(
-                "h-1.5 flex-1 rounded-full",
-                item.done ? "bg-brand" : "bg-border"
-              )}
-            />
-          ))}
-        </div>
+        <SegmentedProgress segments={checklist.map((item) => item.done)} />
         <p className="shrink-0 text-[11px] text-muted-foreground">
           {doneCount} de {checklist.length}
           {missing.length ? ` · falta ${missing.join(" e ")}` : ""}

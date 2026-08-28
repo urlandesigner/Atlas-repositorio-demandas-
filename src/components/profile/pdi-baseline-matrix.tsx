@@ -2,6 +2,7 @@
 
 import { ChevronRight } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { PdiLevelTrack } from "@/components/profile/pdi-level-track"
 import {
@@ -50,14 +51,14 @@ export function PdiBaselineMatrix({
           return (
             <div key={theme} className="flex flex-col gap-2">
               <div className="flex items-center justify-between gap-3">
-                <button
-                  type="button"
+                <Button
+                  variant="link"
                   onClick={() => onOpenRubric(theme)}
-                  className="group flex min-w-0 items-center gap-1 text-sm font-medium"
+                  className="h-auto min-w-0 shrink justify-start gap-1 border-none p-0 text-sm font-medium text-foreground"
                 >
                   {PDI_THEME_LABEL[theme]}
-                  <ChevronRight className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-                </button>
+                  <ChevronRight className="size-3.5 text-muted-foreground transition-transform group-hover/button:translate-x-0.5" />
+                </Button>
                 <span
                   className={cn(
                     "text-xs tabular-nums",

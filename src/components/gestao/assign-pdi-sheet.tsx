@@ -6,6 +6,7 @@ import { FrameworkPdiMatrix } from "@/components/gestao/framework-pdi-matrix"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -91,8 +92,7 @@ export function AssignPdiSheet({
         </SheetHeader>
 
         <div className="flex flex-col gap-4 p-4 pt-0">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Trilha</span>
+          <Field label="Trilha" size="sm">
             <Select
               value={frameworkId}
               onValueChange={(value) => {
@@ -115,18 +115,19 @@ export function AssignPdiSheet({
                 ))}
               </SelectContent>
             </Select>
-          </label>
+          </Field>
 
           {framework ? (
             <>
-              <label className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-muted-foreground">Nível atual na trilha</span>
+              <Field label="Nível atual na trilha" size="sm">
                 <Select
                   value={currentLevelId}
                   onValueChange={(value) => value && setCurrentLevelId(value)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue>
+                      {(value: string) => framework.ladder.find((level) => level.id === value)?.name}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {framework.ladder.map((level) => (
@@ -136,10 +137,9 @@ export function AssignPdiSheet({
                     ))}
                   </SelectContent>
                 </Select>
-              </label>
+              </Field>
 
-              <label className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-muted-foreground">Meta de nível (opcional)</span>
+              <Field label="Meta de nível (opcional)" size="sm">
                 <Select
                   value={targetLevelId}
                   onValueChange={(value) => value && setTargetLevelId(value)}
@@ -156,14 +156,13 @@ export function AssignPdiSheet({
                     ))}
                   </SelectContent>
                 </Select>
-              </label>
+              </Field>
             </>
           ) : null}
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Ciclo</span>
+          <Field label="Ciclo" size="sm">
             <Input value={cycleLabel} onChange={(event) => setCycleLabel(event.target.value)} />
-          </label>
+          </Field>
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
         </div>

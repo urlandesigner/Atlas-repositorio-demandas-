@@ -1,5 +1,7 @@
 "use client"
 
+import { PageHeader } from "@/components/ui/page-header"
+
 import { EvolutionNav, EvolutionNavMobile } from "./evolution-nav"
 
 export function EvolutionShell({
@@ -15,10 +17,11 @@ export function EvolutionShell({
     <div className="flex flex-col gap-6">
       {title ? (
         <header>
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-          {description ? (
-            <p className="mt-1 max-w-2xl text-sm text-muted-foreground">{description}</p>
-          ) : null}
+          <PageHeader
+            title={title}
+            description={description}
+            descriptionClassName="max-w-2xl"
+          />
         </header>
       ) : null}
 

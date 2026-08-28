@@ -13,7 +13,10 @@ import {
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { ImpactDots } from "@/components/ui/impact-dots"
 import { Input } from "@/components/ui/input"
+import { Overline } from "@/components/ui/overline"
+import { StatusBadge } from "@/components/ui/status-badge"
 import { Textarea } from "@/components/ui/textarea"
 import { ATUACOES } from "./atuacao-picker"
 import { AREAS } from "./area-picker"
@@ -183,32 +186,17 @@ function DetailBody({
       <div className="flex flex-col gap-3 border-b px-6 py-4 shrink-0">
         <div className="flex items-center gap-2 pr-8">
           {atuacao && (
-            <span
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium",
-                atuacao.baseClass
-              )}
-            >
+            <StatusBadge tone="neutral">
               <atuacao.icon className="size-3" />
               {atuacao.label}
-            </span>
+            </StatusBadge>
           )}
           {area && (
             <span className="text-[11px] text-muted-foreground">
               {area.label}
             </span>
           )}
-          <div className="ml-auto flex items-center gap-1">
-            {([1, 2, 3, 4, 5] as const).map((l) => (
-              <div
-                key={l}
-                className={cn(
-                  "size-1.5 rounded-full transition-colors",
-                  l <= record.impactLevel ? "bg-violet-500" : "bg-muted"
-                )}
-              />
-            ))}
-          </div>
+          <ImpactDots level={record.impactLevel} className="ml-auto" />
         </div>
 
         <h2 className="text-base font-semibold leading-snug tracking-tight pr-8">
@@ -247,52 +235,52 @@ function DetailBody({
         {editing ? (
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground/60">
                 Titulo
-              </span>
+              </Overline>
               <Input value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground/60">
                 Projeto
-              </span>
+              </Overline>
               <Input value={draftProjectName} onChange={(e) => setDraftProjectName(e.target.value)} placeholder="Nome do projeto" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground/60">
                 Data
-              </span>
+              </Overline>
               <Input type="date" value={draftDate} onChange={(e) => setDraftDate(e.target.value)} className="w-fit" />
               <p className="text-[11px] text-muted-foreground">Define onde o registro aparece na linha do tempo.</p>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground/60">
                 Contexto
-              </span>
+              </Overline>
               <Textarea value={draftContext} onChange={(e) => setDraftContext(e.target.value)} className="min-h-[110px] resize-none" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground/60">
                 Solucao / contribuicao
-              </span>
+              </Overline>
               <Textarea value={draftContribution} onChange={(e) => setDraftContribution(e.target.value)} className="min-h-[110px] resize-none" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground/60">
                 Impacto
-              </span>
+              </Overline>
               <Textarea value={draftImpact} onChange={(e) => setDraftImpact(e.target.value)} className="min-h-[110px] resize-none" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground/60">
                 Destaque
-              </span>
+              </Overline>
               <Input
                 value={draftHighlight}
                 onChange={(e) => setDraftHighlight(e.target.value)}
@@ -312,23 +300,23 @@ function DetailBody({
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,260px)]">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground/60">
                     Tipo de atuacao
-                  </span>
+                  </Overline>
                   <AtuacaoPicker value={draftAtuacao} onChange={setDraftAtuacao} />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground/60">
                     Area
-                  </span>
+                  </Overline>
                   <AreaPicker value={draftArea} onChange={setDraftArea} />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground/60">
                     Tags
-                  </span>
+                  </Overline>
                   <Input
                     value={draftTags}
                     onChange={(e) => setDraftTags(e.target.value)}
@@ -353,9 +341,9 @@ function DetailBody({
               if (!value) return null
               return (
                 <div key={key} className="flex flex-col gap-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground/60">
                     {FIELD_LABELS[key]}
-                  </span>
+                  </Overline>
                   <p className="text-sm leading-relaxed text-foreground/90">
                     {value}
                   </p>

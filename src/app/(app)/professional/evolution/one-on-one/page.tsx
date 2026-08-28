@@ -8,7 +8,9 @@ import { useOptionalSession } from "@/hooks/use-optional-session"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { MetricCard } from "@/components/ui/metric-card"
 import { Textarea } from "@/components/ui/textarea"
 import {
   addOneOnOneEntry,
@@ -124,17 +126,12 @@ export default function EvolutionOneOnOnePage() {
     >
       <div className="flex max-w-3xl flex-col gap-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-sm font-medium">Registros salvos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-semibold tracking-tight">{totalEntries}</p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Um texto por 1:1, para manter o histórico claro e simples.
-              </p>
-            </CardContent>
-          </Card>
+          <MetricCard
+            variant="card"
+            label="Registros salvos"
+            value={totalEntries}
+            helper="Um texto por 1:1, para manter o histórico claro e simples."
+          />
 
           <Card>
             <CardHeader>
@@ -166,26 +163,22 @@ export default function EvolutionOneOnOnePage() {
             {isEditing ? <Badge variant="outline">Editando</Badge> : null}
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <div className="flex max-w-xs flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground">Data do 1:1</label>
+            <Field label="Data do 1:1" className="max-w-xs">
               <Input
                 type="date"
                 value={form.date}
                 onChange={(event) => set("date", event.target.value)}
               />
-            </div>
+            </Field>
 
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-medium text-muted-foreground">
-                Como foi o 1:1
-              </label>
+            <Field label="Como foi o 1:1">
               <Textarea
                 value={form.notes}
                 onChange={(event) => set("notes", event.target.value)}
                 placeholder="Descreva os principais pontos da conversa, acordos, feedbacks, decisões e próximos passos."
                 className="min-h-[220px] resize-y"
               />
-            </div>
+            </Field>
 
             <div className="flex flex-wrap gap-2">
               <Button onClick={handleSubmit}>

@@ -10,6 +10,7 @@ import { DiscProfileBadges } from "@/components/gestao/disc-profile-picker"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import {
   CardList,
   CardListBody,
@@ -20,6 +21,7 @@ import {
   CardListRowTitle,
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { MetricCard } from "@/components/ui/metric-card"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Dialog,
@@ -169,11 +171,7 @@ export function CollaboratorsManager({
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
-          </div>
+        <PageHeader title={title} description={description}>
           <PageHeaderActions>
             <Button
               size="sm"
@@ -186,12 +184,12 @@ export function CollaboratorsManager({
               Novo colaborador
             </Button>
           </PageHeaderActions>
-        </div>
+        </PageHeader>
 
         <div className="grid gap-3 md:grid-cols-3">
-          <SummaryMetric label="Pessoas no time" value={summary.total} />
-          <SummaryMetric label="Com perfil definido" value={summary.withDisc} />
-          <SummaryMetric label="Em gestão ou coordenação" value={summary.gestao} />
+          <MetricCard label="Pessoas no time" value={summary.total} />
+          <MetricCard label="Com perfil definido" value={summary.withDisc} />
+          <MetricCard label="Em gestão ou coordenação" value={summary.gestao} />
         </div>
 
         <CardList>
@@ -309,16 +307,5 @@ export function CollaboratorsManager({
         </DialogContent>
       </Dialog>
     </>
-  )
-}
-
-function SummaryMetric({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-    </div>
   )
 }

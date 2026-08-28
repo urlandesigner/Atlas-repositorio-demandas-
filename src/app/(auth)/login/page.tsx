@@ -6,7 +6,7 @@ import { AuthProvider } from "@/components/auth/auth-provider"
 
 function AtlasLogo() {
   return (
-    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand shadow-[0_8px_20px_color-mix(in_srgb,var(--color-brand)_24%,transparent)]">
+    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-brand shadow-brand">
       <span className="text-sm font-bold tracking-tight text-brand-foreground">A</span>
     </div>
   )
@@ -15,12 +15,12 @@ function AtlasLogo() {
 export default function LoginPage() {
   return (
     <AuthProvider>
-      <div className="grid min-h-dvh bg-white lg:grid-cols-[45%_minmax(0,1fr)]">
-        <div className="hidden bg-white lg:flex lg:min-h-dvh lg:w-full lg:p-4">
+      <div className="grid min-h-dvh bg-background lg:grid-cols-[45%_minmax(0,1fr)]">
+        <div className="hidden bg-background lg:flex lg:min-h-dvh lg:w-full lg:p-4">
           <LoginHeroPanel />
         </div>
 
-        <div className="flex min-h-dvh flex-col bg-white">
+        <div className="flex min-h-dvh flex-col bg-background">
           <main className="flex flex-1 items-center justify-center px-6 sm:px-10 lg:px-12 xl:px-16">
             <div className="w-full max-w-[26rem] space-y-8">
               <div className="space-y-3">

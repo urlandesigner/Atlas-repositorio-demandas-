@@ -67,7 +67,7 @@ export function EvolutionNav({ className }: { className?: string }) {
             className={cn(
               "flex items-start gap-2.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
               active
-                ? "bg-brand-muted/60 text-brand-muted-foreground"
+                ? "bg-brand-muted text-brand-muted-foreground"
                 : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
             )}
           >
@@ -94,17 +94,16 @@ export function EvolutionNavMobile() {
   const pathname = usePathname()
 
   return (
-    <div className="flex gap-1 overflow-x-auto pb-1 lg:hidden" role="tablist">
+    <div className="flex gap-1 overflow-x-auto pb-1 lg:hidden">
       {NAV_ITEMS.map((item) => {
         const active = pathname === item.href
         return (
           <Link
             key={item.href}
             href={item.href}
-            role="tab"
-            aria-selected={active}
+            aria-current={active ? "page" : undefined}
             className={cn(
-              "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
+              "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium whitespace-nowrap outline-none transition-colors focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/20",
               active
                 ? "border-brand/30 bg-brand-muted/50 text-brand-muted-foreground"
                 : "border-border/60 text-muted-foreground hover:text-foreground"

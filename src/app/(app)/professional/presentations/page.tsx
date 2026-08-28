@@ -1,12 +1,20 @@
 "use client"
 
 import { useState, useSyncExternalStore } from "react"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { StatusBadge } from "@/components/ui/status-badge"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Sheet,
@@ -15,6 +23,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet"
+import { PRESENTATION_STATUS_TONE } from "@/lib/status-tone"
 import { CalendarDays, ExternalLink, Pencil, Plus, Presentation, Trash2, UsersRound } from "lucide-react"
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
 import {
@@ -38,12 +47,6 @@ const STATUS_LABEL: Record<PresentationStatus, string> = {
   done: "Realizado",
   scheduled: "Agendado",
   not_done: "Não realizado",
-}
-
-const STATUS_BADGE_CLASS: Record<PresentationStatus, string> = {
-  done: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  scheduled: "border-blue-500/20 bg-blue-500/10 text-blue-700 dark:text-blue-300",
-  not_done: "border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-300",
 }
 
 function formatDate(iso: string | null) {
@@ -124,15 +127,19 @@ function PresentationSheet({
 
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Status</label>
-              <select
+              <Select
                 value={form.status}
-                onChange={(e) => set("status", e.target.value as PresentationStatus)}
-                className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none transition-[color,box-shadow] focus:border-ring focus:ring-[3px] focus:ring-ring/50"
+                onValueChange={(value) => set("status", value as PresentationStatus)}
               >
-                <option value="done">Realizado</option>
-                <option value="scheduled">Agendado</option>
-                <option value="not_done">Não realizado</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue>{(value: PresentationStatus) => STATUS_LABEL[value]}</SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="done">Realizado</SelectItem>
+                  <SelectItem value="scheduled">Agendado</SelectItem>
+                  <SelectItem value="not_done">Não realizado</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -168,15 +175,15 @@ function PresentationCard({
 
   return (
     <Card
-      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
+      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover"
       onClick={onClick}
     >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-medium text-sm leading-snug">{item.title}</h3>
-          <Badge variant="outline" className={`shrink-0 text-xs font-normal ${STATUS_BADGE_CLASS[item.status]}`}>
+          <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="shrink-0 text-xs font-normal">
             {STATUS_LABEL[item.status]}
-          </Badge>
+          </StatusBadge>
         </div>
       </CardHeader>
 
@@ -218,20 +225,18 @@ function PresentationCard({
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-[12px] border border-dashed border-border/60 bg-muted/15 py-16">
-      <div className="icon-well flex size-10 items-center justify-center rounded-full">
-        <Presentation className="size-5" />
-      </div>
-      <p className="text-sm text-muted-foreground text-center">
-        Nenhuma apresentação registrada ainda.
-        <br />
-        Adicione materiais que você compartilhou com o time.
-      </p>
-      <Button size="sm" className="gap-1.5" onClick={onOpen}>
-        <Plus className="size-4" />
-        Nova apresentação
-      </Button>
-    </div>
+    <EmptyStateCard
+      size="page"
+      icon={Presentation}
+      title="Nenhuma apresentação registrada ainda"
+      description="Adicione materiais que você compartilhou com o time."
+      action={
+        <Button size="sm" className="gap-1.5" onClick={onOpen}>
+          <Plus className="size-4" />
+          Nova apresentação
+        </Button>
+      }
+    />
   )
 }
 
@@ -254,9 +259,9 @@ function PresentationDrawer({
             <SheetHeader className="px-5 pt-5 pb-4 border-b pr-12">
               <div className="flex items-center gap-2 flex-wrap">
                 <SheetTitle className="text-base">{item.title}</SheetTitle>
-                <Badge variant="outline" className={`font-normal ${STATUS_BADGE_CLASS[item.status]}`}>
+                <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="font-normal">
                   {STATUS_LABEL[item.status]}
-                </Badge>
+                </StatusBadge>
               </div>
             </SheetHeader>
 
@@ -289,9 +294,9 @@ function PresentationDrawer({
 
                 <section>
                   <p className="text-xs font-medium text-muted-foreground mb-1.5">Status</p>
-                  <Badge variant="outline" className={`font-normal ${STATUS_BADGE_CLASS[item.status]}`}>
+                  <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="font-normal">
                     {STATUS_LABEL[item.status]}
-                  </Badge>
+                  </StatusBadge>
                 </section>
 
                 <Separator />

@@ -1,5 +1,6 @@
 import { ChevronRight, Plus } from "lucide-react"
 
+import { Button } from "@/components/ui/button"
 import { PdiLevelTrack } from "@/components/profile/pdi-level-track"
 import { formatPdiLevel, PDI_RUBRIC, PDI_THEME_LABEL, type PdiTheme } from "@/lib/profile/pdi"
 import type { PdiThemeState } from "@/lib/profile/pdi-store"
@@ -28,14 +29,14 @@ export function PdiThemeRow({
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between gap-3">
-        <button
-          type="button"
+        <Button
+          variant="link"
           onClick={onOpenRubric}
-          className="group flex min-w-0 items-center gap-1 text-sm font-medium"
+          className="h-auto min-w-0 shrink justify-start gap-1 border-none p-0 text-sm font-medium text-foreground"
         >
           {PDI_THEME_LABEL[theme]}
-          <ChevronRight className="size-3.5 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
-        </button>
+          <ChevronRight className="size-3.5 text-muted-foreground transition-transform group-hover/button:translate-x-0.5" />
+        </Button>
 
         <div className="flex shrink-0 items-center gap-2">
           {suggested ? (
@@ -65,14 +66,14 @@ export function PdiThemeRow({
             {above ? "acima do esperado" : "no nível esperado"}
           </span>
         ) : (
-          <button
-            type="button"
+          <Button
+            variant="link"
             onClick={onCreateObjective}
-            className="inline-flex shrink-0 items-center gap-0.5 text-[11px] font-medium text-brand-muted-foreground underline-offset-2 hover:underline"
+            className="h-auto shrink-0 gap-0.5 border-none p-0 text-[11px] font-medium text-brand-muted-foreground underline-offset-2"
           >
             <Plus className="size-3" />
             objetivo · faltam {deficit}
-          </button>
+          </Button>
         )}
       </div>
     </div>

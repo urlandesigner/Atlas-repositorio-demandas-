@@ -124,7 +124,7 @@ export function LideradoPdiPanel({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge variant={readiness >= 80 ? "default" : "outline"}>{readiness}% pronto</Badge>
+        <Badge variant={readiness >= 80 ? "primary-soft" : "outline"}>{readiness}% pronto</Badge>
         <label className="ml-auto flex items-center gap-2 text-sm">
           <span className="text-muted-foreground">Nível na trilha</span>
           <Select

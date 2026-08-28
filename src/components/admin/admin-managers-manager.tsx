@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import {
   CardList,
   CardListBody,
@@ -16,6 +17,8 @@ import {
   CardListRowTitle,
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { Field } from "@/components/ui/field"
+import { MetricCard } from "@/components/ui/metric-card"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Dialog,
@@ -83,25 +86,22 @@ export function AdminManagersManager() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Gestores da área</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Pessoas responsáveis por liderar times e operar o fluxo de acompanhamento da área.
-          </p>
-        </div>
+      <PageHeader
+        title="Gestores da área"
+        description="Pessoas responsáveis por liderar times e operar o fluxo de acompanhamento da área."
+      >
         <PageHeaderActions>
           <Button onClick={openCreate}>
             <Plus data-icon="inline-start" />
             Novo gestor
           </Button>
         </PageHeaderActions>
-      </div>
+      </PageHeader>
 
       <div className="grid gap-3 md:grid-cols-3">
-        <AdminMetric label="Gestores ativos" value={managers.length} helper="Cadastros disponíveis para atuação" />
-        <AdminMetric label="Com time vinculado" value={managersWithTeam} helper="Já responsáveis por pessoas da área" />
-        <AdminMetric label="Sem time ainda" value={Math.max(managers.length - managersWithTeam, 0)} helper="Podem receber novos vínculos" />
+        <MetricCard label="Gestores ativos" value={managers.length} helper="Cadastros disponíveis para atuação" />
+        <MetricCard label="Com time vinculado" value={managersWithTeam} helper="Já responsáveis por pessoas da área" />
+        <MetricCard label="Sem time ainda" value={Math.max(managers.length - managersWithTeam, 0)} helper="Podem receber novos vínculos" />
       </div>
 
       <CardList>
@@ -200,26 +200,6 @@ export function AdminManagersManager() {
   )
 }
 
-function AdminMetric({
-  label,
-  value,
-  helper,
-}: {
-  label: string
-  value: number
-  helper: string
-}) {
-  return (
-    <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
-    </div>
-  )
-}
-
 function ManagerFormSheet({
   open,
   onOpenChange,
@@ -284,26 +264,23 @@ function ManagerFormSheet({
           </SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 p-4 pt-0">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Nome</span>
+          <Field label="Nome">
             <Input value={name} onChange={(event) => setName(event.target.value)} />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Email</span>
+          </Field>
+          <Field label="Email">
             <Input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Cargo de gestão</span>
+          </Field>
+          <Field label="Cargo de gestão">
             <Input
               value={managementTitle}
               onChange={(event) => setManagementTitle(event.target.value)}
               placeholder="Head, Coordenador, Supervisor…"
             />
-          </label>
+          </Field>
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
         </div>
         <SheetFooter className="border-t">

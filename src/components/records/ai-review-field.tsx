@@ -3,7 +3,8 @@
 import { useState } from "react"
 import { CheckIcon, PencilIcon, SparklesIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { Overline } from "@/components/ui/overline"
+import { Textarea } from "@/components/ui/textarea"
 
 interface AIReviewFieldProps {
   label: string
@@ -17,10 +18,10 @@ export function AIReviewField({ label, value, onChange }: AIReviewFieldProps) {
   return (
     <div className="group flex flex-col gap-1.5">
       <div className="flex items-center gap-1.5">
-        <SparklesIcon className="size-3 text-violet-500 shrink-0" />
-        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
+        <SparklesIcon className="size-3 text-impact shrink-0" />
+        <Overline size="sm">
           {label}
-        </span>
+        </Overline>
         {!editing && (
           <Button
             variant="ghost"
@@ -35,7 +36,7 @@ export function AIReviewField({ label, value, onChange }: AIReviewFieldProps) {
           <Button
             variant="ghost"
             size="icon-xs"
-            className="ml-auto text-emerald-600 hover:text-emerald-600"
+            className="ml-auto text-success-foreground hover:text-success-foreground"
             onClick={() => setEditing(false)}
           >
             <CheckIcon />
@@ -44,13 +45,11 @@ export function AIReviewField({ label, value, onChange }: AIReviewFieldProps) {
       </div>
 
       {editing ? (
-        <textarea
+        <Textarea
           autoFocus
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={cn(
-            "w-full resize-none rounded-lg border border-ring bg-transparent px-3 py-2 text-sm leading-relaxed outline-none ring-3 ring-ring/50 field-sizing-content min-h-[60px]"
-          )}
+          className="min-h-[60px] resize-none px-3 py-2 text-sm leading-relaxed"
           onKeyDown={(e) => {
             if (e.key === "Escape") setEditing(false)
           }}

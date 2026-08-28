@@ -13,6 +13,10 @@ import {
   saveObjectives,
   unlinkRecordFromObjectives,
 } from "@/lib/objectives/store"
+import {
+  linkRecordToGestaoObjective,
+  unlinkRecordFromGestaoObjectives,
+} from "@/lib/gestao/objectives/store"
 
 interface RecordsContextValue {
   records: RecordEntry[]
@@ -76,7 +80,9 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
     addRecord(record)
     setRecords((prev) => [record, ...prev])
 
-    if (context?.objective) {
+    if (context?.objective?.source === "gestao") {
+      linkRecordToGestaoObjective(context.objective.id, record.id)
+    } else if (context?.objective) {
       const objectives = getObjectivesSnapshot()
       saveObjectives(linkRecordToObjective(objectives, context.objective.id, record.id))
       emitObjectivesChange()
@@ -111,6 +117,7 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
     const objectives = getObjectivesSnapshot()
     saveObjectives(unlinkRecordFromObjectives(objectives, id))
     emitObjectivesChange()
+    unlinkRecordFromGestaoObjectives(id)
     setDetailRecord(null)
   }, [])
 

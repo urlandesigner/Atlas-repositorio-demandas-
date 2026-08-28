@@ -20,7 +20,7 @@ export function HrNoticesPanel({
 }) {
   // Modo compacto (dashboard): menos avisos e corpo em uma linha, para dividir a
   // fileira com outros blocos em vez de ocupar a largura toda.
-  const { notices, unreadCount, isUnread, markRead } = useHrNotices(compact ? 3 : 4)
+  const { notices, isUnread, markRead } = useHrNotices(compact ? 3 : 4)
 
   if (hideWhenEmpty && notices.length === 0) return null
 
@@ -33,12 +33,7 @@ export function HrNoticesPanel({
             ? undefined
             : "Comunicados importantes para orientar prazos, benefícios e rituais do ciclo."
         }
-        action={
-          <div className="flex items-center gap-2">
-            {unreadCount > 0 ? <Badge variant="secondary">{unreadCount} novo(s)</Badge> : null}
-            <Badge variant="outline">{notices.length}</Badge>
-          </div>
-        }
+        action={<Badge variant="outline">{notices.length}</Badge>}
       />
       <CardListBody>
         {notices.length ? (

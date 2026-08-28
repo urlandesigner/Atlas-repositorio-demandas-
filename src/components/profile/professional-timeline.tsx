@@ -1,5 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { ListRowButton } from "@/components/ui/list-row-button"
+import { Overline } from "@/components/ui/overline"
 import type { TimelineGroup } from "@/lib/profile/derive"
 
 export function ProfessionalTimeline({
@@ -22,23 +24,22 @@ export function ProfessionalTimeline({
           <div className="flex flex-col gap-5">
             {groups.map((group) => (
               <div key={group.monthLabel}>
-                <p className="mb-2 text-[11px] font-medium tracking-wide text-muted-foreground/70 uppercase">
+                <Overline className="mb-2 text-muted-foreground/70">
                   {group.monthLabel}
-                </p>
+                </Overline>
                 <div className="relative flex flex-col gap-1 border-l border-border/70 pl-4">
                   {group.items.map((item) => (
-                    <button
+                    <ListRowButton
                       key={item.id}
-                      type="button"
                       onClick={() => onOpenItem(item.id)}
-                      className="group relative -ml-4 flex items-center gap-3 rounded-lg py-1.5 pr-2 pl-4 text-left transition-colors hover:bg-muted/45"
+                      className="relative -ml-4 items-center border-transparent bg-transparent py-1.5 pr-2 pl-4"
                     >
                       <span className="absolute -left-[5px] size-2 rounded-full bg-brand ring-2 ring-card" />
                       <span className="min-w-0 flex-1 truncate text-sm">{item.title}</span>
                       <Badge variant="outline" className="shrink-0 font-normal">
                         {item.roleLabel}
                       </Badge>
-                    </button>
+                    </ListRowButton>
                   ))}
                 </div>
               </div>

@@ -16,8 +16,14 @@ import { AREAS } from "@/components/records/area-picker"
 import { ImpactCallout } from "@/components/records/impact-callout"
 import { SCOPES } from "@/components/records/impact-selector"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import { useRecords } from "@/components/shell/records-provider"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { FilterPill, FilterPillGroup } from "@/components/ui/filter-pill"
+import { ImpactDots } from "@/components/ui/impact-dots"
+import { Overline } from "@/components/ui/overline"
+import { StatusBadge, type StatusTone } from "@/components/ui/status-badge"
 import { getProjectsServerSnapshot, getProjectsSnapshot, subscribeProjectsStore, type ProjectEntry, type WorkspaceTab } from "@/lib/projects/store"
 import {
   emitTimelinePinsChange,
@@ -30,7 +36,6 @@ import type { ImpactLevel, RecordEntry } from "@/lib/records/types"
 import { HIGHLIGHT_DEFS, resolveHighlightTone, type HighlightTone } from "@/lib/records/highlights"
 import { isInPeriod } from "@/lib/evolution/periods"
 import { HIGHLIGHT_PERIOD_LABEL, type HighlightPeriod } from "@/lib/evolution/types"
-import { cn } from "@/lib/utils"
 
 type ImpactTypeFilter =
   | "all"
@@ -71,9 +76,7 @@ interface StoryItem {
   solution: string
   impact: string
   roleLabel: string
-  roleClassName: string
   areaLabel: string
-  areaClassName: string
   scopeLabel: string
   impactLabel: string
   impactLevel: ImpactLevel
@@ -103,11 +106,11 @@ const IMPACT_LEVEL_LABELS: Record<ImpactLevel, string> = {
   5: "Transformacional",
 }
 
-const HIGHLIGHT_TONE_CLASS: Record<HighlightTone, string> = {
-  violet: "border-violet-500/15 bg-violet-500/10 text-violet-700 dark:text-violet-300",
-  sky: "border-sky-500/15 bg-sky-500/10 text-sky-700 dark:text-sky-300",
-  emerald: "border-emerald-500/15 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  amber: "border-amber-500/15 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+const HIGHLIGHT_STATUS_TONE: Record<HighlightTone, StatusTone> = {
+  violet: "impact",
+  sky: "info",
+  emerald: "success",
+  amber: "warning",
 }
 
 function flattenProjects(allProjects: Record<WorkspaceTab, ProjectEntry[]>) {
@@ -309,9 +312,7 @@ function buildStoryItems(records: RecordEntry[], projects: TimelineProjectMeta[]
           "Solução não detalhada neste registro.",
         impact: record.enriched.impact || "Impacto ainda não descrito neste registro.",
         roleLabel: role?.label || "Contribuição",
-        roleClassName: role?.baseClass || "text-muted-foreground border-border bg-muted/60",
         areaLabel: area?.label || "Entrega profissional",
-        areaClassName: area?.baseClass || "text-muted-foreground border-border bg-muted/60",
         scopeLabel: scope?.label || "Impacto",
         impactLabel: IMPACT_LEVEL_LABELS[record.impactLevel],
         impactLevel: record.impactLevel,
@@ -352,16 +353,13 @@ const PERIOD_FILTER_OPTIONS: Array<{ value: PeriodFilter; label: string }> = [
 
 function EmptyState({ onOpen }: { onOpen: () => void }) {
   return (
-    <div className="rounded-[12px] border border-dashed border-border/80 bg-muted/15 px-6 py-16">
-      <div className="mx-auto flex max-w-lg flex-col items-center text-center">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-violet-500/10 text-violet-700 dark:text-violet-300">
-          <FolderKanbanIcon className="size-7" />
-        </div>
-        <h2 className="mt-5 text-lg font-semibold tracking-tight">Comece pelo primeiro registro</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Cada entrega documentada alimenta sua trajetória — contexto, impacto e senioridade ficam claros nos registros.
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
+    <EmptyStateCard
+      size="page"
+      icon={FolderKanbanIcon}
+      title="Comece pelo primeiro registro"
+      description="Cada entrega documentada alimenta sua trajetória — contexto, impacto e senioridade ficam claros nos registros."
+      action={
+        <>
           <Button className="gap-1.5" onClick={onOpen}>
             <SparklesIcon className="size-4" />
             Registrar progresso
@@ -369,9 +367,9 @@ function EmptyState({ onOpen }: { onOpen: () => void }) {
           <Link href="/projects" className={buttonVariants({ variant: "outline" })}>
             Ver projetos
           </Link>
-        </div>
-      </div>
-    </div>
+        </>
+      }
+    />
   )
 }
 
@@ -387,25 +385,21 @@ function FeaturedStoryCard({
   onOpen: (record: RecordEntry) => void
 }) {
   return (
-    <article className="flex h-full flex-col rounded-[12px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_28px_rgba(15,23,42,0.06)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_18px_42px_rgba(15,23,42,0.09)]">
+    <article className="flex h-full flex-col rounded-[12px] border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
       <div className="flex items-start justify-between gap-3">
-        <p className="min-w-0 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+        <Overline size="sm" className="min-w-0">
           {item.projectName || item.areaLabel}
-        </p>
+        </Overline>
 
-        <button
-          type="button"
+        <FilterPill
+          size="sm"
+          active={pinned}
           onClick={() => onPinToggle(item.id)}
-          className={cn(
-            "inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors",
-            pinned
-              ? "border-foreground/15 bg-foreground text-background"
-              : "border-border bg-background text-muted-foreground hover:text-foreground"
-          )}
+          className="inline-flex shrink-0 items-center gap-1"
         >
           <PinIcon className="size-3.5" />
           {pinned ? "Fixado" : "Fixar"}
-        </button>
+        </FilterPill>
       </div>
 
       <h2 className="mt-2 line-clamp-2 text-base font-semibold leading-snug tracking-tight text-foreground">
@@ -417,7 +411,7 @@ function FeaturedStoryCard({
 
       {item.highlights[0] && (
         <div className="mt-3 rounded-xl border border-border/60 bg-background/55 px-3 py-2">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Destaque</p>
+          <Overline size="sm">Destaque</Overline>
           <p className="mt-1 text-sm font-medium text-foreground/90">{item.highlights[0].label}</p>
         </div>
       )}
@@ -446,26 +440,19 @@ function StoryCard({
   return (
     <div className="relative pl-0 md:pl-28">
       <div className="hidden md:absolute md:left-0 md:top-0 md:block md:w-24">
-        <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <Overline>
           {new Date(item.createdAt).toLocaleDateString("pt-BR", { month: "short", year: "numeric" })}
-        </p>
-        <div className="mt-2.5 flex items-center gap-1">
-          {([1, 2, 3, 4, 5] as const).map((level) => (
-            <div
-              key={level}
-              className={cn("size-1.5 rounded-full", level <= item.impactLevel ? "bg-violet-500" : "bg-muted")}
-            />
-          ))}
-        </div>
+        </Overline>
+        <ImpactDots level={item.impactLevel} className="mt-2.5" />
       </div>
 
-      <article className="rounded-[12px] border border-border/60 bg-card/[0.98] p-4 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
+      <article className="rounded-[12px] border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 space-y-1">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+              <Overline size="sm">
                 {item.areaLabel}
-              </p>
+              </Overline>
               <h2 className="line-clamp-2 text-xl font-semibold tracking-tight text-foreground sm:text-[1.3rem]">{item.title}</h2>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                 <span className="font-medium text-foreground/70">{item.projectName || "Entrega profissional"}</span>
@@ -474,33 +461,24 @@ function StoryCard({
               </div>
             </div>
 
-            <button
-              type="button"
+            <FilterPill
+              size="sm"
+              active={pinned}
               onClick={() => onPinToggle(item.id)}
-              className={cn(
-                "inline-flex size-8 shrink-0 items-center justify-center rounded-full border transition-colors",
-                pinned
-                  ? "border-foreground/15 bg-foreground text-background"
-                  : "border-border bg-background text-muted-foreground hover:text-foreground"
-              )}
+              className="inline-flex shrink-0 items-center"
               aria-label={pinned ? "Desfixar entrega" : "Fixar entrega"}
             >
               <PinIcon className="size-3.5" />
-            </button>
+            </FilterPill>
           </div>
 
           <ImpactCallout lines={2}>{item.impact}</ImpactCallout>
 
           <div className="flex items-center justify-between gap-2 border-t border-border/60 pt-2.5">
             {item.highlights[0] ? (
-              <span
-                className={cn(
-                  "inline-flex rounded-full border px-3 py-1 text-sm font-medium shadow-[inset_0_1px_0_rgba(255,255,255,0.35)]",
-                  HIGHLIGHT_TONE_CLASS[item.highlights[0].tone]
-                )}
-              >
+              <StatusBadge tone={HIGHLIGHT_STATUS_TONE[item.highlights[0].tone]}>
                 {item.highlights[0].label}
-              </span>
+              </StatusBadge>
             ) : (
               <span />
             )}
@@ -555,43 +533,33 @@ export default function TimelinePage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Registros</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Histórico das suas entregas, decisões e impactos.
-            </p>
-        </div>
-
+      <PageHeader
+        title="Registros"
+        description="Histórico das suas entregas, decisões e impactos."
+      >
         <PageHeaderActions>
           <Button size="sm" className="gap-1.5" onClick={() => openCapture()}>
             <SparklesIcon className="size-3.5" />
             Registrar progresso
           </Button>
         </PageHeaderActions>
-      </div>
+      </PageHeader>
 
       {stories.length === 0 ? (
         <EmptyState onOpen={() => openCapture()} />
       ) : (
         <>
-          <div className="flex flex-wrap gap-1.5">
+          <FilterPillGroup aria-label="Filtrar por período">
             {PERIOD_FILTER_OPTIONS.map((option) => (
-              <button
+              <FilterPill
                 key={option.value}
-                type="button"
+                active={period === option.value}
                 onClick={() => setPeriod(option.value)}
-                className={cn(
-                  "rounded-full border px-3 py-1.5 text-xs font-medium transition-colors",
-                  period === option.value
-                    ? "border-brand/30 bg-brand-muted/50 text-brand-muted-foreground"
-                    : "border-border/60 text-muted-foreground hover:text-foreground"
-                )}
               >
                 {option.label}
-              </button>
+              </FilterPill>
             ))}
-          </div>
+          </FilterPillGroup>
 
           {featuredStories.length > 0 && (
             <section className="space-y-3">
@@ -632,9 +600,9 @@ export default function TimelinePage() {
               {groupedStories.map((group) => (
                 <section key={group.year} className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                    <Overline>
                       {group.year}
-                    </span>
+                    </Overline>
                     <div className="h-px flex-1 bg-border/60" />
                   </div>
 

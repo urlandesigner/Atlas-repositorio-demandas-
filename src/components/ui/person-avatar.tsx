@@ -9,14 +9,13 @@ export function PersonAvatar({
   imageUrl,
   size = "default",
   className,
+  ...props
 }: {
   name: string
   imageUrl?: string | null
-  size?: "sm" | "default" | "lg"
-  className?: string
-}) {
+} & React.ComponentProps<typeof Avatar>) {
   return (
-    <Avatar size={size} className={cn("bg-brand-muted/70", className)}>
+    <Avatar size={size} className={cn("bg-brand-muted/70", className)} {...props}>
       {imageUrl ? <AvatarImage src={imageUrl} alt={name} /> : null}
       <AvatarFallback className="bg-brand-muted text-brand-muted-foreground">
         {initialsFromName(name)}

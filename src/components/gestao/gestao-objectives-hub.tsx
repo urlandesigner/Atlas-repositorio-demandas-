@@ -6,6 +6,7 @@ import { ArrowUpRight } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/ui/status-badge"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   CardList,
@@ -17,6 +18,8 @@ import {
 } from "@/components/ui/card-list"
 import { buttonVariants } from "@/components/ui/button"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { MetricCard } from "@/components/ui/metric-card"
+import { PageHeader } from "@/components/ui/page-header"
 import {
   getGestaoObjectivesServerSnapshot,
   getGestaoObjectivesSnapshot,
@@ -24,6 +27,7 @@ import {
   PDI_DIMENSION_LABEL,
   subscribeGestaoObjectivesStore,
 } from "@/lib/gestao/objectives/store"
+import { OBJECTIVE_STATUS_TONE } from "@/lib/status-tone"
 import {
   getOrgServerSnapshot,
   getOrgSnapshot,
@@ -52,25 +56,23 @@ export function GestaoObjectivesHub() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Metas do time</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Objetivos ativos do seu time, ligados ao ciclo atual de desenvolvimento.
-        </p>
-      </div>
+      <PageHeader
+        title="Metas do time"
+        description="Objetivos ativos do seu time, ligados ao ciclo atual de desenvolvimento."
+      />
 
       <div className="grid gap-3 md:grid-cols-3">
-        <Metric
+        <MetricCard
           label="Metas ativas"
           value={objectives.filter((objective) => objective.status === "in_progress").length}
           helper="Em execução agora"
         />
-        <Metric
+        <MetricCard
           label="Pessoas com meta"
           value={new Set(objectives.map((objective) => objective.userId)).size}
           helper="Cobertura do time"
         />
-        <Metric
+        <MetricCard
           label="Prazo próximo"
           value={objectives.filter((objective) => {
             if (!objective.deadline) return false
@@ -103,7 +105,7 @@ export function GestaoObjectivesHub() {
                   <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
                     <CardListRowTitle>{objective.title}</CardListRowTitle>
-                    <Badge variant="outline">{OBJECTIVE_STATUS_LABEL[objective.status]}</Badge>
+                    <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]}>{OBJECTIVE_STATUS_LABEL[objective.status]}</StatusBadge>
                   </div>
                   <CardListRowMeta>
                     {user?.name ?? "Colaborador"}
@@ -153,26 +155,6 @@ export function GestaoObjectivesHub() {
             ) : null}
         </CardListBody>
       </CardList>
-    </div>
-  )
-}
-
-function Metric({
-  label,
-  value,
-  helper,
-}: {
-  label: string
-  value: number
-  helper: string
-}) {
-  return (
-    <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
     </div>
   )
 }

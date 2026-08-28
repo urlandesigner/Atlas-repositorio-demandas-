@@ -15,6 +15,7 @@ import { SoftSkillsEditor } from "@/components/gestao/soft-skills-editor"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field } from "@/components/ui/field"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { logAudit } from "@/lib/gestao/audit/store"
@@ -247,14 +248,13 @@ function ProfileField({
   placeholder: string
 }) {
   return (
-    <label className="flex flex-col gap-1.5">
-      <span className="text-sm font-medium">{label}</span>
+    <Field label={label}>
       <Textarea
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={3}
       />
-    </label>
+    </Field>
   )
 }

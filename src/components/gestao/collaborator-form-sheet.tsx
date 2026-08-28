@@ -3,7 +3,9 @@
 import { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { OptionCard } from "@/components/ui/option-card"
 import {
   Sheet,
   SheetContent,
@@ -13,7 +15,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import type { CollaboratorKind, OrgUser } from "@/lib/org/types"
-import { cn } from "@/lib/utils"
 
 const TYPE_OPTIONS: { value: CollaboratorKind; label: string; hint: string }[] = [
   { value: "colaborador", label: "Colaborador", hint: "Profissional IC, sem time sob gestão." },
@@ -90,19 +91,17 @@ export function CollaboratorFormSheet({
             </p>
           ) : null}
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Nome</span>
+          <Field label="Nome" size="sm">
             <Input value={name} onChange={(event) => setName(event.target.value)} />
-          </label>
+          </Field>
 
-          <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted-foreground">Email</span>
+          <Field label="Email" size="sm">
             <Input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
-          </label>
+          </Field>
 
           {!isLeader ? (
             <div className="flex flex-col gap-1.5">
@@ -111,21 +110,14 @@ export function CollaboratorFormSheet({
                 {TYPE_OPTIONS.map((option) => {
                   const selected = kind === option.value
                   return (
-                    <button
+                    <OptionCard
                       key={option.value}
-                      type="button"
+                      active={selected}
                       onClick={() => setKind(option.value)}
-                      aria-pressed={selected}
-                      className={cn(
-                        "rounded-xl border px-3 py-2.5 text-left transition-colors",
-                        selected
-                          ? "border-brand bg-brand/10 text-foreground"
-                          : "border-border hover:bg-muted/40"
-                      )}
                     >
                       <span className="text-sm font-medium">{option.label}</span>
                       <p className="mt-0.5 text-xs text-muted-foreground">{option.hint}</p>
-                    </button>
+                    </OptionCard>
                   )
                 })}
               </div>
@@ -133,14 +125,13 @@ export function CollaboratorFormSheet({
           ) : null}
 
           {!isLeader && kind === "gestao" ? (
-            <label className="flex flex-col gap-1.5">
-              <span className="text-xs font-medium text-muted-foreground">Cargo de gestão</span>
+            <Field label="Cargo de gestão" size="sm">
               <Input
                 value={managementTitle}
                 onChange={(event) => setManagementTitle(event.target.value)}
                 placeholder="Head, Coordenador, Supervisor…"
               />
-            </label>
+            </Field>
           ) : null}
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}

@@ -1,14 +1,19 @@
 "use client"
 
 import Image from "next/image"
+import dynamic from "next/dynamic"
 
-import HeroGeometric from "@/components/ui/hero-geometric"
+const HeroGeometric = dynamic(() => import("@/components/ui/hero-geometric"), {
+  ssr: false,
+  loading: () => <div className="absolute inset-0 bg-brand" />,
+})
 
 export function LoginHeroPanel() {
   return (
     <div className="relative flex h-full min-h-full w-full flex-1 flex-col overflow-hidden rounded-[16px]">
       <HeroGeometric
         className="absolute inset-0 min-h-0 h-full bg-transparent"
+        // tons de --brand para o shader (three não lê CSS vars)
         color1="#2f3fc3"
         color2="#6d7ef7"
         speed={0.65}
@@ -28,10 +33,10 @@ export function LoginHeroPanel() {
 
         <div className="flex flex-1 flex-col justify-end pb-[2.4rem] text-left">
           <div className="w-full max-w-lg space-y-4">
-            <h1 className="text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-white">
+            <h1 className="text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-brand-foreground">
               Evolução profissional, com método.
             </h1>
-            <p className="max-w-md text-base leading-7 text-white/78">
+            <p className="max-w-md text-base leading-7 text-brand-foreground/80">
               PDIs, objetivos e registros em ambiente confidencial.
             </p>
           </div>

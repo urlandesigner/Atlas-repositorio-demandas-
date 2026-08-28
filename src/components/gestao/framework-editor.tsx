@@ -10,6 +10,7 @@ import { PdiLevelTrack } from "@/components/profile/pdi-level-track"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -183,21 +184,19 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
           <CardTitle className="text-base">Informações gerais</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Nome</span>
+          <Field label="Nome">
             <Input
               value={draft.name}
               onChange={(event) => updateDraft({ ...draft, name: event.target.value })}
             />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Descrição</span>
+          </Field>
+          <Field label="Descrição">
             <Textarea
               value={draft.description}
               onChange={(event) => updateDraft({ ...draft, description: event.target.value })}
               rows={2}
             />
-          </label>
+          </Field>
         </CardContent>
       </Card>
 
@@ -241,14 +240,15 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
           <CardTitle className="text-base">Expectativas por nível</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Nível da trilha</span>
+          <Field label="Nível da trilha">
             <Select
               value={expectationLevelId}
               onValueChange={(value) => value && setExpectationLevelId(value)}
             >
               <SelectTrigger className="max-w-xs">
-                <SelectValue />
+                <SelectValue>
+                  {(value: string) => draft.ladder.find((level) => level.id === value)?.name}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {draft.ladder.map((level) => (
@@ -258,7 +258,7 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
                 ))}
               </SelectContent>
             </Select>
-          </label>
+          </Field>
 
           <div className="flex flex-col gap-4">
             {draft.themes.map((theme) => {
@@ -266,13 +266,14 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
               return (
                 <div key={theme.id} className="flex flex-col gap-2">
                   <div className="flex items-center justify-between gap-3">
-                    <button
-                      type="button"
+                    <Button
+                      variant="link"
+                      size="sm"
                       onClick={() => setRubricTheme(theme)}
-                      className="text-left text-sm font-medium hover:underline"
+                      className="h-auto justify-start border-transparent p-0 text-left whitespace-normal text-foreground"
                     >
                       {theme.label}
-                    </button>
+                    </Button>
                     <span className="text-xs tabular-nums text-muted-foreground">
                       esperado: {formatPdiLevel(expected)}
                     </span>

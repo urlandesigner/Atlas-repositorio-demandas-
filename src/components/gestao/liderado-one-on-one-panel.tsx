@@ -4,6 +4,7 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import { FileText, Sparkles } from "lucide-react"
 
 import { ReportEditor } from "@/components/evolution/report-editor"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -212,7 +213,9 @@ export function LideradoOneOnOnePanel({
                 onValueChange={(value) => value && setPeriodDays(Number(value))}
               >
                 <SelectTrigger className="h-8 w-44">
-                  <SelectValue />
+                  <SelectValue>
+                    {(value: string) => PERIODS.find((period) => String(period.days) === value)?.label}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {PERIODS.map((period) => (
@@ -236,12 +239,9 @@ export function LideradoOneOnOnePanel({
           {displayReport ? (
             <>
               {refineError ? (
-                <p
-                  role="alert"
-                  className="mb-3 rounded-lg border border-rose-500/20 bg-rose-500/10 px-3 py-2 text-xs text-rose-600 dark:text-rose-300"
-                >
-                  {refineError}
-                </p>
+                <Alert variant="destructive" className="mb-3">
+                  <AlertDescription>{refineError}</AlertDescription>
+                </Alert>
               ) : null}
               <ReportEditor
                 report={displayReport}

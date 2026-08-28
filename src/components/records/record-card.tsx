@@ -1,6 +1,8 @@
 import { formatDistanceToNow } from "date-fns"
 import { ptBR } from "date-fns/locale"
 import { cn } from "@/lib/utils"
+import { ImpactDots } from "@/components/ui/impact-dots"
+import { StatusBadge } from "@/components/ui/status-badge"
 import type { RecordEntry } from "@/lib/records/types"
 import { getRecordImpactText } from "@/lib/records/display"
 import { ATUACOES } from "./atuacao-picker"
@@ -30,38 +32,23 @@ export function RecordCard({ record, onClick }: RecordCardProps) {
       onClick={onClick}
       onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
       className={cn(
-        "group flex flex-col gap-3 rounded-[12px] border border-border/60 bg-card/[0.98] p-4 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out",
-        onClick && "cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
+        "group flex flex-col gap-3 rounded-[12px] border border-border/60 bg-card/[0.98] p-4 text-left shadow-card transition-all duration-200 ease-out",
+        onClick && "cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover"
       )}
     >
       {/* Header: atuação badge + area label + impact dots */}
       <div className="flex items-center gap-2">
         {atuacao && (
-          <span
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-xs font-medium",
-              atuacao.baseClass
-            )}
-          >
+          <StatusBadge tone="neutral">
             <atuacao.icon className="size-3" />
             {atuacao.label}
-          </span>
+          </StatusBadge>
         )}
         {area && (
           <span className="text-[11px] text-muted-foreground">{area.label}</span>
         )}
 
-        <div className="ml-auto flex items-center gap-1">
-          {([1, 2, 3, 4, 5] as const).map((l) => (
-            <div
-              key={l}
-              className={cn(
-                "size-1.5 rounded-full transition-colors",
-                l <= record.impactLevel ? "bg-violet-500" : "bg-muted"
-              )}
-            />
-          ))}
-        </div>
+        <ImpactDots level={record.impactLevel} className="ml-auto" />
       </div>
 
       {/* Title */}

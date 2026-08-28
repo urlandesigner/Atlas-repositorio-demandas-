@@ -18,7 +18,6 @@ import {
   subscribeOrgStore,
 } from "@/lib/org/store"
 import type { OrgUser } from "@/lib/org/types"
-import { cn } from "@/lib/utils"
 
 /** Disposição do quadrante DISC: Tarefa↔Pessoas (horizontal) · Ativo↔Reflexivo (vertical) */
 const QUADRANT_LAYOUT: DiscProfileId[] = ["executor", "comunicador", "analista", "planejador"]
@@ -85,10 +84,7 @@ export function LideradosMatrix() {
             return (
               <div
                 key={id}
-                className={cn(
-                  "flex min-h-32 flex-col gap-2 rounded-xl border p-3",
-                  profile.accentClass
-                )}
+                className="flex min-h-32 flex-col gap-2 rounded-xl border border-border bg-muted/40 p-3"
               >
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2">

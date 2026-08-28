@@ -1,5 +1,6 @@
 import { Check } from "lucide-react"
 
+import { StepConnector } from "@/components/ui/segmented-progress"
 import type { LevelDef } from "@/lib/profile/types"
 import { levelIndex } from "@/lib/profile/store"
 import { cn } from "@/lib/utils"
@@ -88,13 +89,7 @@ export function LadderStepper({
               showCurrentHint={showCurrentHint}
             />
             {!isLast ? (
-              <div
-                className={cn(
-                  "h-0.5 flex-1",
-                  connectorOffset,
-                  index < currentIndex ? "bg-brand" : "bg-border"
-                )}
-              />
+              <StepConnector filled={index < currentIndex} className={connectorOffset} />
             ) : null}
           </div>
         )

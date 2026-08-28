@@ -10,14 +10,16 @@ import {
   Target,
   UserCog,
   Users,
-  type LucideIcon,
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { MetricCard } from "@/components/ui/metric-card"
+import { PageHeader } from "@/components/ui/page-header"
 import { PersonAvatar } from "@/components/ui/person-avatar"
+import { Progress } from "@/components/ui/progress"
 import {
   getHrNoticesServerSnapshot,
   getHrNoticesSnapshot,
@@ -153,27 +155,29 @@ export default function AdminHomePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Visão geral</h1>
-        {pendingRequests.length > 0 ? (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {pendingRequests.length}{" "}
-            {pendingRequests.length === 1 ? "aprovação aguardando" : "aprovações aguardando"}
-          </p>
-        ) : null}
-      </div>
+      <PageHeader
+        title="Visão geral"
+        description={
+          pendingRequests.length > 0
+            ? `${pendingRequests.length} ${
+                pendingRequests.length === 1 ? "aprovação aguardando" : "aprovações aguardando"
+              }`
+            : undefined
+        }
+      />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <Metric icon={UserCog} label="Gestores" value={managers.length} hint="Quem opera a área" />
-        <Metric icon={Users} label="Colaboradores" value={collaborators.length} hint="Vinculados à área" />
-        <Metric icon={Target} label="PDIs ativos" value={activePdis} hint={`${coverage}% da base acompanhada`} />
-        <Metric
+        <MetricCard variant="card" icon={UserCog} label="Gestores" value={managers.length} helper="Quem opera a área" />
+        <MetricCard variant="card" icon={Users} label="Colaboradores" value={collaborators.length} helper="Vinculados à área" />
+        <MetricCard variant="card" icon={Target} label="PDIs ativos" value={activePdis} helper={`${coverage}% da base acompanhada`} />
+        <MetricCard
+          variant="card"
           icon={CheckSquare}
           label="Aprovações pendentes"
           value={pendingRequests.length}
-          hint={pendingRequests.length ? "Subidas aguardando decisão" : "Sem fila de aprovação"}
+          helper={pendingRequests.length ? "Subidas aguardando decisão" : "Sem fila de aprovação"}
         />
-        <Metric icon={Megaphone} label="Avisos RH" value={hrNoticesCount} hint="Publicados na home da área" />
+        <MetricCard variant="card" icon={Megaphone} label="Avisos RH" value={hrNoticesCount} helper="Publicados na home da área" />
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
@@ -374,31 +378,6 @@ export default function AdminHomePage() {
   )
 }
 
-function Metric({
-  icon: Icon,
-  label,
-  value,
-  hint,
-}: {
-  icon: LucideIcon
-  label: string
-  value: number
-  hint?: string
-}) {
-  return (
-    <Card className="border-border/60">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium">{label}</CardTitle>
-        <Icon className="size-4 text-muted-foreground" />
-      </CardHeader>
-      <CardContent>
-        <p className="text-3xl font-semibold tracking-tight">{value}</p>
-        {hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null}
-      </CardContent>
-    </Card>
-  )
-}
-
 function HealthRow({
   label,
   value,
@@ -416,12 +395,7 @@ function HealthRow({
         <p className="text-sm font-medium">{label}</p>
         <span className="text-sm font-semibold">{value}</span>
       </div>
-      <div className="h-2 overflow-hidden rounded-full bg-muted/70">
-        <div
-          className="h-full rounded-full bg-primary transition-[width]"
-          style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
-        />
-      </div>
+      <Progress value={Math.max(0, Math.min(100, progress))} size="md" tone="primary" />
       <p className="text-xs text-muted-foreground">{description}</p>
     </div>
   )

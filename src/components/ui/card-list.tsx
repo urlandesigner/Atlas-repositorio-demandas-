@@ -23,15 +23,16 @@ export function CardListHeader({
   description,
   action,
   className,
+  ...props
 }: {
   title: ReactNode
   description?: ReactNode
   action?: ReactNode
-  className?: string
-}) {
+} & React.ComponentProps<typeof CardHeader>) {
   return (
     <CardHeader
       className={cn("border-b border-border/60 px-4 pt-4 pb-3.5", className)}
+      {...props}
     >
       <div className="flex w-full items-start justify-between gap-4">
         <div className="min-w-0 space-y-1">
@@ -47,69 +48,43 @@ export function CardListHeader({
 }
 
 export function CardListBody({
-  children,
   className,
-}: {
-  children: ReactNode
-  className?: string
-}) {
-  return <CardContent className={cn("p-0", className)}>{children}</CardContent>
+  ...props
+}: React.ComponentProps<typeof CardContent>) {
+  return <CardContent className={cn("p-0", className)} {...props} />
 }
 
-export function CardListRows({
-  children,
-  className,
-}: {
-  children: ReactNode
-  className?: string
-}) {
-  return <div className={cn("divide-y divide-border/60", className)}>{children}</div>
+export function CardListRows({ className, ...props }: React.ComponentProps<"div">) {
+  return <div className={cn("divide-y divide-border/60", className)} {...props} />
 }
 
-export function CardListRow({
-  children,
-  className,
-}: {
-  children: ReactNode
-  className?: string
-}) {
+export function CardListRow({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
         "flex flex-col gap-3 px-4 py-3.5 lg:flex-row lg:items-center lg:justify-between",
         className
       )}
-    >
-      {children}
-    </div>
+      {...props}
+    />
   )
 }
 
 /** Título de linha — menor e mais leve que o título do card. */
-export function CardListRowTitle({
-  children,
-  className,
-}: {
-  children: ReactNode
-  className?: string
-}) {
+export function CardListRowTitle({ className, ...props }: React.ComponentProps<"p">) {
   return (
-    <p className={cn("text-sm font-medium leading-snug text-foreground/90", className)}>
-      {children}
-    </p>
+    <p
+      className={cn("text-sm font-medium leading-snug text-foreground/90", className)}
+      {...props}
+    />
   )
 }
 
-export function CardListRowMeta({
-  children,
-  className,
-}: {
-  children: ReactNode
-  className?: string
-}) {
+export function CardListRowMeta({ className, ...props }: React.ComponentProps<"p">) {
   return (
-    <p className={cn("mt-1 text-xs leading-relaxed text-muted-foreground", className)}>
-      {children}
-    </p>
+    <p
+      className={cn("mt-1 text-xs leading-relaxed text-muted-foreground", className)}
+      {...props}
+    />
   )
 }

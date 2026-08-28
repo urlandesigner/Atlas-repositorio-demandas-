@@ -4,7 +4,7 @@ import { ChevronDown, ChevronUp } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
+import { OptionCard } from "@/components/ui/option-card"
 import { DISC_PROFILES, type DiscProfileId } from "@/lib/gestao/types"
 
 export function DiscProfilePicker({
@@ -46,14 +46,10 @@ export function DiscProfilePicker({
           const isDominant = rank === 0
 
           return (
-            <button
+            <OptionCard
               key={profile.id}
-              type="button"
+              active={selected}
               onClick={() => toggle(profile.id)}
-              className={cn(
-                "rounded-[12px] border px-3 py-3 text-left transition-colors",
-                selected ? profile.accentClass : "border-border hover:bg-muted/40"
-              )}
             >
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-medium">{profile.label}</span>
@@ -63,8 +59,8 @@ export function DiscProfilePicker({
                   </Badge>
                 ) : null}
               </div>
-              <p className="mt-1 text-xs opacity-80">{profile.description}</p>
-            </button>
+              <p className="mt-1 text-xs text-muted-foreground">{profile.description}</p>
+            </OptionCard>
           )
         })}
       </div>
@@ -128,11 +124,7 @@ export function DiscProfileBadges({ profiles }: { profiles: DiscProfileId[] }) {
         const profile = DISC_PROFILES.find((entry) => entry.id === id)
         if (!profile) return null
         return (
-          <Badge
-            key={id}
-            variant="outline"
-            className={cn("font-normal", profile.accentClass)}
-          >
+          <Badge key={id} variant="outline" className="font-normal">
             {profile.label}
             {index === 0 ? " · dominante" : ""}
           </Badge>

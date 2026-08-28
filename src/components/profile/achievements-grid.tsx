@@ -11,8 +11,10 @@ import {
   type LucideIcon,
 } from "lucide-react"
 
+import { Progress } from "@/components/ui/progress"
 import type { Achievement } from "@/lib/profile/derive"
 import { cn } from "@/lib/utils"
+import { Overline } from "@/components/ui/overline"
 
 const ACHIEVEMENT_ICON: Record<string, LucideIcon> = {
   "first-record": FileText,
@@ -62,12 +64,11 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
 
       {showProgress ? (
         <div>
-          <div className="h-1 overflow-hidden rounded-full bg-muted">
-            <div
-              className="h-full rounded-full bg-brand/55"
-              style={{ width: `${(progress.current / progress.target) * 100}%` }}
-            />
-          </div>
+          <Progress
+            value={Math.min(100, (progress.current / progress.target) * 100)}
+            size="xs"
+            tone="brand"
+          />
           <p className="mt-1 text-[11px] text-muted-foreground tabular-nums">
             {progress.current} / {progress.target}
           </p>
@@ -83,9 +84,9 @@ export function AchievementsGrid({ achievements }: { achievements: Achievement[]
   return (
     <section>
       <div className="mb-3 flex items-baseline justify-between gap-3">
-        <h2 className="text-xs font-medium tracking-wide text-muted-foreground/70 uppercase">
+        <Overline render={<h2 />} className="text-muted-foreground/70">
           Conquistas
-        </h2>
+        </Overline>
         <span className="text-xs text-muted-foreground tabular-nums">
           {unlockedCount} de {achievements.length}
         </span>

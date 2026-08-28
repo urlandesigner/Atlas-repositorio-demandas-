@@ -8,8 +8,9 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
-import { Input } from "@/components/ui/input"
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group"
 import { MyNetworkCard } from "@/components/people/my-network-card"
+import { PageHeader } from "@/components/ui/page-header"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { buildOrgPublicSearchText, getOrgPublicPerson } from "@/lib/org/public"
 import {
@@ -80,12 +81,10 @@ export function PeopleDirectory() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-3xl font-semibold tracking-tight text-foreground">Pessoas</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          A rede interna da Ybera — conheça quem constrói com você e reconheça bons momentos.
-        </p>
-      </div>
+      <PageHeader
+        title="Pessoas"
+        description="A rede interna da Ybera — conheça quem constrói com você e reconheça bons momentos."
+      />
 
       {/* Mobile: âncora pessoal antes da lista */}
       {currentUser ? (
@@ -96,15 +95,16 @@ export function PeopleDirectory() {
         {/* Coluna principal: toolbar + grade de perfis */}
         <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <label className="relative block w-full max-w-sm">
-              <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
+            <InputGroup className="h-9 w-full max-w-sm">
+              <InputGroupAddon align="inline-start">
+                <Search />
+              </InputGroupAddon>
+              <InputGroupInput
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Buscar pessoa, cargo ou skill"
-                className="h-9 pl-9"
               />
-            </label>
+            </InputGroup>
             <p className="text-xs text-muted-foreground">
               {normalizedQuery
                 ? `${filtered.length} de ${people.length} pessoas`

@@ -1,7 +1,7 @@
 import { ArrowUpRight, CalendarDays } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
+import { StatusBadge, type StatusTone } from "@/components/ui/status-badge"
 import { cn } from "@/lib/utils"
 import {
   formatPdiScheduleDate,
@@ -13,15 +13,15 @@ import {
 
 const TONE_CLASSNAME = {
   neutral: "border-border/70 bg-card text-foreground",
-  warning: "border-amber-300/70 bg-amber-50 text-amber-950",
-  critical: "border-rose-300/70 bg-rose-50 text-rose-950",
+  warning: "border-warning/20 bg-warning/10 text-warning-foreground",
+  critical: "border-destructive/20 bg-destructive/10 text-danger-foreground",
 } as const
 
-const BADGE_CLASSNAME = {
-  neutral: "border-border/70 bg-background text-foreground",
-  warning: "border-amber-300/70 bg-amber-100 text-amber-900",
-  critical: "border-rose-300/70 bg-rose-100 text-rose-900",
-} as const
+const BADGE_TONE: Record<keyof typeof TONE_CLASSNAME, StatusTone> = {
+  neutral: "neutral",
+  warning: "warning",
+  critical: "danger",
+}
 
 export function NextPdiHighlight({
   baselineAt,
@@ -52,9 +52,9 @@ export function NextPdiHighlight({
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm font-semibold tracking-tight">Próximo PDI</p>
-            <Badge variant="outline" className={cn("font-normal", BADGE_CLASSNAME[tone])}>
+            <StatusBadge tone={BADGE_TONE[tone]} className="font-normal">
               {getNextPdiStatusText(daysUntil)}
-            </Badge>
+            </StatusBadge>
           </div>
           <p className="mt-1 text-base font-medium">
             {formatPdiScheduleDate(nextPdiDate)}

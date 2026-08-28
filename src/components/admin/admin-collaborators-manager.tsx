@@ -8,6 +8,7 @@ import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   CardList,
@@ -18,6 +19,8 @@ import {
   CardListRowTitle,
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { Field } from "@/components/ui/field"
+import { MetricCard } from "@/components/ui/metric-card"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Dialog,
@@ -96,30 +99,27 @@ export function AdminCollaboratorsManager() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Colaboradores da área</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Pessoas da área vinculadas a um gestor, prontas para acompanhamento e PDI.
-          </p>
-        </div>
+      <PageHeader
+        title="Colaboradores da área"
+        description="Pessoas da área vinculadas a um gestor, prontas para acompanhamento e PDI."
+      >
         <PageHeaderActions>
           <Button onClick={openCreate} disabled={!managers.length}>
             <Plus data-icon="inline-start" />
             Novo colaborador
           </Button>
         </PageHeaderActions>
-      </div>
+      </PageHeader>
 
       <div className="grid gap-3 md:grid-cols-3">
-        <AdminMetric label="Pessoas cadastradas" value={collaborators.length} helper="Base atual da área" />
-        <AdminMetric label="Gestores disponíveis" value={managers.length} helper="Responsáveis possíveis para vínculo" />
-        <AdminMetric label="Sem gestor" value={withoutManager} helper="Precisam de vínculo para acompanhamento" />
+        <MetricCard label="Pessoas cadastradas" value={collaborators.length} helper="Base atual da área" />
+        <MetricCard label="Gestores disponíveis" value={managers.length} helper="Responsáveis possíveis para vínculo" />
+        <MetricCard label="Sem gestor" value={withoutManager} helper="Precisam de vínculo para acompanhamento" />
       </div>
 
       {!managers.length ? (
         <Card>
-          <CardContent className="p-4">
+          <CardContent>
             <EmptyStateCard
               title="Cadastre um gestor antes de criar colaboradores"
               description="Cada pessoa precisa de um gestor para PDI e acompanhamento."
@@ -240,26 +240,6 @@ export function AdminCollaboratorsManager() {
   )
 }
 
-function AdminMetric({
-  label,
-  value,
-  helper,
-}: {
-  label: string
-  value: number
-  helper: string
-}) {
-  return (
-    <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
-    </div>
-  )
-}
-
 function CollaboratorFormSheet({
   open,
   onOpenChange,
@@ -326,20 +306,17 @@ function CollaboratorFormSheet({
           </SheetDescription>
         </SheetHeader>
         <div className="flex flex-col gap-4 p-4 pt-0">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Nome</span>
+          <Field label="Nome">
             <Input value={name} onChange={(event) => setName(event.target.value)} />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Email</span>
+          </Field>
+          <Field label="Email">
             <Input
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
             />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Gestor</span>
+          </Field>
+          <Field label="Gestor">
             <Select value={managerId} onValueChange={(value) => value && setManagerId(value)}>
               <SelectTrigger>
                 <SelectValue placeholder="Selecione o gestor" />
@@ -353,7 +330,7 @@ function CollaboratorFormSheet({
                 ))}
               </SelectContent>
             </Select>
-          </label>
+          </Field>
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
         </div>
         <SheetFooter className="border-t">

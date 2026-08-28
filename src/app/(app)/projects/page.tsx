@@ -3,14 +3,26 @@
 import Link from "next/link"
 import { useState, useSyncExternalStore } from "react"
 import { ArrowUpRight, FileText, FolderOpen, LayoutGrid, List, Plus } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { useRecords } from "@/components/shell/records-provider"
-import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
+import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { FilterPill, FilterPillGroup } from "@/components/ui/filter-pill"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
+import { PageBanner } from "@/components/ui/page-banner"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { SegmentedControl, SegmentedControlItem } from "@/components/ui/segmented-control"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { StatusBadge } from "@/components/ui/status-badge"
+import { PROJECT_STATUS_TONE } from "@/lib/status-tone"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Sheet,
@@ -37,14 +49,6 @@ import {
 import type { ProjectStatus } from "@/types"
 
 const WORKSPACE = "professional" as const
-
-const STATUS_BADGE_CLASS: Record<ProjectStatus, string> = {
-  active: "border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
-  not_started: "border-zinc-500/20 bg-zinc-500/10 text-zinc-700 dark:text-zinc-300",
-  paused: "border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300",
-  closed: "border-sky-500/20 bg-sky-500/10 text-sky-700 dark:text-sky-300",
-  inactive: "border-rose-500/20 bg-rose-500/10 text-rose-700 dark:text-rose-300",
-}
 
 function formatDate(iso: string | null) {
   if (!iso) return null
@@ -74,7 +78,7 @@ function ProjectCard({
   onRecord: () => void
 }) {
   return (
-    <Card className="h-full hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]">
+    <Card className="h-full hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
       <Link
         href={createProjectPath(WORKSPACE, project.id)}
         className="flex flex-1 cursor-pointer flex-col gap-4"
@@ -82,9 +86,9 @@ function ProjectCard({
         <CardHeader>
           <div className="flex items-center justify-between gap-2">
             <h3 className="truncate text-sm font-medium">{project.name}</h3>
-            <Badge variant="outline" className={cn("shrink-0 font-normal", STATUS_BADGE_CLASS[project.status])}>
+            <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0 font-normal">
               {STATUS_LABEL[project.status]}
-            </Badge>
+            </StatusBadge>
           </div>
         </CardHeader>
 
@@ -171,12 +175,9 @@ function ProjectTable({
                     </Link>
                   </td>
                   <td className="px-4 py-3.5">
-                    <Badge
-                      variant="outline"
-                      className={cn("shrink-0 font-normal", STATUS_BADGE_CLASS[project.status])}
-                    >
+                    <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0 font-normal">
                       {STATUS_LABEL[project.status]}
-                    </Badge>
+                    </StatusBadge>
                   </td>
                   <td className="px-4 py-3.5 text-xs text-muted-foreground">
                     {formatProjectPeriod(project)}
@@ -208,19 +209,6 @@ function ProjectTable({
           </tbody>
         </table>
       </div>
-    </div>
-  )
-}
-
-function EmptyState() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16">
-      <div className="icon-well flex size-10 items-center justify-center rounded-full">
-        <FolderOpen className="size-5" />
-      </div>
-      <p className="text-center text-sm text-muted-foreground">
-        Nenhum projeto ainda. Cadastre onde você está atuando.
-      </p>
     </div>
   )
 }
@@ -268,17 +256,20 @@ function NewProjectSheet({
 
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Status</label>
-              <select
-                value={form.status}
-                onChange={(e) => set("status", e.target.value)}
-                className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
-              >
-                {STATUS_OPTIONS.map((status) => (
-                  <option key={status} value={status}>
-                    {STATUS_LABEL[status]}
-                  </option>
-                ))}
-              </select>
+              <Select value={form.status} onValueChange={(status) => status && set("status", status as string)}>
+                <SelectTrigger className="w-full">
+                  <SelectValue>
+                    {(value) => STATUS_LABEL[value as ProjectStatus]}
+                  </SelectValue>
+                </SelectTrigger>
+                <SelectContent>
+                  {STATUS_OPTIONS.map((status) => (
+                    <SelectItem key={status} value={status}>
+                      {STATUS_LABEL[status]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -362,78 +353,58 @@ export default function ProjectsPage() {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Projetos</h1>
-            <p className="mt-1 text-sm text-muted-foreground">Entregas e iniciativas em andamento</p>
-          </div>
+        <PageHeader
+          title="Projetos"
+          description="Entregas e iniciativas em andamento"
+        >
           <PageHeaderActions>
             <Button size="sm" onClick={() => setIsAdding(true)}>
               <Plus className="size-4" />
               Novo projeto
             </Button>
           </PageHeaderActions>
-        </div>
+        </PageHeader>
+
+        <PageBanner
+          title="Para que serve esta página"
+          description="Aqui você organiza os projetos e contextos em que atua. Cadastre um projeto novo, filtre pelo status logo abaixo e use “Registrar” em cada card sempre que tiver uma entrega para documentar — isso alimenta seu histórico de evolução de carreira."
+        />
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-wrap gap-2">
-            <Button
-              size="sm"
-              variant={statusFilter === "all" ? "default" : "outline"}
-              onClick={() => setStatusFilter("all")}
-            >
+          <FilterPillGroup aria-label="Filtrar por status">
+            <FilterPill active={statusFilter === "all"} onClick={() => setStatusFilter("all")}>
               Todos
-            </Button>
+            </FilterPill>
             {STATUS_OPTIONS.map((status) => (
-              <Button
+              <FilterPill
                 key={status}
-                size="sm"
-                variant={statusFilter === status ? "default" : "outline"}
+                active={statusFilter === status}
                 onClick={() => setStatusFilter(status)}
               >
                 {STATUS_LABEL[status]}
-              </Button>
+              </FilterPill>
             ))}
-          </div>
+          </FilterPillGroup>
 
-          <div
-            className="inline-flex w-fit items-center rounded-lg border border-border bg-card p-1"
-            role="group"
-            aria-label="Visualização dos projetos"
-          >
-            <button
-              type="button"
-              aria-pressed={viewMode === "grid"}
-              onClick={() => setViewMode("grid")}
-              className={cn(
-                "inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium transition-colors",
-                viewMode === "grid"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
+          <SegmentedControl aria-label="Visualização dos projetos">
+            <SegmentedControlItem active={viewMode === "grid"} onClick={() => setViewMode("grid")}>
               <LayoutGrid className="size-3.5" />
               Blocos
-            </button>
-            <button
-              type="button"
-              aria-pressed={viewMode === "table"}
-              onClick={() => setViewMode("table")}
-              className={cn(
-                "inline-flex h-7 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium transition-colors",
-                viewMode === "table"
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
-              )}
-            >
+            </SegmentedControlItem>
+            <SegmentedControlItem active={viewMode === "table"} onClick={() => setViewMode("table")}>
               <List className="size-3.5" />
               Tabela
-            </button>
-          </div>
+            </SegmentedControlItem>
+          </SegmentedControl>
         </div>
 
         {projects.length === 0 ? (
-          <EmptyState />
+          <EmptyStateCard
+            size="page"
+            icon={FolderOpen}
+            title="Nenhum projeto ainda"
+            description="Cadastre onde você está atuando."
+          />
         ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {projects.map((project) => (

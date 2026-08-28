@@ -6,6 +6,7 @@ import { ArrowUpCircle, XCircle } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field } from "@/components/ui/field"
 import {
   Select,
   SelectContent,
@@ -19,6 +20,7 @@ import {
   type PdiFramework,
   type PdiPromotionRequest,
 } from "@/lib/gestao/pdi/types"
+import { Overline } from "@/components/ui/overline"
 import {
   cancelPromotionRequest,
   submitPromotionRequest,
@@ -135,11 +137,10 @@ export function PromotionRequestPanel({
           <>
             <div className="flex flex-wrap items-center gap-2 text-sm">
               <span className="text-muted-foreground">Prontidão atual:</span>
-              <Badge variant={readiness >= 80 ? "default" : "outline"}>{readiness}%</Badge>
+              <Badge variant={readiness >= 80 ? "primary-soft" : "outline"}>{readiness}%</Badge>
             </div>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Nível proposto</span>
+            <Field label="Nível proposto">
               <Select value={toLevelId} onValueChange={(value) => value && setToLevelId(value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o próximo nível" />
@@ -152,17 +153,16 @@ export function PromotionRequestPanel({
                   ))}
                 </SelectContent>
               </Select>
-            </label>
+            </Field>
 
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Justificativa (opcional)</span>
+            <Field label="Justificativa (opcional)">
               <Textarea
                 value={notes}
                 onChange={(event) => setNotes(event.target.value)}
                 placeholder="Evidências, contexto do ciclo, recomendação…"
                 rows={3}
               />
-            </label>
+            </Field>
 
             {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
@@ -180,9 +180,9 @@ export function PromotionRequestPanel({
 
         {recentRequests.filter((request) => request.status !== "pending").length ? (
           <div className="space-y-2 border-t pt-4">
-            <p className="text-xs font-medium tracking-wide text-muted-foreground uppercase">
+            <Overline>
               Histórico
-            </p>
+            </Overline>
             {recentRequests
               .filter((request) => request.status !== "pending")
               .slice(0, 3)

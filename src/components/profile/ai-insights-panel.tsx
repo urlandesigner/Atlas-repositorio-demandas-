@@ -7,13 +7,14 @@ import { ArrowUpRight, Sparkles, TrendingUp } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { ProfileInsights } from "@/lib/profile/derive"
 import { computePdiInsights, type PdiTheme } from "@/lib/profile/pdi"
+import { Overline } from "@/components/ui/overline"
 
 function InsightGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <p className="mb-2 text-[11px] font-medium tracking-wide text-muted-foreground/70 uppercase">
+      <Overline className="mb-2 text-muted-foreground/70">
         {label}
-      </p>
+      </Overline>
       <div className="flex flex-col gap-2">{children}</div>
     </div>
   )

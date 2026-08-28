@@ -24,6 +24,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { Field } from "@/components/ui/field"
+import { MetricCard } from "@/components/ui/metric-card"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -215,9 +217,9 @@ export function AdminPdiPanel() {
     <div className="flex flex-col gap-8">
       <section className="space-y-3">
         <div className="grid gap-3 md:grid-cols-3">
-          <PanelMetric label="Em análise" value={pending.length} />
-          <PanelMetric label="Ativos" value={activeAssignments.length} />
-          <PanelMetric label="Histórico recente" value={resolved.length} />
+          <MetricCard label="Em análise" value={pending.length} />
+          <MetricCard label="Ativos" value={activeAssignments.length} />
+          <MetricCard label="Histórico recente" value={resolved.length} />
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -272,10 +274,10 @@ export function AdminPdiPanel() {
                       <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <CardListRowTitle>{row.collaboratorName}</CardListRowTitle>
-                        <Badge variant={row.type === "pending" ? "secondary" : "outline"}>
+                        <Badge variant={row.type === "pending" ? "secondary-soft" : "outline"}>
                           {row.type === "pending" ? "Pendente" : "Ativo"}
                         </Badge>
-                        <Badge variant={row.readiness >= 80 ? "default" : "outline"}>
+                        <Badge variant={row.readiness >= 80 ? "primary-soft" : "outline"}>
                           {row.readiness}% pronto
                         </Badge>
                       </div>
@@ -373,10 +375,10 @@ export function AdminPdiPanel() {
                     <Badge
                       variant={
                         request.status === "approved"
-                          ? "default"
+                          ? "primary-soft"
                           : request.status === "rejected"
                             ? "destructive"
-                            : "secondary"
+                            : "secondary-soft"
                       }
                     >
                       {request.status === "approved"
@@ -414,14 +416,13 @@ export function AdminPdiPanel() {
                 : "O gestor será informado via histórico da solicitação."}
             </DialogDescription>
           </DialogHeader>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">Observação (opcional)</span>
+          <Field label="Observação (opcional)">
             <Textarea
               value={adminNotes}
               onChange={(event) => setAdminNotes(event.target.value)}
               rows={3}
             />
-          </label>
+          </Field>
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
           <DialogFooter>
             <Button variant="outline" onClick={() => setReviewing(null)}>
@@ -436,17 +437,6 @@ export function AdminPdiPanel() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  )
-}
-
-function PanelMetric({ label, value }: { label: string; value: number }) {
-  return (
-    <div className="rounded-[14px] border border-border/70 bg-card/65 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
     </div>
   )
 }

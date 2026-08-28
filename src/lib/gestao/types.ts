@@ -5,7 +5,6 @@ export interface DiscProfileDef {
   label: string
   shortLabel: string
   description: string
-  accentClass: string
 }
 
 export const DISC_PROFILES: DiscProfileDef[] = [
@@ -14,28 +13,24 @@ export const DISC_PROFILES: DiscProfileDef[] = [
     label: "Executor",
     shortLabel: "D",
     description: "Foco em resultados, ritmo e decisão.",
-    accentClass: "border-red-500/30 bg-red-500/10 text-red-800 dark:text-red-200",
   },
   {
     id: "comunicador",
     label: "Comunicador",
     shortLabel: "I",
     description: "Foco em relações, entusiasmo e influência.",
-    accentClass: "border-amber-500/30 bg-amber-500/10 text-amber-900 dark:text-amber-200",
   },
   {
     id: "planejador",
     label: "Planejador",
     shortLabel: "S",
     description: "Foco em estabilidade, apoio e consistência.",
-    accentClass: "border-emerald-500/30 bg-emerald-500/10 text-emerald-900 dark:text-emerald-200",
   },
   {
     id: "analista",
     label: "Analista",
     shortLabel: "C",
     description: "Foco em qualidade, dados e precisão.",
-    accentClass: "border-sky-500/30 bg-sky-500/10 text-sky-900 dark:text-sky-200",
   },
 ]
 

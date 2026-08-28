@@ -6,8 +6,11 @@ import { ArrowUpRight, Flag, Target, Users } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/ui/status-badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { buttonVariants } from "@/components/ui/button"
+import { MetricCard } from "@/components/ui/metric-card"
+import { PageHeader } from "@/components/ui/page-header"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   getGestaoObjectivesServerSnapshot,
@@ -21,6 +24,7 @@ import {
   getGestaoPdiSnapshot,
   subscribeGestaoPdiStore,
 } from "@/lib/gestao/pdi/store"
+import { OBJECTIVE_STATUS_TONE } from "@/lib/status-tone"
 import {
   getOrgServerSnapshot,
   getOrgSnapshot,
@@ -92,33 +96,34 @@ export default function GestaoHomePage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Visão geral</h1>
-        {pendingRequests > 0 ? (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {pendingRequests}{" "}
-            {pendingRequests === 1 ? "pendência de PDI" : "pendências de PDI"}
-          </p>
-        ) : null}
-      </div>
+      <PageHeader
+        title="Visão geral"
+        description={
+          pendingRequests > 0
+            ? `${pendingRequests} ${
+                pendingRequests === 1 ? "pendência de PDI" : "pendências de PDI"
+              }`
+            : undefined
+        }
+      />
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-        <GestaoMetric
+        <MetricCard
           label="Pessoas do time"
           value={directReports.length}
           helper="Sob sua gestão direta"
         />
-        <GestaoMetric
+        <MetricCard
           label="PDIs ativos"
           value={activePdis}
           helper="Com trilha em andamento"
         />
-        <GestaoMetric
+        <MetricCard
           label="Metas ativas"
           value={teamObjectives.filter((objective) => objective.status === "in_progress").length}
           helper="Em execução agora"
         />
-        <GestaoMetric
+        <MetricCard
           label="Prazo próximo"
           value={dueSoonGoals}
           helper="Vencem em até 30 dias"
@@ -198,7 +203,7 @@ export default function GestaoHomePage() {
                   >
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm font-medium">{objective.title}</p>
-                      <Badge variant="outline">{OBJECTIVE_STATUS_LABEL[objective.status]}</Badge>
+                      <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]}>{OBJECTIVE_STATUS_LABEL[objective.status]}</StatusBadge>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <PersonAvatar
@@ -260,26 +265,6 @@ export default function GestaoHomePage() {
           </Link>
         </CardContent>
       </Card>
-    </div>
-  )
-}
-
-function GestaoMetric({
-  label,
-  value,
-  helper,
-}: {
-  label: string
-  value: number
-  helper: string
-}) {
-  return (
-    <div className="rounded-[12px] border border-border/60 bg-card/72 px-4 py-3">
-      <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">{value}</p>
-      <p className="mt-1 text-xs text-muted-foreground">{helper}</p>
     </div>
   )
 }

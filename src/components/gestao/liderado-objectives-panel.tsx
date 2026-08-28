@@ -4,8 +4,11 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import { Pencil, Plus, Trash2 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/ui/status-badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Field } from "@/components/ui/field"
+import { FilterPill, FilterPillGroup } from "@/components/ui/filter-pill"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -40,7 +43,7 @@ import {
   type GestaoObjectiveForm,
 } from "@/lib/gestao/objectives/store"
 import type { OrgUser } from "@/lib/org/types"
-import { cn } from "@/lib/utils"
+import { OBJECTIVE_STATUS_TONE } from "@/lib/status-tone"
 
 export function LideradoObjectivesPanel({
   collaborator,
@@ -128,7 +131,7 @@ export function LideradoObjectivesPanel({
               <div className="min-w-0">
                 <p className="text-sm font-medium">{objective.title}</p>
                 <div className="mt-1 flex flex-wrap gap-1.5">
-                  <Badge variant="outline">{OBJECTIVE_STATUS_LABEL[objective.status]}</Badge>
+                  <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]}>{OBJECTIVE_STATUS_LABEL[objective.status]}</StatusBadge>
                   {objective.dimensions.map((dimension) => (
                     <Badge key={dimension} variant="secondary">
                       {PDI_DIMENSION_LABEL[dimension]}
@@ -172,47 +175,41 @@ export function LideradoObjectivesPanel({
           </SheetHeader>
 
           <div className="flex flex-col gap-4 p-4 pt-0">
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Título</span>
+            <Field label="Título">
               <Input
                 value={form.title}
                 onChange={(event) => setForm({ ...form, title: event.target.value })}
               />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Motivação</span>
+            </Field>
+            <Field label="Motivação">
               <Textarea
                 value={form.motivation}
                 onChange={(event) => setForm({ ...form, motivation: event.target.value })}
                 rows={2}
               />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Plano de ação</span>
+            </Field>
+            <Field label="Plano de ação">
               <Textarea
                 value={form.actionPlan}
                 onChange={(event) => setForm({ ...form, actionPlan: event.target.value })}
                 rows={2}
               />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Evidência esperada</span>
+            </Field>
+            <Field label="Evidência esperada">
               <Textarea
                 value={form.expectedEvidence}
                 onChange={(event) => setForm({ ...form, expectedEvidence: event.target.value })}
                 rows={2}
               />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Prazo</span>
+            </Field>
+            <Field label="Prazo">
               <Input
                 type="date"
                 value={form.deadline}
                 onChange={(event) => setForm({ ...form, deadline: event.target.value })}
               />
-            </label>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-sm font-medium">Status</span>
+            </Field>
+            <Field label="Status">
               <Select
                 value={form.status}
                 onValueChange={(value) =>
@@ -224,7 +221,9 @@ export function LideradoObjectivesPanel({
                 }
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue>
+                    {(value: GestaoObjectiveForm["status"]) => OBJECTIVE_STATUS_LABEL[value]}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {Object.entries(OBJECTIVE_STATUS_LABEL).map(([value, label]) => (
@@ -234,26 +233,21 @@ export function LideradoObjectivesPanel({
                   ))}
                 </SelectContent>
               </Select>
-            </label>
+            </Field>
             <div className="flex flex-col gap-2">
               <span className="text-sm font-medium">Dimensões PDI</span>
-              <div className="flex flex-wrap gap-2">
+              <FilterPillGroup aria-label="Dimensões PDI">
                 {PDI_DIMENSION_OPTIONS.map((dimension) => (
-                  <button
+                  <FilterPill
                     key={dimension}
-                    type="button"
+                    size="sm"
+                    active={form.dimensions.includes(dimension)}
                     onClick={() => toggleDimension(dimension)}
-                    className={cn(
-                      "rounded-full border px-2.5 py-1 text-xs transition-colors",
-                      form.dimensions.includes(dimension)
-                        ? "border-brand/40 bg-brand-muted/50 text-foreground"
-                        : "border-border text-muted-foreground hover:bg-muted/40"
-                    )}
                   >
                     {PDI_DIMENSION_LABEL[dimension]}
-                  </button>
+                  </FilterPill>
                 ))}
-              </div>
+              </FilterPillGroup>
             </div>
           </div>
 

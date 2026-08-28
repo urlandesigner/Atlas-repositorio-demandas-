@@ -5,6 +5,7 @@ import { useState, useSyncExternalStore } from "react"
 import { useAuth } from "@/components/auth/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
 import { logAudit } from "@/lib/gestao/audit/store"
 import {
   type AreaPermissions,
@@ -32,11 +33,10 @@ function ToggleRow({
         <span className="block text-sm font-medium">{label}</span>
         <span className="mt-0.5 block text-xs text-muted-foreground">{description}</span>
       </span>
-      <input
-        type="checkbox"
+      <Checkbox
         checked={checked}
-        onChange={(event) => onChange(event.target.checked)}
-        className="mt-1 size-4 accent-brand"
+        onCheckedChange={(value) => onChange(value)}
+        className="mt-1"
       />
     </label>
   )

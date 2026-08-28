@@ -8,6 +8,7 @@ import { CompetencyRow } from "@/components/evolution/competency-row"
 import { EvidenceSheet } from "@/components/evolution/evidence-sheet"
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
 import { EvolutionPanel } from "@/components/profile/evolution-panel"
+import { Overline } from "@/components/ui/overline"
 import type { CompetencyEvidenceView } from "@/lib/evolution/types"
 import { useEvolutionData } from "@/hooks/use-evolution-data"
 
@@ -51,9 +52,9 @@ export default function EvolutionRadarPage() {
 
         <section>
           <div className="mb-3 flex items-baseline justify-between gap-3">
-            <h2 className="text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
+            <Overline render={<h2 />} className="text-muted-foreground/70">
               Competências por evidência
-            </h2>
+            </Overline>
             <span className="text-xs text-muted-foreground">
               {strongCount} de {competencyViews.length} bem evidenciadas
             </span>
@@ -75,9 +76,9 @@ export default function EvolutionRadarPage() {
         </section>
 
         <section>
-          <h2 className="mb-3 text-xs font-medium uppercase tracking-wide text-muted-foreground/70">
+          <Overline render={<h2 />} className="mb-3 text-muted-foreground/70">
             PDI
-          </h2>
+          </Overline>
           <EvolutionPanel
             ladder={profile.ladder}
             currentLevelId={profile.identity.levelId}

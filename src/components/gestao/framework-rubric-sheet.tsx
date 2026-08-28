@@ -2,6 +2,7 @@
 
 import { Check } from "lucide-react"
 
+import { OptionCard } from "@/components/ui/option-card"
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { formatPdiLevel, PDI_MAX_LEVEL } from "@/lib/profile/pdi"
 import type { FrameworkTheme } from "@/lib/gestao/pdi/types"
@@ -84,19 +85,14 @@ export function FrameworkRubricSheet({
                 }
 
                 return (
-                  <button
+                  <OptionCard
                     key={level}
-                    type="button"
+                    active={isExpected}
                     onClick={() => onSetExpected?.(level)}
-                    className={cn(
-                      "flex items-start gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors",
-                      isExpected
-                        ? "border-brand/40 bg-brand-muted/50"
-                        : "border-border/60 hover:bg-muted/40"
-                    )}
+                    className="flex items-start gap-3"
                   >
                     {body}
-                  </button>
+                  </OptionCard>
                 )
               })}
             </div>

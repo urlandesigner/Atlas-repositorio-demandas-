@@ -31,9 +31,24 @@ import { getClientsServerSnapshot, getClientsSnapshot, subscribeClientsStore } f
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { PageHeader } from "@/components/ui/page-header"
+import { Card, CardContent } from "@/components/ui/card"
+import { CardList, CardListHeader } from "@/components/ui/card-list"
 import { Input } from "@/components/ui/input"
+import { ListRowButton } from "@/components/ui/list-row-button"
+import { Overline } from "@/components/ui/overline"
+import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { SegmentedControl, SegmentedControlItem } from "@/components/ui/segmented-control"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { StatusBadge } from "@/components/ui/status-badge"
+import { PROJECT_STATUS_TONE } from "@/lib/status-tone"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Activity,
@@ -58,31 +73,31 @@ import {
 const LINK_KIND_STYLES = {
   figma: {
     icon: Palette,
-    className: "border-pink-500/15 bg-pink-500/10 text-pink-700 dark:text-pink-300",
+    className: "border-border bg-muted/70 text-muted-foreground",
   },
   github: {
     icon: GitBranch,
-    className: "border-slate-500/15 bg-slate-500/10 text-slate-700 dark:text-slate-300",
+    className: "border-border bg-muted/70 text-muted-foreground",
   },
   vercel: {
     icon: Rocket,
-    className: "border-violet-500/15 bg-violet-500/10 text-violet-700 dark:text-violet-300",
+    className: "border-border bg-muted/70 text-muted-foreground",
   },
   notion: {
     icon: FileText,
-    className: "border-zinc-500/15 bg-zinc-500/10 text-zinc-700 dark:text-zinc-300",
+    className: "border-border bg-muted/70 text-muted-foreground",
   },
   jira: {
     icon: Layers3,
-    className: "border-sky-500/15 bg-sky-500/10 text-sky-700 dark:text-sky-300",
+    className: "border-border bg-muted/70 text-muted-foreground",
   },
   production: {
     icon: Globe,
-    className: "border-emerald-500/15 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+    className: "border-success/20 bg-success/10 text-success-foreground",
   },
   staging: {
     icon: Rocket,
-    className: "border-amber-500/15 bg-amber-500/10 text-amber-700 dark:text-amber-300",
+    className: "border-warning/20 bg-warning/10 text-warning-foreground",
   },
   default: {
     icon: Link2,
@@ -130,19 +145,19 @@ function getSimplifiedDomain(url: string) {
 function getTimelineEventMeta(type: TimelineEventType) {
   switch (type) {
     case "created":
-      return { icon: FolderOpen, className: "border-slate-500/15 bg-slate-500/10 text-slate-700 dark:text-slate-300" }
+      return { icon: FolderOpen, className: "border-border bg-muted/70 text-muted-foreground" }
     case "edited":
-      return { icon: Pencil, className: "border-violet-500/15 bg-violet-500/10 text-violet-700 dark:text-violet-300" }
+      return { icon: Pencil, className: "border-border bg-muted/70 text-muted-foreground" }
     case "payment":
-      return { icon: CreditCard, className: "border-emerald-500/15 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" }
+      return { icon: CreditCard, className: "border-success/20 bg-success/10 text-success-foreground" }
     case "status":
-      return { icon: Flag, className: "border-amber-500/15 bg-amber-500/10 text-amber-700 dark:text-amber-300" }
+      return { icon: Flag, className: "border-warning/20 bg-warning/10 text-warning-foreground" }
     case "deploy":
-      return { icon: Rocket, className: "border-sky-500/15 bg-sky-500/10 text-sky-700 dark:text-sky-300" }
+      return { icon: Rocket, className: "border-info/20 bg-info/10 text-info-foreground" }
     case "update":
-      return { icon: Activity, className: "border-fuchsia-500/15 bg-fuchsia-500/10 text-fuchsia-700 dark:text-fuchsia-300" }
+      return { icon: Activity, className: "border-border bg-muted/70 text-muted-foreground" }
     case "observation":
-      return { icon: FileText, className: "border-zinc-500/15 bg-zinc-500/10 text-zinc-700 dark:text-zinc-300" }
+      return { icon: FileText, className: "border-border bg-muted/70 text-muted-foreground" }
   }
 }
 
@@ -194,36 +209,6 @@ function getProjectProgress(
 
   // Sem período definido não há como medir avanço: indicador mínimo por status.
   return status === "active" ? 5 : 0
-}
-
-function getStatusBadgeClassName(status: ProjectStatus) {
-  switch (status) {
-    case "not_started":
-      return "border-zinc-500/20 bg-zinc-500/12 text-zinc-700 dark:text-zinc-300"
-    case "active":
-      return "border-emerald-500/20 bg-emerald-500/12 text-emerald-700 dark:text-emerald-300"
-    case "paused":
-      return "border-amber-500/20 bg-amber-500/12 text-amber-700 dark:text-amber-300"
-    case "closed":
-      return "border-sky-500/20 bg-sky-500/12 text-sky-700 dark:text-sky-300"
-    case "inactive":
-      return "border-rose-500/20 bg-rose-500/12 text-rose-700 dark:text-rose-300"
-  }
-}
-
-function getProgressFillClassName(status: ProjectStatus) {
-  switch (status) {
-    case "not_started":
-      return "bg-zinc-400"
-    case "active":
-      return "bg-emerald-500"
-    case "paused":
-      return "bg-amber-500"
-    case "closed":
-      return "bg-sky-500"
-    case "inactive":
-      return "bg-rose-500"
-  }
 }
 
 function normalizeLinksForComparison(links: ProjectLinkEntry[]) {
@@ -331,18 +316,10 @@ function DetailSection({
   children: React.ReactNode
 }) {
   return (
-    <Card className="border-border/70">
-      <CardHeader className="pb-4">
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="text-sm font-semibold text-foreground">{title}</h2>
-            {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
-          </div>
-          {action && <div className="shrink-0">{action}</div>}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">{children}</CardContent>
-    </Card>
+    <CardList className="border-border/70">
+      <CardListHeader title={title} description={description} action={action} />
+      <CardContent className="space-y-4 px-4 py-4">{children}</CardContent>
+    </CardList>
   )
 }
 
@@ -566,16 +543,11 @@ function ProjectDetailSurface({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight text-foreground">
-            {editName}
-          </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Página dedicada para acompanhar decisões, entregas e contexto operacional deste projeto.
-          </p>
-        </div>
-
+      <PageHeader
+        title={editName}
+        description="Página dedicada para acompanhar decisões, entregas e contexto operacional deste projeto."
+        descriptionClassName="max-w-2xl"
+      >
         <PageHeaderActions>
           <Button variant="ghost" className="flex-1 sm:flex-none" onClick={handleReset}>
             Desfazer
@@ -584,20 +556,20 @@ function ProjectDetailSurface({
             Salvar alterações
           </Button>
         </PageHeaderActions>
-      </div>
+      </PageHeader>
 
-      <Card className="border-border/70 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_32px_rgba(15,23,42,0.06)]">
-        <CardContent className="p-4">
+      <Card className="border-border/70 shadow-card">
+        <CardContent>
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
             <div className="min-w-0 space-y-1.5 lg:shrink-0">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className={cn("rounded-full border px-2.5 py-1 text-[11px] font-medium shadow-none", getStatusBadgeClassName(editStatus))}>
+                <StatusBadge tone={PROJECT_STATUS_TONE[editStatus]} className="rounded-full px-2.5 py-1 text-[11px] font-medium shadow-none">
                   {STATUS_LABEL[editStatus]}
-                </Badge>
+                </StatusBadge>
                 {showFreelancerFields && clientDisplayName && (
-                  <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                  <Overline>
                     {clientDisplayName}
-                  </span>
+                  </Overline>
                 )}
               </div>
 
@@ -614,16 +586,15 @@ function ProjectDetailSurface({
             </div>
 
             <div className="space-y-1.5 lg:flex-1">
-              <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+              <Overline className="flex items-center justify-between">
                 <span>Progressão</span>
                 <span>{commandCenter.progress}%</span>
-              </div>
-              <div className="h-2 rounded-full bg-muted/80">
-                <div
-                  className={cn("h-full rounded-full transition-[width,background-color] duration-200 ease-out", getProgressFillClassName(editStatus))}
-                  style={{ width: `${commandCenter.progress}%` }}
-                />
-              </div>
+              </Overline>
+              <Progress
+                value={commandCenter.progress}
+                size="md"
+                tone={PROJECT_STATUS_TONE[editStatus]}
+              />
             </div>
           </div>
         </CardContent>
@@ -639,35 +610,46 @@ function ProjectDetailSurface({
               </div>
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Status</label>
-                <select
-                  value={editStatus}
-                  onChange={(e) => setEditStatus(e.target.value as ProjectStatus)}
-                  className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
-                >
-                  {STATUS_OPTIONS.map((status) => (
-                    <option key={status} value={status}>
-                      {STATUS_LABEL[status]}
-                    </option>
-                  ))}
-                </select>
+                <Select value={editStatus} onValueChange={(status) => setEditStatus(status as ProjectStatus)}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>
+                      {(value) => STATUS_LABEL[value as ProjectStatus]}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {STATUS_OPTIONS.map((status) => (
+                      <SelectItem key={status} value={status}>
+                        {STATUS_LABEL[status]}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
 
             {showFreelancerFields && (
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-muted-foreground">Cliente</label>
-                <select
+                <Select
                   value={activeClientId}
-                  onChange={(e) => setEditClientId(e.target.value)}
-                  className="h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs outline-none focus:border-ring focus:ring-[3px] focus:ring-ring/50"
+                  onValueChange={(clientId) => setEditClientId((clientId as string | null) ?? "")}
                 >
-                  <option value="">Selecione um cliente</option>
-                  {sortedClients.map((client) => (
-                    <option key={client.id} value={client.id}>
-                      {client.name}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full">
+                    <SelectValue>
+                      {(value) =>
+                        sortedClients.find((client) => client.id === value)?.name ?? "Selecione um cliente"
+                      }
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Selecione um cliente</SelectItem>
+                    {sortedClients.map((client) => (
+                      <SelectItem key={client.id} value={client.id}>
+                        {client.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {sortedClients.length === 0 ? (
                   <p className="mt-2 text-xs text-muted-foreground">
                     Nenhum cliente cadastrado ainda. Abra a tela{" "}
@@ -736,11 +718,10 @@ function ProjectDetailSurface({
             ) : (
               <div className="space-y-2">
                 {linkedRecords.map((record: RecordEntry) => (
-                  <button
+                  <ListRowButton
                     key={record.id}
-                    type="button"
                     onClick={() => openDetail(record)}
-                    className="w-full rounded-[12px] border border-border/60 bg-card/[0.98] p-3 text-left shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_20px_rgba(15,23,42,0.05)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-[0_1px_2px_rgba(15,23,42,0.05),0_14px_28px_rgba(15,23,42,0.075)]"
+                    className="flex-col items-stretch gap-0"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <p className="min-w-0 truncate text-sm font-medium text-foreground">{record.enriched.title || "Entrega sem título"}</p>
@@ -751,7 +732,7 @@ function ProjectDetailSurface({
                     <ImpactCallout size="sm" lines={2} className="mt-2.5">
                       {getRecordImpactText(record) || "—"}
                     </ImpactCallout>
-                  </button>
+                  </ListRowButton>
                 ))}
               </div>
             )}
@@ -767,7 +748,7 @@ function ProjectDetailSurface({
                     {groupedTimeline.map((group) => (
                       <div key={group.label}>
                         <div className="mb-3 flex items-center gap-3">
-                          <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">{group.label}</span>
+                          <Overline>{group.label}</Overline>
                           <div className="h-px flex-1 bg-border/70" />
                         </div>
                         <div className="space-y-3">
@@ -782,7 +763,7 @@ function ProjectDetailSurface({
                                 <div className={cn("absolute left-0 top-0 flex size-9 items-center justify-center rounded-xl border shadow-sm", meta.className)}>
                                   <Icon className="size-4" />
                                 </div>
-                                <div className="rounded-[12px] border border-border/70 bg-background/90 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_20px_rgba(15,23,42,0.06)]">
+                                <div className="rounded-[12px] border border-border/70 bg-background/90 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover">
                                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                     <div className="min-w-0">
                                       <div className="flex flex-wrap items-center gap-2">
@@ -870,7 +851,7 @@ function ProjectDetailSurface({
                   return (
                     <div
                       key={`${link.label}-${link.url}-${index}`}
-                      className="group rounded-[12px] border border-border/70 bg-background/80 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-[0_1px_2px_rgba(15,23,42,0.04),0_10px_24px_rgba(15,23,42,0.08)]"
+                      className="group rounded-[12px] border border-border/70 bg-background/80 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover"
                     >
                       <div className="flex items-start gap-3">
                         <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl border", config.className)}>
@@ -889,7 +870,7 @@ function ProjectDetailSurface({
                               <Button type="button" variant="ghost" size="sm" className="size-8 rounded-full p-0 text-muted-foreground hover:text-foreground" onClick={() => handleEditLink(index)}>
                                 <Pencil className="size-4" />
                               </Button>
-                              <Button type="button" variant="ghost" size="sm" className="size-8 rounded-full p-0 text-muted-foreground hover:text-rose-500" onClick={() => handleRemoveLink(index)}>
+                              <Button type="button" variant="ghost" size="sm" className="size-8 rounded-full p-0 text-muted-foreground hover:text-destructive" onClick={() => handleRemoveLink(index)}>
                                 <Trash2 className="size-4" />
                               </Button>
                             </div>
@@ -944,24 +925,24 @@ function ProjectDetailSurface({
 
                 {addingPayment && (
                   <div className="mb-3 rounded-[12px] border border-border/70 bg-muted/30 p-3">
-                    <div className="flex gap-1 rounded-md bg-muted p-0.5">
+                    <SegmentedControl aria-label="Tipo de lançamento" className="flex w-full">
                       {(["income", "expense"] as const).map((type) => (
-                        <button
+                        <SegmentedControlItem
                           key={type}
+                          active={paymentForm.type === type}
                           onClick={() => setPaymentForm((current) => ({ ...current, type }))}
                           className={cn(
-                            "flex-1 rounded py-1 text-xs font-medium transition-colors",
-                            paymentForm.type === type
-                              ? type === "income"
-                                ? "bg-background text-emerald-600 shadow-xs"
-                                : "bg-background text-rose-600 shadow-xs"
-                              : "text-muted-foreground hover:text-foreground"
+                            "flex-1 justify-center",
+                            paymentForm.type === type &&
+                              (type === "income"
+                                ? "bg-background text-success-foreground shadow-xs"
+                                : "bg-background text-destructive shadow-xs")
                           )}
                         >
                           {type === "income" ? "Receita" : "Despesa"}
-                        </button>
+                        </SegmentedControlItem>
                       ))}
-                    </div>
+                    </SegmentedControl>
                     <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <div>
                         <label className="mb-1.5 block text-xs text-muted-foreground">Data</label>
@@ -999,7 +980,7 @@ function ProjectDetailSurface({
                           </span>
                           {payment.notes && <p className="mt-1 text-xs text-muted-foreground">{payment.notes}</p>}
                         </div>
-                        <span className={cn("text-sm font-medium tabular-nums", payment.type === "income" ? "text-emerald-600" : "text-rose-500")}>
+                        <span className={cn("text-sm font-medium tabular-nums", payment.type === "income" ? "text-success-foreground" : "text-destructive")}>
                           {payment.type === "expense" ? "−" : "+"}
                           {payment.amount.toLocaleString("pt-BR", { style: "currency", currency: "BRL" })}
                         </span>
@@ -1034,7 +1015,7 @@ export default function ProjectDetailPage() {
 
   if (!isWorkspaceTab(workspaceParam)) {
     return (
-      <Card className="border-border/70">
+      <Card className="border-border/70 py-0">
         <CardContent className="p-6">
           <p className="text-sm text-muted-foreground">Workspace de projeto inválido.</p>
         </CardContent>
@@ -1046,7 +1027,7 @@ export default function ProjectDetailPage() {
 
   if (!project) {
     return (
-      <Card className="border-border/70">
+      <Card className="border-border/70 py-0">
         <CardContent className="p-6">
           <p className="text-sm text-muted-foreground">Projeto não encontrado ou removido.</p>
         </CardContent>

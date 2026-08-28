@@ -56,6 +56,8 @@ export interface CaptureProjectContext {
 export interface CaptureObjectiveContext {
   id: string
   title: string
+  /** Objetivo definido pelo gestor (armazenado em outro store) — default "personal". */
+  source?: "personal" | "gestao"
 }
 
 export interface CaptureContext {

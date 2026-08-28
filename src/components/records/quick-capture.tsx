@@ -15,6 +15,22 @@ import {
 import { cn } from "@/lib/utils"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { FilterPill, FilterPillGroup } from "@/components/ui/filter-pill"
+import { Overline } from "@/components/ui/overline"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  StatusBadge,
+  STATUS_TONE_CLASS,
+  type StatusTone,
+} from "@/components/ui/status-badge"
+import { Textarea } from "@/components/ui/textarea"
 import { AIReviewField } from "./ai-review-field"
 import { AtuacaoPicker, ATUACOES } from "./atuacao-picker"
 import { AreaPicker } from "./area-picker"
@@ -60,12 +76,12 @@ type Detection = {
   tags: string[]
 }
 
-type Signal = { icon: string; label: string; colorClass: string }
+type Signal = { icon: string; label: string; tone: StatusTone }
 
 type ScoreResult = {
   label: string
   description: string
-  colorClass: string
+  tone: StatusTone
 }
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -113,7 +129,7 @@ function computeSignals(
     signals.push({
       icon: "👥",
       label: "Liderança identificada",
-      colorClass: "text-purple-700 bg-purple-50 border-purple-200",
+      tone: "neutral",
     })
   }
 
@@ -121,7 +137,7 @@ function computeSignals(
     signals.push({
       icon: "🎯",
       label: "Impacto transversal",
-      colorClass: "text-blue-700 bg-blue-50 border-blue-200",
+      tone: "info",
     })
   }
 
@@ -129,7 +145,7 @@ function computeSignals(
     signals.push({
       icon: "⚡",
       label: "Decisão arquitetural",
-      colorClass: "text-amber-700 bg-amber-50 border-amber-200",
+      tone: "neutral",
     })
   }
 
@@ -137,7 +153,7 @@ function computeSignals(
     signals.push({
       icon: "🧩",
       label: "Design System detectado",
-      colorClass: "text-violet-700 bg-violet-50 border-violet-200",
+      tone: "neutral",
     })
   }
 
@@ -145,7 +161,7 @@ function computeSignals(
     signals.push({
       icon: "📈",
       label: "Impacto mensurável",
-      colorClass: "text-emerald-700 bg-emerald-50 border-emerald-200",
+      tone: "success",
     })
   }
 
@@ -178,24 +194,24 @@ function computeScore(
     return {
       label: "Alta relevância estratégica",
       description: "Forte evidência para promoção ou performance review",
-      colorClass: "text-violet-700 bg-violet-50 border-violet-200",
+      tone: "impact",
     }
   if (total >= 11)
     return {
       label: "Contribuição estratégica",
       description: "Impacto bem documentado, boa visibilidade organizacional",
-      colorClass: "text-blue-700 bg-blue-50 border-blue-200",
+      tone: "info",
     }
   if (total >= 7)
     return {
       label: "Impacto sólido",
       description: "Registro consistente da sua atuação profissional",
-      colorClass: "text-emerald-700 bg-emerald-50 border-emerald-200",
+      tone: "success",
     }
   return {
     label: "Contribuição registrada",
     description: "Boa base para evolução e documentação de trajetória",
-    colorClass: "text-muted-foreground bg-muted border-border",
+    tone: "neutral",
   }
 }
 
@@ -422,15 +438,25 @@ export function QuickCapture({ open, onOpenChange, onSave, initialContext }: Qui
   function handleSave() {
     if (!enriched) return
     const selectedProject = projectOptions.find((project) => project.id === selectedProjectId)
-    const selectedObjective = objectiveOptions.find(
-      (objective) => objective.id === selectedObjectiveId
-    )
+    // Quando o objetivo vem travado pelo contexto (ex: objetivo do gestor), ele pode não
+    // estar em objectiveOptions (lista só de objetivos próprios em planned/in_progress).
+    const selectedObjective =
+      initialContext?.objective ??
+      objectiveOptions.find((objective) => objective.id === selectedObjectiveId)
     const context: CaptureContext = {
       ...(selectedProject
         ? { project: { id: selectedProject.id, name: selectedProject.name } }
         : {}),
       ...(selectedObjective
-        ? { objective: { id: selectedObjective.id, title: selectedObjective.title } }
+        ? {
+            objective: {
+              id: selectedObjective.id,
+              title: selectedObjective.title,
+              ...("source" in selectedObjective && selectedObjective.source
+                ? { source: selectedObjective.source }
+                : {}),
+            },
+          }
         : {}),
     }
     const record: RecordEntry = {
@@ -593,13 +619,13 @@ function InputStep({
                 : "Vincule a um projeto, a um objetivo ou aos dois."}
             </p>
           </div>
-          <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
+          <Overline size="sm" className="text-muted-foreground/70">
             {hasLockedContext ? "Contexto atual" : "Opcional"}
-          </span>
+          </Overline>
         </div>
 
         <div className="grid gap-2.5 sm:grid-cols-2">
-          <label className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
+          <div className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
             <FolderOpenIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-primary" />
             <span className="min-w-0 flex-1">
               <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
@@ -613,23 +639,32 @@ function InputStep({
                   </span>
                 </span>
               ) : (
-                <select
+                <Select
                   value={selectedProjectId}
-                  onChange={(event) => onProjectChange(event.target.value)}
-                  className="mt-0.5 w-full appearance-none bg-transparent text-xs font-medium outline-none"
+                  onValueChange={(value) => onProjectChange(value ?? "")}
                 >
-                  <option value="">Sem projeto</option>
-                  {projectOptions.map((project) => (
-                    <option key={project.id} value={project.id}>
-                      {project.name}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger
+                    aria-label="Projeto"
+                    className="mt-0.5 w-full rounded-none border-0 bg-transparent p-0 text-xs font-medium data-[size=default]:h-auto focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent"
+                  >
+                    <SelectValue>
+                      {(value: string) => projectOptions.find((project) => project.id === value)?.name ?? "Sem projeto"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Sem projeto</SelectItem>
+                    {projectOptions.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>
+                        {project.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             </span>
-          </label>
+          </div>
 
-          <label className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
+          <div className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
             <TargetIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-primary" />
             <span className="min-w-0 flex-1">
               <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
@@ -643,27 +678,36 @@ function InputStep({
                   </span>
                 </span>
               ) : (
-                <select
+                <Select
                   value={selectedObjectiveId}
-                  onChange={(event) => onObjectiveChange(event.target.value)}
-                  className="mt-0.5 w-full appearance-none bg-transparent text-xs font-medium outline-none"
+                  onValueChange={(value) => onObjectiveChange(value ?? "")}
                 >
-                  <option value="">Sem objetivo</option>
-                  {objectiveOptions.map((objective) => (
-                    <option key={objective.id} value={objective.id}>
-                      {objective.title}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger
+                    aria-label="Objetivo"
+                    className="mt-0.5 w-full rounded-none border-0 bg-transparent p-0 text-xs font-medium data-[size=default]:h-auto focus-visible:ring-0 dark:bg-transparent dark:hover:bg-transparent"
+                  >
+                    <SelectValue>
+                      {(value: string) => objectiveOptions.find((objective) => objective.id === value)?.title ?? "Sem objetivo"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="">Sem objetivo</SelectItem>
+                    {objectiveOptions.map((objective) => (
+                      <SelectItem key={objective.id} value={objective.id}>
+                        {objective.title}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
             </span>
-          </label>
+          </div>
         </div>
       </div>
 
       {/* Textarea */}
       <div className="px-5 py-4">
-        <textarea
+        <Textarea
           ref={textareaRef}
           value={raw}
           onChange={(e) => setRaw(e.target.value)}
@@ -674,10 +718,7 @@ function InputStep({
             }
           }}
           placeholder="Conduzi as decisões técnicas do novo módulo de checkout junto ao time de produto e engenharia. Alinhamos prioridades com stakeholders, eliminamos débito crítico no fluxo e entregamos 2 semanas antes — o que reduziu chamados de suporte em 35% no primeiro mês."
-          className={cn(
-            "w-full resize-none rounded-xl border border-transparent bg-muted/40 px-4 py-3 text-sm leading-relaxed placeholder:text-muted-foreground/50 outline-none transition-colors focus:border-ring/30 focus:bg-background focus:ring-3 focus:ring-ring/20",
-            "field-sizing-content min-h-[160px]"
-          )}
+          className="min-h-[160px] resize-none rounded-xl border-transparent bg-muted/40 text-sm leading-relaxed placeholder:text-muted-foreground/50 focus-visible:border-ring/30 focus-visible:bg-background focus-visible:ring-ring/20"
         />
 
         {/* Live detection strip */}
@@ -694,14 +735,7 @@ function InputStep({
             </div>
           ) : atuacaoInfo ? (
             <div className="flex items-center gap-2">
-              <span
-                className={cn(
-                  "text-[11px] font-medium px-2 py-0.5 rounded-full border",
-                  atuacaoInfo.baseClass
-                )}
-              >
-                {atuacaoInfo.label}
-              </span>
+              <StatusBadge tone="neutral">{atuacaoInfo.label}</StatusBadge>
               {detection!.tags.length > 0 && (
                 <>
                   <span className="text-muted-foreground/40 text-[11px]">·</span>
@@ -725,26 +759,25 @@ function InputStep({
 
       {/* Examples */}
       <div className="px-5 pb-2">
-        <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60 mb-2">
+        <Overline size="sm" className="mb-2 text-muted-foreground/60">
           Inspiração
-        </p>
-        <div className="flex flex-wrap gap-1.5">
+        </Overline>
+        <FilterPillGroup aria-label="Exemplos de registro">
           {[
             "Decidi arquitetura com trade-offs claros",
             "Alinhou produto e eng em mudança de rota",
             "Reestruturei processo entre squads",
             "Entrega que moveu métricas de negócio",
           ].map((ex) => (
-            <button
+            <FilterPill
               key={ex}
-              type="button"
+              size="sm"
               onClick={() => { if (!raw) setRaw(ex) }}
-              className="rounded-full border bg-muted/50 px-2.5 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
             >
               {ex}
-            </button>
+            </FilterPill>
           ))}
-        </div>
+        </FilterPillGroup>
       </div>
 
       {/* Footer */}
@@ -797,7 +830,7 @@ function ProcessingStep({ visibleSteps }: { visibleSteps: number }) {
             >
               <div className="shrink-0">
                 {done ? (
-                  <CheckIcon className="size-4 text-emerald-500" />
+                  <CheckIcon className="size-4 text-success" />
                 ) : active ? (
                   <Loader2Icon className="size-4 animate-spin text-primary" />
                 ) : (
@@ -826,9 +859,9 @@ function ProcessingStep({ visibleSteps }: { visibleSteps: number }) {
 
 function SidebarLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
+    <Overline size="sm" className="text-muted-foreground/60">
       {children}
-    </span>
+    </Overline>
   )
 }
 
@@ -878,8 +911,8 @@ function ReviewStep({
           <ChevronLeftIcon />
         </Button>
         <div className="flex items-center gap-2">
-          <div className="flex size-5 items-center justify-center rounded bg-emerald-100">
-            <CheckIcon className="size-3 text-emerald-600" />
+          <div className="flex size-5 items-center justify-center rounded bg-success/10">
+            <CheckIcon className="size-3 text-success-foreground" />
           </div>
           <p className="text-sm font-semibold">Seu registro estruturado</p>
         </div>
@@ -922,10 +955,10 @@ function ReviewStep({
             <div
               className={cn(
                 "overflow-hidden transition-all duration-300 ease-out",
-                showRaw ? "max-h-48 opacity-100 mt-2.5" : "max-h-0 opacity-0"
+                showRaw ? "max-h-60 opacity-100 mt-2.5" : "max-h-0 opacity-0"
               )}
             >
-              <div className="rounded-lg border bg-muted/30 px-4 py-3 font-mono text-xs text-muted-foreground leading-relaxed">
+              <div className="rounded-lg border bg-muted/30 px-4 py-3 font-mono text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
                 {raw}
               </div>
             </div>
@@ -946,7 +979,7 @@ function ReviewStep({
                       key={sig.label}
                       className={cn(
                         "flex items-center gap-2 rounded-lg border px-2.5 py-1.5",
-                        sig.colorClass
+                        STATUS_TONE_CLASS[sig.tone]
                       )}
                     >
                       <span className="text-sm leading-none">{sig.icon}</span>
@@ -1002,11 +1035,10 @@ function ReviewStep({
             <div className="flex flex-col gap-2">
               <SidebarLabel>Conhecimento</SidebarLabel>
               <label className="flex items-start gap-2 rounded-lg border bg-muted/20 px-2.5 py-2 cursor-pointer hover:bg-muted/40 transition-colors">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={isKnowledgeShare}
-                  onChange={(e) => onKnowledgeShareChange(e.target.checked)}
-                  className="mt-0.5 size-3.5 shrink-0 accent-primary"
+                  onCheckedChange={(checked) => onKnowledgeShareChange(checked)}
+                  className="mt-0.5 size-3.5"
                 />
                 <span className="text-[11px] leading-snug text-muted-foreground">
                   Isso também foi uma apresentação ou compartilhamento de conhecimento?
@@ -1017,7 +1049,7 @@ function ReviewStep({
             {/* Visibility score */}
             <div className="flex flex-col gap-2">
               <SidebarLabel>Relevância Profissional</SidebarLabel>
-              <div className={cn("rounded-lg border px-3 py-2.5", score.colorClass)}>
+              <div className={cn("rounded-lg border px-3 py-2.5", STATUS_TONE_CLASS[score.tone])}>
                 <p className="text-[11px] font-semibold leading-snug">{score.label}</p>
                 <p className="text-[10px] opacity-75 mt-0.5 leading-snug">{score.description}</p>
               </div>

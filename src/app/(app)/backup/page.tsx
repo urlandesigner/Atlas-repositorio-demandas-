@@ -2,8 +2,10 @@
 
 import { useRef, useState } from "react"
 import { Download, Upload, ShieldCheck, AlertTriangle } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { PageHeader } from "@/components/ui/page-header"
 
 /**
  * Página de backup / restauração dos dados locais (localStorage).
@@ -143,13 +145,10 @@ export default function BackupPage() {
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Backup de dados</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Seus dados ficam salvos apenas neste navegador. Exporte um arquivo para preservá-los ou
-          migrá-los para os sistemas Profissional e Pessoal.
-        </p>
-      </div>
+      <PageHeader
+        title="Backup de dados"
+        description="Seus dados ficam salvos apenas neste navegador. Exporte um arquivo para preservá-los ou migrá-los para os sistemas Profissional e Pessoal."
+      />
 
       <Card>
         <CardHeader>
@@ -205,20 +204,10 @@ export default function BackupPage() {
       </Card>
 
       {status.kind !== "idle" && (
-        <div
-          className={
-            status.kind === "ok"
-              ? "flex items-start gap-2 rounded-md border border-emerald-500/20 bg-emerald-500/10 p-3 text-sm text-emerald-700 dark:text-emerald-300"
-              : "flex items-start gap-2 rounded-md border border-rose-500/20 bg-rose-500/10 p-3 text-sm text-rose-700 dark:text-rose-300"
-          }
-        >
-          {status.kind === "ok" ? (
-            <ShieldCheck className="mt-0.5 size-4 shrink-0" />
-          ) : (
-            <AlertTriangle className="mt-0.5 size-4 shrink-0" />
-          )}
-          <span>{status.msg}</span>
-        </div>
+        <Alert variant={status.kind === "ok" ? "success" : "destructive"}>
+          {status.kind === "ok" ? <ShieldCheck /> : <AlertTriangle />}
+          <AlertDescription>{status.msg}</AlertDescription>
+        </Alert>
       )}
     </div>
   )

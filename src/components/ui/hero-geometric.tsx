@@ -4,7 +4,6 @@
 import { useRef, useMemo } from "react";
 import { Canvas, useFrame, ThreeElements } from "@react-three/fiber";
 import * as THREE from "three";
-import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 
@@ -64,35 +63,35 @@ float snoise(vec2 v){
 float bayerDither4x4(vec2 uv) {
     int x = int(mod(uv.x, 4.0));
     int y = int(mod(uv.y, 4.0));
-    
+
     int matrix[16];
     matrix[0] = 0; matrix[1] = 8; matrix[2] = 2; matrix[3] = 10;
     matrix[4] = 12; matrix[5] = 4; matrix[6] = 14; matrix[7] = 6;
     matrix[8] = 3; matrix[9] = 11; matrix[10] = 1; matrix[11] = 9;
     matrix[12] = 15; matrix[13] = 7; matrix[14] = 13; matrix[15] = 5;
-    
+
     return float(matrix[y * 4 + x]) / 16.0;
 }
 
 void main() {
     vec2 uv = vUv;
     vec2 coord = gl_FragCoord.xy;
-    
+
     // Enhanced noise with time
     float noise = snoise(uv * 1.5 + vec2(uTime * 0.05, uTime * 0.03)) * 0.25;
-    
+
     // Diagonal gradient from bottom-left to top-right
     float diagonal = (uv.x + uv.y) * 0.5;
-    
+
     // Combine for gradient - emphasize corners
     float gradient = diagonal * 1.2 + noise;
-    
+
     // Interpolate colors based on gradient
     vec3 deepBlue = uColor1;
     vec3 paleBlue = uColor2;
     vec3 softBlue = mix(deepBlue, paleBlue, 0.33);
     vec3 lightBlue = mix(deepBlue, paleBlue, 0.66);
-    
+
     // Map to colors with more distinct steps
     vec3 color;
     if (gradient < 0.3) {
@@ -104,11 +103,11 @@ void main() {
     } else {
         color = paleBlue;
     }
-    
+
     // Enhanced dithering at boundaries
     float dither = bayerDither4x4(coord);
     float threshold = fract(gradient * 4.0);
-    
+
     if (gradient < 0.3 && threshold > dither * 0.5) {
         color = softBlue;
     } else if (gradient >= 0.3 && gradient < 0.55 && threshold > dither * 0.5) {
@@ -116,16 +115,16 @@ void main() {
     } else if (gradient >= 0.55 && gradient < 0.8 && threshold > dither * 0.5) {
         color = paleBlue;
     }
-    
+
     // Softer fade to white - only at extreme bottom-left
     vec2 cornerDist = vec2(uv.x, uv.y);
     float fadeMask = smoothstep(0.0, 0.25, length(cornerDist));
     color = mix(vec3(1.0), color, fadeMask);
-    
+
     // Add subtle vignette to emphasize corners
     float vignette = smoothstep(1.2, 0.3, length(uv - 0.5));
     color = mix(color, color * 0.95, (1.0 - vignette) * 0.3);
-    
+
     gl_FragColor = vec4(color, 1.0);
 }
 `;
@@ -176,30 +175,24 @@ const GradientPlane = ({
 // --- Main Component ---
 
 interface HeroGeometricProps {
-    title1?: string;
-    title2?: string;
-    description?: string;
-    className?: string; // Explicitly included
+    className?: string;
     color1?: string;
     color2?: string;
     speed?: number;
 }
 
+/** Fundo decorativo WebGL (shader de gradiente com noise). Importar via next/dynamic com ssr:false. */
 export default function HeroGeometric({
-    title1,
-    title2,
-    description,
-    color1 = "#3B82F6", // Default soft blue
-    color2 = "#F0F9FF", // Default pale blue
+    color1 = "#3B82F6",
+    color2 = "#F0F9FF",
     speed = 1,
     className,
 }: HeroGeometricProps) {
     return (
         <div
-            className={cn("relative w-full min-h-screen flex flex-col items-center overflow-hidden bg-white text-black", className)}
+            className={cn("relative w-full min-h-screen overflow-hidden bg-card text-foreground", className)}
             style={{ containerType: "size" }}
         >
-            {/* Background Shader */}
             <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none">
                 <Canvas
                     camera={{ position: [0, 0, 1] }}
@@ -212,57 +205,6 @@ export default function HeroGeometric({
                     <GradientPlane color1={color1} color2={color2} speed={speed} />
                 </Canvas>
             </div>
-
-            {/* Content */}
-            {(title1 || title2 || description) && (
-                <div className="relative z-10 w-full flex-1 flex flex-col items-center justify-center pt-8 pb-8 md:pt-20 md:pb-20">
-                    <div className="w-full max-w-[1200px] px-6 flex flex-col items-center">
-                        {/* Headline */}
-                        <div className="flex flex-col items-center text-center gap-2 md:gap-4 mb-8 md:mb-12">
-                            {title1 && (
-                                <div className="overflow-hidden">
-                                    <motion.h1
-                                        initial={{ y: "100%", opacity: 0 }}
-                                        animate={{ y: "0%", opacity: 1 }}
-                                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-                                        className="text-[12cqi] md:text-[8cqi] lg:text-[6cqi] leading-[0.9] tracking-tighter text-[#131313]"
-                                    >
-                                        <span className="font-serif italic font-light text-[#1a1a1a]">
-                                            {title1}
-                                        </span>
-                                    </motion.h1>
-                                </div>
-                            )}
-                            {title2 && (
-                                <div className="overflow-hidden">
-                                    <motion.h1
-                                        initial={{ y: "100%", opacity: 0 }}
-                                        animate={{ y: "0%", opacity: 1 }}
-                                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-                                        className="text-[12cqi] md:text-[8cqi] lg:text-[6cqi] leading-[0.9] tracking-tighter font-bold text-black"
-                                    >
-                                        {title2}
-                                    </motion.h1>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Subheadline */}
-                        {description && (
-                            <div className="max-w-[480px] text-center mb-8">
-                                <motion.p
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-                                    className="text-lg md:text-[1.35rem] leading-relaxed text-neutral-600 font-normal"
-                                >
-                                    {description}
-                                </motion.p>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

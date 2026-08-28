@@ -3,6 +3,7 @@
 import { SoftSkillsPillarsEditor } from "@/components/gestao/soft-skills-pillars-editor"
 import { SoftSkillsRadarChart } from "@/components/gestao/soft-skills-radar-chart"
 import { Button } from "@/components/ui/button"
+import { Slider } from "@/components/ui/slider"
 import {
   defaultSoftSkillsScores,
   type SoftSkillsRadar,
@@ -49,14 +50,15 @@ export function SoftSkillsEditor({
             <div key={pillar.id} className="rounded-lg border px-3 py-2">
               <div className="mb-2 text-sm font-medium">{pillar.label}</div>
               <div className="flex items-center gap-3">
-                <input
-                  type="range"
+                <Slider
                   min={1}
                   max={5}
                   step={1}
                   value={value.scores[pillar.id] ?? 3}
-                  onChange={(event) => updateScore(pillar.id, Number(event.target.value))}
-                  className="w-full accent-brand"
+                  onValueChange={(next) =>
+                    updateScore(pillar.id, Array.isArray(next) ? next[0] : next)
+                  }
+                  aria-label={`Nota de ${pillar.label}`}
                 />
                 <span className="w-6 text-right text-sm font-medium tabular-nums">
                   {value.scores[pillar.id] ?? 3}

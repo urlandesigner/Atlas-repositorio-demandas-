@@ -5,11 +5,13 @@ import { useState } from "react"
 import { useAuth } from "@/components/auth/auth-provider"
 import { DEMO_ACCOUNTS, type DemoAccount } from "@/lib/auth/mock-users"
 import { Button } from "@/components/ui/button"
+import { FilterPill, FilterPillGroup } from "@/components/ui/filter-pill"
 import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
+import { Overline } from "@/components/ui/overline"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const inputClassName =
-  "h-11 border-border/70 bg-white px-4 text-[15px] transition-[border-color,box-shadow] focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/12"
+  "h-11 border-border/70 px-4 text-[15px] transition-[border-color,box-shadow] focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/12"
 
 export function LoginForm() {
   const { login } = useAuth()
@@ -91,31 +93,31 @@ export function LoginForm() {
       </form>
 
       <div className="mt-5">
-        <p className="mb-2.5 text-center text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+        <Overline className="mb-2.5 text-center">
           Acesso rápido
-        </p>
-        <div className="grid grid-cols-3 gap-2">
+        </Overline>
+        <FilterPillGroup aria-label="Acesso rápido" className="grid grid-cols-3 gap-2">
           {DEMO_ACCOUNTS.map((account) => {
             const isActive = activeDemoId === account.id
             return (
-              <button
-                key={account.id}
-                type="button"
-                title={account.description}
-                disabled={loading}
-                onClick={() => enterAsDemo(account)}
-                className={cn(
-                  "rounded-lg border px-2 py-2 text-center text-xs font-medium transition-colors",
-                  isActive
-                    ? "border-brand/30 bg-brand-muted/40 text-brand-muted-foreground"
-                    : "border-border/60 bg-muted/30 text-foreground hover:border-border hover:bg-muted/50"
-                )}
-              >
-                {account.role}
-              </button>
+              <Tooltip key={account.id}>
+                <TooltipTrigger
+                  render={
+                    <FilterPill
+                      active={isActive}
+                      disabled={loading}
+                      onClick={() => enterAsDemo(account)}
+                      className="rounded-lg px-2 py-2 text-center"
+                    >
+                      {account.role}
+                    </FilterPill>
+                  }
+                />
+                <TooltipContent>{account.description}</TooltipContent>
+              </Tooltip>
             )
           })}
-        </div>
+        </FilterPillGroup>
       </div>
     </div>
   )

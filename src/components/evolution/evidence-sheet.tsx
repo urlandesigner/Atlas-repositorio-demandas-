@@ -2,6 +2,7 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
+import { ListRowButton } from "@/components/ui/list-row-button"
 import type { RecordEntry } from "@/lib/records/types"
 import { getRecordImpactText } from "@/lib/records/display"
 import type { CompetencyEvidenceView } from "@/lib/evolution/types"
@@ -37,25 +38,26 @@ export function EvidenceSheet({
             <div className="flex flex-col gap-2 p-4 pt-0">
               {linked.length ? (
                 linked.map((record) => (
-                  <button
+                  <ListRowButton
                     key={record.id}
-                    type="button"
                     onClick={() => onOpenRecord(record)}
-                    className="rounded-xl border border-border/60 p-3 text-left transition-colors hover:bg-muted/40"
+                    className="rounded-xl p-3"
                   >
-                    <p className="text-sm font-medium">{record.enriched.title || "Registro"}</p>
-                    <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
-                      {getRecordImpactText(record)}
-                    </p>
-                    <div className="mt-2 flex flex-wrap gap-1">
-                      <Badge variant="outline" className="text-[10px] font-normal">
-                        Impacto {record.impactLevel}
-                      </Badge>
-                      <Badge variant="outline" className="text-[10px] font-normal">
-                        {record.atuacao}
-                      </Badge>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium">{record.enriched.title || "Registro"}</p>
+                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
+                        {getRecordImpactText(record)}
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        <Badge variant="outline" className="text-[10px] font-normal">
+                          Impacto {record.impactLevel}
+                        </Badge>
+                        <Badge variant="outline" className="text-[10px] font-normal">
+                          {record.atuacao}
+                        </Badge>
+                      </div>
                     </div>
-                  </button>
+                  </ListRowButton>
                 ))
               ) : (
                 <p className="py-8 text-center text-sm text-muted-foreground">

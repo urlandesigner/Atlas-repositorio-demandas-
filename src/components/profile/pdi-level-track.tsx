@@ -1,3 +1,4 @@
+import { StepConnector } from "@/components/ui/segmented-progress"
 import { formatPdiLevel, PDI_MAX_LEVEL } from "@/lib/profile/pdi"
 import { cn } from "@/lib/utils"
 
@@ -55,21 +56,14 @@ export function PdiLevelTrack({
                 onClick={() => onSelect?.(level)}
                 aria-label={`Definir nível ${formatPdiLevel(level)}${isExpected ? " (esperado)" : ""}`}
                 aria-pressed={level === current}
-                className="flex items-center justify-center rounded-full p-1.5"
+                className="flex items-center justify-center rounded-full p-1.5 outline-none transition-colors focus-visible:ring-3 focus-visible:ring-ring/20"
               >
                 {dot}
               </button>
             ) : (
               <span className="p-0.5">{dot}</span>
             )}
-            {level < PDI_MAX_LEVEL ? (
-              <span
-                className={cn(
-                  "h-0.5 flex-1",
-                  level < current ? "bg-brand" : "bg-border"
-                )}
-              />
-            ) : null}
+            {level < PDI_MAX_LEVEL ? <StepConnector filled={level < current} /> : null}
           </div>
         )
       })}

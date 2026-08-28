@@ -4,6 +4,7 @@ import { useState } from "react"
 
 import { FrameworkRubricSheet } from "@/components/gestao/framework-rubric-sheet"
 import { PdiLevelTrack } from "@/components/profile/pdi-level-track"
+import { Button } from "@/components/ui/button"
 import { formatPdiLevel } from "@/lib/profile/pdi"
 import type { FrameworkTheme, PdiFramework } from "@/lib/gestao/pdi/types"
 import { cn } from "@/lib/utils"
@@ -34,13 +35,14 @@ export function FrameworkPdiMatrix({
           return (
             <div key={theme.id} className="flex flex-col gap-2">
               <div className="flex items-center justify-between gap-3">
-                <button
-                  type="button"
+                <Button
+                  variant="link"
+                  size="sm"
                   onClick={() => setRubricTheme(theme)}
-                  className="text-left text-sm font-medium hover:underline"
+                  className="h-auto justify-start border-transparent p-0 text-left whitespace-normal text-foreground"
                 >
                   {theme.label}
-                </button>
+                </Button>
                 <span
                   className={cn(
                     "text-xs tabular-nums",

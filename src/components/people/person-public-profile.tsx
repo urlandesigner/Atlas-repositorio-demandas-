@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
+import { FilterPill, FilterPillGroup } from "@/components/ui/filter-pill"
 import { Input } from "@/components/ui/input"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
@@ -26,6 +27,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet"
 import { Textarea } from "@/components/ui/textarea"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { getOrgPublicPerson } from "@/lib/org/public"
 import {
   addKudo,
@@ -383,28 +385,28 @@ function KudoComposer({ fromUserId, toUser }: { fromUserId: string; toUser: OrgU
       <p className="text-sm font-medium text-foreground">
         Reconhecer {firstName} publicamente
       </p>
-      <div className="mt-3 flex flex-wrap gap-1.5">
+      <FilterPillGroup aria-label="Tipo de reconhecimento" className="mt-3">
         {KUDO_TYPES.map((kudoType) => {
           const meta = KUDO_TYPE_META[kudoType]
-          const active = kudoType === type
           return (
-            <button
-              key={kudoType}
-              type="button"
-              onClick={() => setType(kudoType)}
-              title={meta.helper}
-              className={
-                active
-                  ? "inline-flex items-center gap-1.5 rounded-full border border-brand bg-brand px-3 py-1.5 text-xs font-medium text-brand-foreground transition-colors"
-                  : "inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:border-brand/50 hover:text-foreground"
-              }
-            >
-              <span>{meta.emoji}</span>
-              {meta.label}
-            </button>
+            <Tooltip key={kudoType}>
+              <TooltipTrigger
+                render={
+                  <FilterPill
+                    active={kudoType === type}
+                    onClick={() => setType(kudoType)}
+                    className="inline-flex items-center gap-1.5"
+                  >
+                    <span>{meta.emoji}</span>
+                    {meta.label}
+                  </FilterPill>
+                }
+              />
+              <TooltipContent>{meta.helper}</TooltipContent>
+            </Tooltip>
           )
         })}
-      </div>
+      </FilterPillGroup>
       <Textarea
         value={message}
         onChange={(event) => {

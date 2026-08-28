@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Copy, Loader2, Sparkles } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Overline } from "@/components/ui/overline"
 import { Textarea } from "@/components/ui/textarea"
 import type { ReportSnapshot } from "@/lib/evolution/types"
 import { reportToMarkdown } from "@/lib/evolution/reports"
@@ -60,9 +61,9 @@ export function ReportEditor({
           >
             <div className="mb-2 flex items-center justify-between gap-2">
               <h3 className="text-sm font-medium">{section.title}</h3>
-              <span
+              <Overline
+                size="sm"
                 className={cn(
-                  "text-[10px] uppercase tracking-wide",
                   section.source === "user"
                     ? "text-foreground/70"
                     : section.source === "ai"
@@ -75,7 +76,7 @@ export function ReportEditor({
                   : section.source === "ai"
                     ? "IA"
                     : "Automático"}
-              </span>
+              </Overline>
             </div>
             <Textarea
               value={section.content}
