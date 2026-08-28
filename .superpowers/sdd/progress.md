@@ -26,3 +26,32 @@ Task 2: completa (commit 28a65f6, review limpa)
   Achou defeito NO PLANO: text-primary (24 ocorrências, 9 arquivos) fica ilegível
   no tema claro. Task 4 ampliada para varrer text-primary -> text-accent-ink.
   Minor: @custom-variant dark segue vivo e é necessário (next-themes usa class="dark").
+Task 3: completa (commits 6697be6..c116aca, review limpa)
+  Primeiro commit passou em todos os gates mas não mudou nenhum pixel: @layer base
+  apontava body/h1-h4 para --font-editorial-sans = "CursorGothic", fonte que não
+  existe no repo. Segunda fonte fantasma, além do Open Sans. Corrigido em c116aca.
+  Controlador verificou no navegador: body e headings agora em Archivo.
+  font-weight 400 do @layer base é inerte (todo h1-h4 real traz peso via Tailwind) —
+  verificado independentemente pelo revisor.
+Task 4: completa (commit 953c690, review limpa, sem achados)
+  Varredura verificada: 0 text-primary residual, 8 text-primary-foreground preservados,
+  nenhum falso positivo ouro-sobre-ouro. Controlador mediu no navegador: badge "Novo"
+  no tema claro agora rgb(138,98,18) = #8A6212, contraste 5.47:1 (passa 4.5:1).
+
+## RETOMAR AQUI
+Próxima: Task 5 (Button). Depois: 6 (Card), 7 (medidores/figuras), 8 (Trilha),
+9 (Trilha na sidebar), 10 (herói na Início), 11 (login), 12 (varredura final).
+
+Como retomar:
+  1. cd para o repo, confirmar branch: git branch --show-current  -> redesign/instrumento
+  2. Invocar a skill superpowers:subagent-driven-development
+  3. Ela lê este ledger e reinicia na primeira task não marcada como completa.
+  4. Gerar o brief: scripts/task-brief docs/superpowers/plans/2026-08-28-atlas-instrumento.md 5
+
+ARMADILHA RECORRENTE: o Turbopack serve CSS obsoleto com frequência neste projeto.
+Se uma mudança de CSS não aparecer no navegador, pare o servidor, rm -rf .next e
+reinicie ANTES de concluir que a implementação está errada. Isso já causou dois
+diagnósticos falsos nesta sessão.
+
+Estado dos gates no ponto de parada: tsc limpo, build limpo, check:contrast 0 falhas
+nos dois temas, lint com os mesmos 13 erros pré-existentes (fora de escopo).
