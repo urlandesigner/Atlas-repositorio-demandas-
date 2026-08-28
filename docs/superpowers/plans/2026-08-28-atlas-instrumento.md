@@ -686,17 +686,23 @@ git commit -m "Troca Open Sans por Archivo e cria utilitários de figura em mono
 
 ---
 
-### Task 4: Badge e StatusBadge
+### Task 4: Badge, StatusBadge e legibilidade do acento
 
-As variantes `*-soft` e os tons de `StatusBadge` assumem fundo claro. Sobre `#0B0C0E` uma tinta a 10% some.
+Dois problemas juntos, porque têm a mesma causa. Primeiro: as variantes `*-soft`
+e os tons de `StatusBadge` assumem fundo claro — sobre `#0B0C0E` uma tinta a 10%
+some. Segundo, e mais grave: **o app usa `text-primary` em 24 lugares**, e no tema
+claro isso renderiza ouro `#E8B44A` sobre `#EDEEF0` — ilegível, e violação direta
+da constraint global. Verificado visualmente no navegador após a Task 2: o badge
+"Novo" fica praticamente invisível no tema claro.
 
 **Files:**
 - Modify: `src/components/ui/badge.tsx`
 - Modify: `src/components/ui/status-badge.tsx`
+- Modify (varredura `text-primary` → `text-accent-ink`): `src/app/(app)/professional/presentations/page.tsx`, `src/app/(app)/projects/page.tsx`, `src/app/(app)/dashboard/page.tsx`, `src/app/design-system/page.tsx`, `src/components/ui/page-banner.tsx`, `src/components/ui/button.tsx`, `src/components/records/quick-capture.tsx`, `src/components/ui/empty-state-card.tsx`
 
 **Interfaces:**
-- Consumes: tokens da Task 2.
-- Produces: nomes de variante inalterados (`default`, `secondary`, `primary-soft`, `secondary-soft`, `destructive`, `outline`, `ghost`, `link`) e `StatusTone` inalterado (`success | warning | info | neutral | danger | impact`). Nenhum consumidor precisa mudar.
+- Consumes: tokens da Task 2, em especial `--accent-ink` (ouro no escuro, `#8A6212` no claro).
+- Produces: nomes de variante inalterados (`default`, `secondary`, `primary-soft`, `secondary-soft`, `destructive`, `outline`, `ghost`, `link`) e `StatusTone` inalterado (`success | warning | info | neutral | danger | impact`). Nenhum consumidor precisa mudar de API.
 
 - [ ] **Step 1: Ajustar as variantes soft do Badge**
 
@@ -704,7 +710,7 @@ Em `src/components/ui/badge.tsx`, dentro de `badgeVariants`, substituir as varia
 
 ```tsx
         "primary-soft":
-          "border-primary/25 bg-primary/15 text-primary [a]:hover:bg-primary/25",
+          "border-primary/25 bg-primary/15 text-accent-ink [a]:hover:bg-primary/25",
         "secondary-soft":
           "border-hairline-strong bg-muted text-foreground [a]:hover:bg-muted/70",
         destructive:
@@ -730,23 +736,59 @@ const STATUS_TONE_CLASS: Record<StatusTone, string> = {
 }
 ```
 
-- [ ] **Step 3: Rodar os gates**
+- [ ] **Step 3: Varrer `text-primary` → `text-accent-ink`**
+
+`text-primary` renderiza ouro. No tema escuro isso é legível; no claro, não.
+`text-accent-ink` resolve para ouro no escuro e `#8A6212` no claro, então a troca
+preserva a aparência escura e conserta a clara.
+
+Substituir em todos os arquivos, **sem tocar em `text-primary-foreground`**
+(que é outro token — a tinta escura *sobre* o ouro):
 
 ```bash
-npx tsc --noEmit && npm run lint && npm run build
+grep -rl 'text-primary\([^-]\|$\)' src --include="*.tsx" \
+  | xargs sed -i '' 's/text-primary\([^-]\)/text-accent-ink\1/g; s/text-primary$/text-accent-ink/'
 ```
 
-Esperado: os três passam.
-
-- [ ] **Step 4: Verificar os dois temas no navegador**
-
-Abrir `/professional/objectives` no preview. Confirmar que os badges `Em andamento`, `Definido pelo gestor`, `Influência` e `Novo` estão legíveis no tema escuro; trocar para claro via `ThemeToggle` e confirmar de novo. Nenhum badge pode sumir no fundo.
-
-- [ ] **Step 5: Commit**
+Depois conferir que nada de `text-primary` sobrou e que `text-primary-foreground` ficou intacto:
 
 ```bash
-git add src/components/ui/badge.tsx src/components/ui/status-badge.tsx
-git commit -m "Corrige variantes de badge e tons de status para fundo escuro"
+grep -rn 'text-primary\([^-]\|$\)' src --include="*.tsx"
+grep -roh 'text-primary-foreground' src --include="*.tsx" | wc -l
+```
+
+Esperado: o primeiro comando não retorna nada; o segundo retorna um número maior que zero.
+
+Atenção a `hover:text-primary` e `group-hover:text-primary` — a varredura também
+os converte, o que é correto: a cor de destaque no hover tem o mesmo problema.
+
+- [ ] **Step 4: Rodar os gates**
+
+```bash
+npx tsc --noEmit && npm run build
+```
+
+Esperado: ambos passam. Para o lint, confirmar que nenhum arquivo tocado ganhou erro novo:
+
+```bash
+npm run lint 2>&1 | grep -E "badge|status-badge|page-banner|empty-state-card|quick-capture|dashboard|projects|presentations|design-system" || echo "nenhum erro novo nos arquivos tocados"
+```
+
+- [ ] **Step 5: Verificar os dois temas no navegador**
+
+Abrir `/dashboard` e `/professional/objectives` no preview, **nos dois temas**.
+Alternar o tema com `localStorage.setItem('theme','light')` / `'dark'` seguido de reload
+(o `ThemeToggle` só chega à sidebar na Task 9).
+
+Confirmar especificamente: o badge `Novo` está legível no tema claro (era o caso
+que falhava), e os badges `Em andamento`, `Definido pelo gestor` e `Influência`
+estão legíveis nos dois temas. Nenhum badge pode sumir no fundo.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A src
+git commit -m "Corrige badges para fundo escuro e usa accent-ink como texto de acento"
 ```
 
 ---
