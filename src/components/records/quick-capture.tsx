@@ -599,7 +599,7 @@ function InputStep({
       {/* Header */}
       <div className="flex items-center gap-2.5 border-b bg-gradient-to-b from-primary/5 to-transparent px-5 py-4">
         <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10">
-          <SparklesIcon className="size-4 text-primary" />
+          <SparklesIcon className="size-4 text-accent-ink" />
         </div>
         <div>
           <p className="text-sm font-semibold">Registrar progresso</p>
@@ -626,7 +626,7 @@ function InputStep({
 
         <div className="grid gap-2.5 sm:grid-cols-2">
           <div className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
-            <FolderOpenIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-primary" />
+            <FolderOpenIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-accent-ink" />
             <span className="min-w-0 flex-1">
               <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Projeto
@@ -634,7 +634,7 @@ function InputStep({
               {lockedProjectName ? (
                 <span className="mt-0.5 flex items-center justify-between gap-2 text-xs font-medium">
                   <span className="truncate">{lockedProjectName}</span>
-                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-primary">
+                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-accent-ink">
                     Fixo
                   </span>
                 </span>
@@ -665,7 +665,7 @@ function InputStep({
           </div>
 
           <div className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
-            <TargetIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-primary" />
+            <TargetIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-accent-ink" />
             <span className="min-w-0 flex-1">
               <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
                 Objetivo
@@ -673,7 +673,7 @@ function InputStep({
               {lockedObjectiveTitle ? (
                 <span className="mt-0.5 flex items-center justify-between gap-2 text-xs font-medium">
                   <span className="truncate">{lockedObjectiveTitle}</span>
-                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-primary">
+                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-accent-ink">
                     Fixo
                   </span>
                 </span>
@@ -730,7 +730,7 @@ function InputStep({
         >
           {detecting ? (
             <div className="flex items-center gap-1.5">
-              <Loader2Icon className="size-3 animate-spin text-primary/70" />
+              <Loader2Icon className="size-3 animate-spin text-accent-ink/70" />
               <span className="text-[11px] text-muted-foreground">Interpretando...</span>
             </div>
           ) : atuacaoInfo ? (
@@ -802,7 +802,7 @@ function ProcessingStep({ visibleSteps }: { visibleSteps: number }) {
   return (
     <div className="flex flex-col items-center justify-center gap-6 px-8 py-12">
       <div className="flex size-12 items-center justify-center rounded-xl bg-primary/10">
-        <Loader2Icon className="size-6 animate-spin text-primary" />
+        <Loader2Icon className="size-6 animate-spin text-accent-ink" />
       </div>
 
       <div className="text-center">
@@ -832,7 +832,7 @@ function ProcessingStep({ visibleSteps }: { visibleSteps: number }) {
                 {done ? (
                   <CheckIcon className="size-4 text-success" />
                 ) : active ? (
-                  <Loader2Icon className="size-4 animate-spin text-primary" />
+                  <Loader2Icon className="size-4 animate-spin text-accent-ink" />
                 ) : (
                   <div className="size-4 rounded-full border-2 border-muted" />
                 )}

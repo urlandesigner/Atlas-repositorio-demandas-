@@ -37,7 +37,7 @@ export function EmptyStateCard({
     >
       <div className={cn("mx-auto", size === "page" ? "max-w-lg" : "max-w-md")}>
         {Icon ? (
-          <div className="mx-auto mb-4 flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <div className="mx-auto mb-4 flex size-10 items-center justify-center rounded-full bg-primary/10 text-accent-ink">
             <Icon className="size-5" />
           </div>
         ) : null}

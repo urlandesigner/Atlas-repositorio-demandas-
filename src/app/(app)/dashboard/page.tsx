@@ -233,7 +233,7 @@ function WorkFlowGuide({
     <section className="overflow-hidden rounded-[12px] border border-border bg-card">
       <div className="flex flex-col gap-2 border-b border-border px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <Overline size="sm" className="text-primary">
+          <Overline size="sm" className="text-accent-ink">
             Seu fluxo no Atlas
           </Overline>
           <h2 className="mt-1 text-lg font-medium tracking-tight">Do trabalho à evidência</h2>
@@ -257,13 +257,13 @@ function WorkFlowGuide({
               <div className="mt-3 flex flex-wrap gap-2">
                 <Link
                   href="/projects"
-                  className="rounded-md border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:border-primary/30 hover:text-primary"
+                  className="rounded-md border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:border-primary/30 hover:text-accent-ink"
                 >
                   {projectCount} projeto(s)
                 </Link>
                 <Link
                   href="/professional/objectives"
-                  className="rounded-md border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:border-primary/30 hover:text-primary"
+                  className="rounded-md border bg-background px-2.5 py-1.5 text-xs font-medium transition-colors hover:border-primary/30 hover:text-accent-ink"
                 >
                   {objectiveCount} objetivo(s)
                 </Link>
@@ -360,7 +360,7 @@ function CareerProgressCard({
               <TrendingUp className="size-5" />
             </div>
             <div className="min-w-0">
-              <Overline size="sm" className="text-primary">
+              <Overline size="sm" className="text-accent-ink">
                 Progresso de carreira
               </Overline>
               <h2 className="mt-1 text-sm font-medium tracking-tight">

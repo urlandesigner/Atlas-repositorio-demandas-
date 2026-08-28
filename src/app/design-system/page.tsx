@@ -557,8 +557,8 @@ export default function DesignSystemPage() {
                 ))}
               </div>
               <div className="rounded-[10px] border border-primary/20 bg-primary/10 px-4 py-3">
-                <p className="text-sm font-medium text-primary">Radius e densidade</p>
-                <p className="mt-0.5 text-sm text-primary/80">
+                <p className="text-sm font-medium text-accent-ink">Radius e densidade</p>
+                <p className="mt-0.5 text-sm text-accent-ink/80">
                   <code className="font-mono text-xs">--radius: 0.75rem</code> · cards usam 12px fixo · a escala de
                   espaçamento parte de <code className="font-mono text-xs">--spacing: 0.25rem</code>.
                 </p>
@@ -1547,13 +1547,13 @@ export default function DesignSystemPage() {
               <div className="flex flex-col gap-3">
                 {GAPS.map((gap, i) => (
                   <div key={gap.title} className="flex gap-3 rounded-[10px] border border-border bg-muted/20 p-4">
-                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-[11px] font-semibold text-primary">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-[11px] font-semibold text-accent-ink">
                       {i + 1}
                     </span>
                     <div className="min-w-0">
                       <p className="text-sm font-medium">{gap.title}</p>
                       <p className="mt-1 text-sm text-muted-foreground">{gap.detail}</p>
-                      <p className="mt-2 flex items-start gap-1.5 text-sm text-primary">
+                      <p className="mt-2 flex items-start gap-1.5 text-sm text-accent-ink">
                         <Check className="mt-0.5 size-3.5 shrink-0" />
                         <span>{gap.fix}</span>
                       </p>

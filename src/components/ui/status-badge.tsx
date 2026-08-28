@@ -8,12 +8,12 @@ import { cn } from "@/lib/utils"
 export type StatusTone = "success" | "warning" | "info" | "neutral" | "danger" | "impact"
 
 const STATUS_TONE_CLASS: Record<StatusTone, string> = {
-  success: "border-success/20 bg-success/10 text-success-foreground",
-  warning: "border-warning/20 bg-warning/10 text-warning-foreground",
-  info: "border-info/20 bg-info/10 text-info-foreground",
-  danger: "border-destructive/20 bg-destructive/10 text-danger-foreground",
-  neutral: "border-muted-foreground/20 bg-muted text-muted-foreground",
-  impact: "border-impact/20 bg-impact/10 text-impact-foreground",
+  success: "border-success/30 bg-success/12 text-success-foreground",
+  warning: "border-warning/30 bg-warning/12 text-warning-foreground",
+  info: "border-info/30 bg-info/12 text-info-foreground",
+  danger: "border-destructive/30 bg-destructive/12 text-danger-foreground",
+  neutral: "border-hairline-strong bg-muted text-muted-foreground",
+  impact: "border-impact/30 bg-impact/12 text-impact-foreground",
 }
 
 export function StatusBadge({
