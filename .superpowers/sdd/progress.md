@@ -12,3 +12,8 @@ Base: 1a1ddbb
   migram para Trilha, e LadderStepper é removido.
 
 ## Tasks
+Task 1: completa (commit 6cdc9fc, review limpa)
+  Minor (herdados do brief, para triagem final):
+  - extractBlock depende de casamento exato "\n<sel> {" — frágil a reformatação do CSS
+  - parseTokens exige declaração numa única linha
+  - resolve_ não entende var(--x, fallback)

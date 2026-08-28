@@ -20,7 +20,7 @@ Todo requisito abaixo vale implicitamente para **todas** as tasks.
 - **Contraste WCAG AA:** 4.5:1 para texto corrido, 3:1 para elementos de interface e texto grande, nos dois temas.
 - **Nenhuma cor pode ser definida exclusivamente dentro de um bloco de tema.** Todo token existe no `:root`; `.light` apenas redefine.
 - **Não alterar modelo de dados, stores, ou arquitetura de informação.** Ver seção "Fora de escopo" da spec.
-- **Gates de cada task:** `npx tsc --noEmit`, `npm run lint` e `npm run build` devem passar limpos antes do commit.
+- **Gates de cada task:** `npx tsc --noEmit` e `npm run build` devem passar limpos antes do commit. `npm run lint` **já falha na linha de base** com 13 erros pré-existentes, em arquivos fora do escopo deste redesign (`quick-capture.tsx`, `use-evolution-data.ts`, `auth-provider.tsx`, `hero-geometric.tsx`, `page-banner.tsx`, `use-mobile.ts`, entre outros). O gate real é: **nenhum erro novo nos arquivos que a task tocou**. Verifique com `npm run lint 2>&1 | grep <arquivo-tocado>`.
 - Diretório de trabalho: `/Users/urlandipre/ProjetosYbera/Atlas (registros)/atlas-profissional`.
 
 ---
