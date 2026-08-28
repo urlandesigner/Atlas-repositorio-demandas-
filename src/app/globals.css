@@ -7,8 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: Open Sans, sans-serif;
-  --font-mono: Menlo, monospace;
+  --font-sans: var(--font-archivo), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
   --font-heading: var(--font-sans);
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.125rem;
@@ -303,5 +303,34 @@
 @layer utilities {
   .icon-well {
     @apply bg-primary/80 text-primary-foreground;
+  }
+
+  /* Números do produto: mono, tabular, tracking apertado. */
+  .figure {
+    font-family: var(--font-mono);
+    font-size: 40px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .figure-lg {
+    font-family: var(--font-mono);
+    font-size: 56px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Rótulo de instrumento: mono, caixa alta, muito espaçado. */
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
 }
