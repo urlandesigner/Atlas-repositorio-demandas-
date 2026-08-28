@@ -42,7 +42,10 @@ Todo requisito abaixo vale implicitamente para **todas** as tasks.
 - `src/components/ui/metric-card.tsx` — figura em mono.
 - `src/components/ui/progress.tsx` — tom `brand` → ouro.
 - `src/components/ui/segmented-progress.tsx` — `bg-brand` → `bg-primary`.
-- `src/components/profile/ladder-stepper.tsx` — passa a delegar para `Trilha`.
+- `src/components/profile/career-goal-card.tsx`, `src/components/profile/evolution-panel.tsx`, `src/components/evolution/career-context-bar.tsx` — migram de `LadderStepper` para `Trilha`.
+
+**Remover:**
+- `src/components/profile/ladder-stepper.tsx` — substituído por `Trilha`.
 - `src/components/shell/app-sidebar.tsx` — hospeda `Trilha` variante `mini` e o `ThemeToggle`.
 - `src/app/(app)/dashboard/page.tsx` — `CareerProgressCard` passa a usar `Trilha` variante `hero`.
 - `src/components/auth/login-hero-panel.tsx` — cores do shader.
