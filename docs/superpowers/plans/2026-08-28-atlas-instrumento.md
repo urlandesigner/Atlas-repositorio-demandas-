@@ -953,14 +953,17 @@ O elemento-assinatura. Evolui `LadderStepper` sem alterar o modelo de dados.
 **Files:**
 - Create: `src/components/career/trilha-gauge.tsx`
 - Create: `src/components/career/trilha.tsx`
-- Modify: `src/components/profile/ladder-stepper.tsx`
+- Delete: `src/components/profile/ladder-stepper.tsx`
+- Modify: `src/components/profile/career-goal-card.tsx`
+- Modify: `src/components/profile/evolution-panel.tsx`
+- Modify: `src/components/evolution/career-context-bar.tsx`
 
 **Interfaces:**
 - Consumes: `LevelDef` de `@/lib/profile/types`, `levelIndex` de `@/lib/profile/store`, `SegmentedProgress` e `StepConnector` da Task 7, `.figure` e `.label-mono` da Task 3.
 - Produces:
   - `TrilhaGauge({ value, segments?, className? }: { value: number; segments?: number; className?: string })` — medidor de barras discretas; `value` é 0-100, `segments` padrão 12.
-  - `Trilha({ ladder, currentLevelId, targetLevelId?, readiness?, variant?, className? })` com `variant?: "hero" | "detail" | "mini"` (padrão `"detail"`).
-  - `LadderStepper` mantém a assinatura atual `{ ladder, currentLevelId, size?, showCurrentHint? }` e passa a delegar para `Trilha`.
+  - `Trilha({ ladder, currentLevelId, targetLevelId?, readiness?, variant?, size?, showCurrentHint?, className? })` com `variant?: "hero" | "detail" | "mini"` (padrão `"detail"`), `size?: "sm" | "lg"` (padrão `"sm"`, só afeta `detail`) e `showCurrentHint?: boolean` (padrão `false`).
+  - `LadderStepper` deixa de existir; seus três consumidores passam a usar `Trilha` diretamente.
 
 - [ ] **Step 1: Criar o medidor**
 
@@ -1037,32 +1040,44 @@ function stateFor(index: number, currentIndex: number): LevelState {
   return "future"
 }
 
+const NODE_SIZE = {
+  sm: "size-6",
+  lg: "size-8",
+} as const
+
 function TrilhaNode({
   level,
   state,
   variant,
+  size,
+  showCurrentHint,
 }: {
   level: LevelDef
   state: LevelState
   variant: TrilhaVariant
+  size: "sm" | "lg"
+  showCurrentHint: boolean
 }) {
-  const size = variant === "hero" ? "size-7" : variant === "detail" ? "size-6" : "size-2"
+  const nodeSize =
+    variant === "mini" ? "size-2" : variant === "hero" ? "size-7" : NODE_SIZE[size]
 
   return (
     <div className="flex shrink-0 flex-col items-center gap-1.5">
       <div
         className={cn(
           "flex items-center justify-center rounded-full",
-          size,
+          nodeSize,
           state === "done" && "bg-primary text-primary-foreground",
           state === "current" &&
             "bg-primary text-primary-foreground ring-2 ring-primary/35 ring-offset-2 ring-offset-card motion-safe:animate-pulse",
           state === "future" && "border border-hairline-strong bg-muted"
         )}
       >
-        {variant !== "mini" && state === "done" ? <Check className="size-3.5" /> : null}
+        {variant !== "mini" && state === "done" ? (
+          <Check className={size === "lg" ? "size-4" : "size-3.5"} />
+        ) : null}
         {variant !== "mini" && state === "current" ? (
-          <span className="size-2 rounded-full bg-primary-foreground" />
+          <span className={cn("rounded-full bg-primary-foreground", size === "lg" ? "size-2.5" : "size-2")} />
         ) : null}
       </div>
       {variant !== "mini" ? (
@@ -1074,6 +1089,9 @@ function TrilhaNode({
         >
           {level.name}
         </span>
+      ) : null}
+      {showCurrentHint && state === "current" && variant !== "mini" ? (
+        <span className="text-[10px] font-medium text-primary">você está aqui</span>
       ) : null}
     </div>
   )
@@ -1090,6 +1108,8 @@ export function Trilha({
   targetLevelId,
   readiness,
   variant = "detail",
+  size = "sm",
+  showCurrentHint = false,
   className,
 }: {
   ladder: LevelDef[]
@@ -1097,6 +1117,8 @@ export function Trilha({
   targetLevelId?: string
   readiness?: number
   variant?: TrilhaVariant
+  size?: "sm" | "lg"
+  showCurrentHint?: boolean
   className?: string
 }) {
   if (!ladder.length) return null
@@ -1111,11 +1133,19 @@ export function Trilha({
     <div className="flex items-start">
       {ladder.map((level, index) => (
         <div key={level.id} className="flex flex-1 items-start last:flex-none">
-          <TrilhaNode level={level} state={stateFor(index, currentIndex)} variant={variant} />
+          <TrilhaNode
+            level={level}
+            state={stateFor(index, currentIndex)}
+            variant={variant}
+            size={size}
+            showCurrentHint={showCurrentHint}
+          />
           {index < ladder.length - 1 ? (
             <StepConnector
               filled={index < currentIndex}
-              className={variant === "hero" ? "mt-3.5" : variant === "detail" ? "mt-3" : "mt-1"}
+              className={
+                variant === "mini" ? "mt-1" : variant === "hero" ? "mt-3.5" : size === "lg" ? "mt-4" : "mt-3"
+              }
             />
           ) : null}
         </div>
@@ -1167,30 +1197,49 @@ export function Trilha({
 }
 ```
 
-- [ ] **Step 3: Fazer o LadderStepper delegar para a Trilha**
+- [ ] **Step 3: Migrar os consumidores e remover o LadderStepper**
 
-Substituir **todo** o conteúdo de `src/components/profile/ladder-stepper.tsx` por:
+Três call sites passam props que a `Trilha` precisa honrar — uma fachada que as
+aceitasse e ignorasse seria regressão silenciosa. Migrar cada um e apagar o arquivo.
+
+Em `src/components/profile/career-goal-card.tsx`, trocar o import de
+`LadderStepper` por `import { Trilha } from "@/components/career/trilha"` e a
+chamada por:
 
 ```tsx
-import { Trilha } from "@/components/career/trilha"
-import type { LevelDef } from "@/lib/profile/types"
-
-/**
- * Mantido como fachada da Trilha para não quebrar os consumidores existentes.
- * Código novo deve usar `Trilha` diretamente.
- */
-export function LadderStepper({
-  ladder,
-  currentLevelId,
-}: {
-  ladder: LevelDef[]
-  currentLevelId: string
-  size?: "sm" | "lg"
-  showCurrentHint?: boolean
-}) {
-  return <Trilha ladder={ladder} currentLevelId={currentLevelId} variant="detail" />
-}
+        <Trilha ladder={ladder} currentLevelId={currentLevelId} />
 ```
+
+Em `src/components/profile/evolution-panel.tsx`, mesmo import, e a chamada por:
+
+```tsx
+          <Trilha
+            ladder={ladder}
+            currentLevelId={currentLevelId}
+            size="lg"
+            showCurrentHint
+          />
+```
+
+Em `src/components/evolution/career-context-bar.tsx`, mesmo import, e a chamada por:
+
+```tsx
+        <Trilha ladder={ladder} currentLevelId={currentLevelId} size="sm" />
+```
+
+Depois remover o arquivo antigo:
+
+```bash
+git rm src/components/profile/ladder-stepper.tsx
+```
+
+Confirmar que não sobrou referência:
+
+```bash
+grep -rn "LadderStepper" src
+```
+
+Esperado: nenhuma saída.
 
 - [ ] **Step 4: Rodar os gates**
 
@@ -1207,7 +1256,7 @@ Abrir `/professional/profile` e confirmar que a trilha renderiza com nós ouro, 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/components/career/trilha.tsx src/components/career/trilha-gauge.tsx src/components/profile/ladder-stepper.tsx
+git add -A src/components/career src/components/profile src/components/evolution
 git commit -m "Cria o componente Trilha com variantes hero, detail e mini"
 ```
 
