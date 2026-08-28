@@ -95,11 +95,6 @@
 }
 
 :root {
-  /* Fonte editorial — preservada da paleta anterior; não faz parte do escopo
-     de cor desta task e não é redefinida por tema. */
-  --font-editorial-sans:
-    "CursorGothic", system-ui, "Helvetica Neue", Helvetica, Arial, sans-serif;
-
   /* Superfícies — elevação no escuro é superfície mais clara, não sombra. */
   --background: #0B0C0E;
   --card: #121519;
@@ -279,7 +274,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-editorial-sans);
+    font-family: var(--font-sans);
     font-feature-settings: "kern", "liga", "calt";
     letter-spacing: var(--tracking-normal);
     line-height: 1.5;
@@ -289,7 +284,7 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-editorial-sans);
+    font-family: var(--font-sans);
     font-weight: 400;
     letter-spacing: -0.02em;
     text-wrap: balance;
