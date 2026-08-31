@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { LadderStepper } from "@/components/profile/ladder-stepper"
+import { Trilha } from "@/components/career/trilha"
 import type { CareerGoal, LevelDef } from "@/lib/profile/types"
 
 export function CareerGoalCard({
@@ -37,7 +37,7 @@ export function CareerGoalCard({
           </div>
         </div>
 
-        <LadderStepper ladder={ladder} currentLevelId={currentLevelId} />
+        <Trilha ladder={ladder} currentLevelId={currentLevelId} />
       </CardContent>
     </Card>
   )

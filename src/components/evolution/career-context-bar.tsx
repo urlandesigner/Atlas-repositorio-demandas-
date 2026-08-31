@@ -1,6 +1,6 @@
 "use client"
 
-import { LadderStepper } from "@/components/profile/ladder-stepper"
+import { Trilha } from "@/components/career/trilha"
 import { MetricCard } from "@/components/ui/metric-card"
 import { Overline } from "@/components/ui/overline"
 import type { CareerGoal, LevelDef } from "@/lib/profile/types"
@@ -55,7 +55,7 @@ export function CareerContextBar({
         </div>
       </div>
       <div className="mt-4 overflow-x-auto">
-        <LadderStepper ladder={ladder} currentLevelId={currentLevelId} size="sm" />
+        <Trilha ladder={ladder} currentLevelId={currentLevelId} size="sm" />
       </div>
     </div>
   )
