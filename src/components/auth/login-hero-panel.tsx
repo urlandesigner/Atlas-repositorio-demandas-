@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"
 
 const HeroGeometric = dynamic(() => import("@/components/ui/hero-geometric"), {
   ssr: false,
-  loading: () => <div className="absolute inset-0 bg-[#12100B]" />,
+  loading: () => <div className="absolute inset-0 bg-[#0B0A07]" />,
 })
 
 export function LoginHeroPanel() {
@@ -13,9 +13,10 @@ export function LoginHeroPanel() {
     <div className="relative flex h-full min-h-full w-full flex-1 flex-col overflow-hidden rounded-[16px]">
       <HeroGeometric
         className="absolute inset-0 min-h-0 h-full bg-transparent"
-        // tons do acento ouro para o shader (three não lê CSS vars)
-        color1="#8A6212"
-        color2="#E8B44A"
+        // Campo escuro com luz ouro — o painel lê como o resto do produto
+        // (quase-preto com ouro pontual). O three não lê CSS vars, daí os literais.
+        color1="#0B0A07"
+        color2="#3D2B08"
         speed={0.45}
       />
 
@@ -36,7 +37,7 @@ export function LoginHeroPanel() {
             <h1 className="text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-[#FBF6EA]">
               Evolução profissional, com método.
             </h1>
-            <p className="max-w-md text-base leading-7 text-[#FBF6EA]/78">
+            <p className="max-w-md text-base leading-7 text-[#FBF6EA]">
               PDIs, objetivos e registros em ambiente confidencial.
             </p>
           </div>
