@@ -14,7 +14,7 @@ const SIZE_CLASS = {
 
 const TONE_CLASS: Record<StatusTone | "primary" | "brand" | "foreground", string> = {
   primary: "bg-primary",
-  brand: "bg-brand/55",
+  brand: "bg-primary",
   foreground: "bg-foreground",
   success: "bg-success",
   warning: "bg-warning",
