@@ -1448,7 +1448,7 @@ export default function DesignSystemPage() {
             <Group label="badge + group">
               <Avatar>
                 <AvatarFallback>UD</AvatarFallback>
-                <AvatarBadge className="bg-emerald-500" />
+                <AvatarBadge className="bg-success" />
               </Avatar>
               <AvatarGroup>
                 <Avatar size="sm"><AvatarFallback>A</AvatarFallback></Avatar>
