@@ -88,3 +88,14 @@ Task 9: completa (commits 86dd56d..528bad2, review + 1 rodada de fix)
   Medi no navegador: separador em y=823 tem o bloco do avatar colapsado logo abaixo
   (y=840, h=44, display flex). A leitura estática ignorou o segundo bloco
   group-data-[collapsible=icon]:flex. Nenhuma ação necessária.
+Task 10: completa (commits a9adb5a..c7f4a80, review limpa)
+  Bug de layout encontrado e corrigido NO COMPONENTE (regra do usuário): na variante
+  hero os 4 StepConnector tinham largura 0 e a folga entre TODOS os rótulos era 0 —
+  ficavam encostados. Mesma classe do bug de badges que o usuário reportou no início
+  da sessão. Causa: coluna shrink-0 + rótulo whitespace-nowrap consumindo a linha.
+  Correção condicionada a variant==="hero": min-w-0 na coluna, w-full truncate no
+  rótulo, min-w-3 no conector. detail e mini intocadas (verificado linha a linha).
+  Controlador mediu em 1009px (pior caso, abaixo do range testado pelo agente):
+  conectores 12px, nenhum rótulo truncado. Segura.
+  Minor (triagem final): rótulo do hero sem title de fallback caso trunque; hoje
+  inofensivo (ladder fixo em DEFAULT_LADDER, hero tem 1 consumidor só).
