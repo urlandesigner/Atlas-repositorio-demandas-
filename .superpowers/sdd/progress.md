@@ -67,3 +67,14 @@ Task 7: completa (commit 27385e0, review limpa)
   Minor arquitetural (para triagem final): .figure/.figure-lg declaram font-size, o
   que obriga todo consumidor a usar "!" para mudar tamanho. Mais limpo seria separar
   "mono tabular" de "tamanho". Afeta Task 3; hoje só metric-card.tsx consome.
+Task 8: completa (commits 364fd4f..f7e84d0, review limpa após 1 rodada de fix)
+  Critical corrigido: o hint "você está aqui" usava text-primary (ouro), ~1.9:1 sobre
+  card branco no tema claro. Era regressão vs o LadderStepper removido, que usava o
+  token escurecido. CULPA DO PLANO: eu escrevi text-primary na emenda da Task 8,
+  contradizendo a constraint global do próprio documento. Plano corrigido também.
+  Após o fix: 5.47:1 no claro, 9.64:1 no escuro (medido e reconferido pelo revisor).
+  Lição: o gate de contraste valida PARES DE TOKEN e nunca pegaria isso — o defeito
+  era um componente usando token de preenchimento como cor de texto, num caminho
+  (showCurrentHint) que só o EvolutionPanel ativa.
+  Minor (triagem final): text-[10px] arbitrário em vez de token tipográfico (herdado
+  do componente antigo); sem aria-current="step" no nó atual.

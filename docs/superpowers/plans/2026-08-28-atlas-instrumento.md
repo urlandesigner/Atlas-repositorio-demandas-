@@ -1136,7 +1136,7 @@ function TrilhaNode({
         </span>
       ) : null}
       {showCurrentHint && state === "current" && variant !== "mini" ? (
-        <span className="text-[10px] font-medium text-primary">você está aqui</span>
+        <span className="text-[10px] font-medium text-accent-ink">você está aqui</span>
       ) : null}
     </div>
   )
