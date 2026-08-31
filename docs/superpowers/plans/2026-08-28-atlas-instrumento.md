@@ -1540,9 +1540,11 @@ Primeira coisa que os diretores veem.
 Em `src/components/auth/login-hero-panel.tsx`, substituir as props de cor do `HeroGeometric` por:
 
 ```tsx
-        // tons do acento ouro para o shader (three não lê CSS vars)
-        color1="#8A6212"
-        color2="#E8B44A"
+        // Campo escuro com luz ouro — o painel precisa ler como o resto do
+        // produto (quase-preto com ouro pontual), não como uma chapa dourada.
+        // O three não lê CSS vars, por isso os literais.
+        color1="#0B0A07"
+        color2="#8A6212"
         speed={0.45}
 ```
 

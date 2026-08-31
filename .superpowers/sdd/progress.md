@@ -99,3 +99,21 @@ Task 10: completa (commits a9adb5a..c7f4a80, review limpa)
   conectores 12px, nenhum rótulo truncado. Segura.
   Minor (triagem final): rótulo do hero sem title de fallback caso trunque; hoje
   inofensivo (ladder fixo em DEFAULT_LADDER, hero tem 1 consumidor só).
+Task 11: completa (commits 714e42b..4ca53fc — 4 rodadas)
+  A mais trabalhosa da sessão, e a maioria dos erros foi do plano/controlador:
+  1. 714e42b: brief mandava ouro claro no shader -> chapa LARANJA, texto a 1.6-2.6:1.
+     O painel azul antigo era ESCURO; trocar por ouro claro inverteu a luminosidade
+     da tela e quebrou a própria direção "Instrumento".
+  2. a2ced99: eu instruí "escureça até bater 4.5:1" -> agente escureceu tanto que o
+     painel SUMIU. Métrica certa, alavanca errada: para texto sobre imagem a solução
+     é scrim, não apagar a imagem. Erro meu de método.
+  3. f41c030: scrim adicionado (correto), mas color2 #8A6212 + scrim 72%/90% ainda
+     deixava o painel sem ouro visível.
+  4. 4ca53fc (controlador): descobri que o shader ANIMA o gradiente — o painel oscila
+     entre fases, e minhas capturas pegavam fases diferentes, o que explica os
+     diagnósticos contraditórios. Faixa final #141005 -> #9C6F1A e scrim 58%/80%.
+  Contraste do texto (medido pelo agente, varredura t=0-150s): headline 17.8:1,
+  subtítulo 11.6:1 — o scrim resolveu com folga e liberou as cores para a composição.
+  Achado estrutural do agente: hero-geometric.tsx tem mix(vec3(1.0), color, fadeMask)
+  que puxa o canto inferior-esquerdo para BRANCO, limitando o contraste a 4.07:1 ali
+  mesmo com cores pretas. O scrim contorna; a linha do shader segue como dívida.
