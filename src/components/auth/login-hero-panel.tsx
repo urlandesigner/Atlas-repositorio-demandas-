@@ -16,8 +16,14 @@ export function LoginHeroPanel() {
         // Campo escuro com luz ouro — o painel lê como o resto do produto
         // (quase-preto com ouro pontual). O three não lê CSS vars, daí os literais.
         color1="#0B0A07"
-        color2="#3D2B08"
+        color2="#8A6212"
         speed={0.45}
+      />
+
+      {/* Scrim: garante contraste do texto sobre o shader sem apagar o brilho ouro do painel. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[72%] bg-gradient-to-t from-[#0B0A07] via-[#0B0A07]/90 to-transparent"
       />
 
       <div className="relative z-10 flex min-h-full flex-col px-[2.4rem] xl:px-[3.2rem]">
@@ -37,7 +43,7 @@ export function LoginHeroPanel() {
             <h1 className="text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-[#FBF6EA]">
               Evolução profissional, com método.
             </h1>
-            <p className="max-w-md text-base leading-7 text-[#FBF6EA]">
+            <p className="max-w-md text-base leading-7 text-[#FBF6EA]/80">
               PDIs, objetivos e registros em ambiente confidencial.
             </p>
           </div>
