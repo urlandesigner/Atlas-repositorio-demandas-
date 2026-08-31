@@ -15,6 +15,13 @@ function stateFor(index: number, currentIndex: number): LevelState {
   return "future"
 }
 
+/** Descrição textual do estado, para o `aria-label` de cada nó da Trilha. */
+function stateDescription(state: LevelState, isNext: boolean): string {
+  if (state === "done") return "concluído"
+  if (state === "current") return "nível atual"
+  return isNext ? "próximo nível" : "nível futuro"
+}
+
 const NODE_SIZE = {
   sm: "size-6",
   lg: "size-8",
@@ -26,30 +33,38 @@ function TrilhaNode({
   variant,
   size,
   showCurrentHint,
+  isNext,
 }: {
   level: LevelDef
   state: LevelState
   variant: TrilhaVariant
   size: "sm" | "lg"
   showCurrentHint: boolean
+  isNext: boolean
 }) {
-  const nodeSize =
-    variant === "mini" ? "size-2" : variant === "hero" ? "size-7" : NODE_SIZE[size]
+  const isMini = variant === "mini"
+  const nodeSize = isMini ? "size-2" : variant === "hero" ? "size-7" : NODE_SIZE[size]
 
   return (
     <div
+      role="img"
+      aria-label={`${level.name}, ${stateDescription(state, isNext)}`}
+      aria-current={state === "current" ? "step" : undefined}
       className={cn(
         "flex flex-col items-center gap-1.5",
-        variant === "hero" ? "min-w-0" : "shrink-0"
+        isMini ? "shrink-0" : "min-w-0"
       )}
     >
       <div
         className={cn(
           "flex items-center justify-center rounded-full",
           nodeSize,
-          state === "done" && "bg-primary text-primary-foreground",
+          state === "done" && (isMini ? "bg-gauge-on" : "bg-primary text-primary-foreground"),
           state === "current" &&
-            "bg-primary text-primary-foreground ring-2 ring-primary/35 ring-offset-2 ring-offset-card motion-safe:animate-pulse",
+            cn(
+              isMini ? "bg-gauge-on" : "bg-primary text-primary-foreground",
+              "ring-2 ring-primary/35 ring-offset-2 ring-offset-card motion-safe:animate-pulse"
+            ),
           state === "future" && "border border-hairline-strong bg-muted"
         )}
       >
@@ -62,9 +77,9 @@ function TrilhaNode({
       </div>
       {variant !== "mini" ? (
         <span
+          title={level.name}
           className={cn(
-            "label-mono",
-            variant === "hero" ? "w-full truncate text-center" : "whitespace-nowrap",
+            "label-mono w-full truncate text-center",
             state === "current" ? "text-foreground" : "text-muted-foreground"
           )}
         >
@@ -120,6 +135,7 @@ export function Trilha({
             variant={variant}
             size={size}
             showCurrentHint={showCurrentHint}
+            isNext={index === currentIndex + 1}
           />
           {index < ladder.length - 1 ? (
             <StepConnector
@@ -130,8 +146,8 @@ export function Trilha({
                   : variant === "hero"
                     ? "mt-3.5 min-w-3"
                     : size === "lg"
-                      ? "mt-4"
-                      : "mt-3"
+                      ? "mt-4 min-w-3"
+                      : "mt-3 min-w-3"
               }
             />
           ) : null}
@@ -173,7 +189,7 @@ export function Trilha({
               {Math.round(readiness)}
               <span className="ml-0.5 text-lg text-muted-foreground">%</span>
             </p>
-            <TrilhaGauge value={readiness} className="h-10 w-36" />
+            <TrilhaGauge value={readiness} className="h-10 w-36" hideFromScreenReader />
           </div>
         ) : null}
       </div>
