@@ -35,6 +35,9 @@ const PAIRS = [
   ["--sidebar-primary-foreground", "--sidebar-primary", 4.5, "texto do item ativo da sidebar"],
   ["--hairline-strong", "--card", 3, "borda de controle sobre card"],
   ["--ring", "--background", 3, "anel de foco"],
+  ["--gauge-on", "--card", 3, "medidor aceso (TrilhaGauge) sobre card"],
+  ["--gauge-on", "--sidebar", 3, "nó aceso da Trilha mini sobre a sidebar"],
+  ["--gauge-on", "--border", 3, "barra acesa vs. apagada do TrilhaGauge"],
 ]
 // Nota: `--primary` contra `--background` NÃO é verificado de propósito.
 // O ouro é cor de preenchimento, não de contorno: sua legibilidade é governada

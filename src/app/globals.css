@@ -54,6 +54,7 @@
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-ink: var(--accent-ink);
   --color-accent: var(--accent);
+  --color-gauge-on: var(--gauge-on);
   --color-muted-foreground: var(--muted-foreground);
   --color-muted: var(--muted);
   --color-secondary-foreground: var(--secondary-foreground);
@@ -118,6 +119,10 @@
   --brand-foreground: #0B0C0E;
   --brand-muted: #2A2314;
   --brand-muted-foreground: #F0CE8C;
+  /* "Aceso" de medidores/nós sem glifo por cima (TrilhaGauge, nó da Trilha
+     mini): no claro precisa de um ouro mais escuro para não sumir contra a
+     superfície — ver --primary abaixo, que fica ouro puro nos dois temas. */
+  --gauge-on: #E8B44A;
 
   --secondary: #E7E9ED;
   --secondary-hover: #C9CED6;
@@ -209,6 +214,11 @@
   --brand-foreground: #1A1407;
   --brand-muted: #FAF3E2;
   --brand-muted-foreground: #8A6212;
+  /* Ouro puro (#E8B44A) some contra card/sidebar claros — precisa de um tom
+     mais escuro para o "aceso" ser percebido como aceso, não apagado. Mesmo
+     tom de --accent-ink: também precisa se distinguir do segmento "apagado"
+     (--border), não só da superfície por trás. */
+  --gauge-on: #8A6212;
 
   --secondary: #14171C;
   --secondary-hover: #2A2F38;
