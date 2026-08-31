@@ -56,3 +56,6 @@ diagnósticos falsos nesta sessão.
 Estado dos gates no ponto de parada: tsc limpo, build limpo, check:contrast 0 falhas
 nos dois temas, lint com os mesmos 13 erros pré-existentes (fora de escopo).
 Task 5: completa (commit 32ebc55, review limpa, sem achados)
+Task 6: completa (commit 842d04a, review limpa)
+  Nota: no tema claro bg-muted/40 fica levemente mais ESCURO que o card (invertido
+  em relação ao escuro). Aceito: é a convenção correta de rodapé em UI clara.
