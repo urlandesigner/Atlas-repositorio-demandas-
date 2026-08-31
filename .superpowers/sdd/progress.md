@@ -59,3 +59,11 @@ Task 5: completa (commit 32ebc55, review limpa, sem achados)
 Task 6: completa (commit 842d04a, review limpa)
   Nota: no tema claro bg-muted/40 fica levemente mais ESCURO que o card (invertido
   em relação ao escuro). Aceito: é a convenção correta de rodapé em UI clara.
+Task 7: completa (commit 27385e0, review limpa)
+  Desvio aceito e confirmado empiricamente pelo revisor (offsets no CSS compilado):
+  .figure (@layer utilities, font-size 40px) VENCE text-[28px] na cascata do
+  Tailwind v4, porque ambas caem na mesma layer e .figure vem depois. Override de
+  tamanho exige o modificador "!" -> text-[28px]!. A nota do plano dizia o contrário.
+  Minor arquitetural (para triagem final): .figure/.figure-lg declaram font-size, o
+  que obriga todo consumidor a usar "!" para mudar tamanho. Mais limpo seria separar
+  "mono tabular" de "tamanho". Afeta Task 3; hoje só metric-card.tsx consome.
