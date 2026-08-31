@@ -127,3 +127,36 @@ Task 12: completa (commit ce58d8f)
   lint com os mesmos 13 pré-existentes.
 
 TODAS AS 12 TASKS COMPLETAS. Próximo: revisão final da branch inteira.
+
+## REVISÃO FINAL DA BRANCH — reprovou, corrigida
+A revisão por task aprovou tudo, mas a revisão do CONJUNTO achou 2 Critical que
+nenhuma task poderia ver sozinha. Ambos causados por instrução minha:
+
+C1: text-brand = ouro como TEXTO, 16 ocorrências em 12 arquivos, 1.90:1 no tema
+    claro (links "Meu perfil"/"Ver perfil" invisíveis). A varredura da Task 4 cobriu
+    text-primary e ignorou o alias text-brand — mesma cor, outro nome. Pior: eu
+    escrevi no dispatch da Task 12 que "bg-brand/text-brand são usos válidos",
+    o que ativamente mandou preservá-los. Vale para bg-brand, não para text-brand.
+C2: Trilha variante detail com conectores de largura 0 a 375px — o trilho some no
+    celular. A correção da Task 10 foi condicionada a variant==="hero" e nunca
+    alcançou a detail.
+Mais: Trilha opaca para leitor de tela (zero aria-current), afordância INVERTIDA na
+mini no tema claro (níveis conquistados mais apagados que os que faltam), e a página
+do design system ainda documentando a paleta azul — o que faria C1 voltar.
+
+Corrigidos em e9c7c01, 8131df8, d1fbce0, 3f4d1ed. Medições pós-fix:
+  links 5.47:1 | conectores detail 12px a 375px | aria-current presente com
+  aria-label de estado por nó | nó aceso da mini 5.10:1 | gauge aceso vs apagado 4.21:1
+Token --gauge-on criado e ADICIONADO ao gate (3 pares novos) para não regredir.
+
+DÍVIDA ACEITA (não bloqueia, registrada pela revisão final):
+  - .figure/.figure-lg declaram font-size, obrigando "!" em overrides
+  - Critério 4 da spec (todo número em mono tabular) só vale para .figure: dezenas
+    de números seguem em Archivo. O plano copiou o critério sem uma task que o
+    executasse fora do metric-card/Trilha.
+  - PdiLevelTrack ficou fora do redesign: segundo vocabulário de trilho, pontos a
+    1.06:1 no claro
+  - ~23 utilitários dark: nunca renderizaram antes (tema escuro nunca fora ligado)
+    e agora são o caminho padrão; nenhuma task os auditou. Ex.: input desabilitado
+    fica mais claro que o habilitado no escuro.
+  - design.md na raiz ainda descreve a direção antiga (azul, creme, CursorGothic)
