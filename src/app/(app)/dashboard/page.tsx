@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
+import { Trilha } from "@/components/career/trilha"
 import { HrNoticesPanel } from "@/components/hr/hr-notices-panel"
 import { useEvolutionData } from "@/hooks/use-evolution-data"
 import { useHrNotices } from "@/hooks/use-hr-notices"
@@ -56,6 +57,7 @@ import {
   type ProjectEntry,
   type WorkspaceTab,
 } from "@/lib/projects/store"
+import type { LevelDef } from "@/lib/profile/types"
 import { getRecordImpactText } from "@/lib/records/display"
 import type { RecordEntry } from "@/lib/records/types"
 import type { PresentationEntry } from "@/lib/presentations/store"
@@ -330,14 +332,18 @@ function WorkFlowGuide({
 }
 
 function CareerProgressCard({
-  currentLevelName,
+  ladder,
+  currentLevelId,
+  targetLevelId,
   targetRole,
   targetYear,
   readiness,
   recordCount,
   strongCount,
 }: {
-  currentLevelName: string
+  ladder: LevelDef[]
+  currentLevelId: string
+  targetLevelId?: string
   targetRole?: string
   targetYear?: number | null
   readiness: number
@@ -354,36 +360,17 @@ function CareerProgressCard({
   return (
     <Card className="overflow-hidden">
       <CardContent className="flex flex-col gap-5">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex min-w-0 items-start gap-3.5">
-            <div className="icon-well flex size-10 shrink-0 items-center justify-center rounded-full">
-              <TrendingUp className="size-5" />
-            </div>
-            <div className="min-w-0">
-              <Overline size="sm" className="text-accent-ink">
-                Progresso de carreira
-              </Overline>
-              <h2 className="mt-1 text-sm font-medium tracking-tight">
-                {currentLevelName || "Seu nível atual"}
-                {targetRole ? (
-                  <span className="text-muted-foreground"> → {targetRole}</span>
-                ) : null}
-                {targetYear ? (
-                  <span className="text-xs font-normal text-muted-foreground"> · meta {targetYear}</span>
-                ) : null}
-              </h2>
-              <p className="mt-1 max-w-xl text-xs leading-relaxed text-muted-foreground">
-                {evidenceLabel}
-              </p>
-            </div>
-          </div>
-          <MetricCard
-            className="shrink-0"
-            label="Prontidão no PDI"
-            value={readiness}
-            suffix="%"
-          />
-        </div>
+        <Trilha
+          ladder={ladder}
+          currentLevelId={currentLevelId}
+          targetLevelId={targetLevelId}
+          readiness={readiness}
+          variant="hero"
+        />
+        <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
+          {evidenceLabel}
+          {targetRole ? ` Meta: ${targetRole}${targetYear ? ` até ${targetYear}` : ""}.` : ""}
+        </p>
         <div className="flex flex-wrap gap-2">
           <Link href="/professional/evolution/radar" className={buttonVariants({ size: "sm" })}>
             <TrendingUp data-icon="inline-start" />
@@ -411,7 +398,6 @@ export default function DashboardPage() {
     objectives,
     presentations,
     readiness,
-    currentLevel,
     profile,
     strongCount,
   } = useEvolutionData()
@@ -583,7 +569,9 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 gap-4 min-[1100px]:grid-cols-2">{kpiCards}</div>
 
         <CareerProgressCard
-          currentLevelName={currentLevel?.name ?? ""}
+          ladder={profile.ladder}
+          currentLevelId={profile.identity.levelId}
+          targetLevelId={profile.goal.targetLevelId}
           targetRole={profile.goal.targetRole}
           targetYear={profile.goal.targetYear}
           readiness={readiness}
