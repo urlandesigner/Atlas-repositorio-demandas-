@@ -178,7 +178,7 @@ function SidebarTrilha() {
   if (!profile.ladder.length) return null
 
   return (
-    <div className="px-4 group-data-[collapsible=icon]:hidden">
+    <div className="px-4">
       <Trilha
         ladder={profile.ladder}
         currentLevelId={profile.identity.levelId}
@@ -211,7 +211,10 @@ export function AppSidebar() {
               Atlas
             </span>
           </div>
-          <SidebarTrigger className="size-8 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground group-data-[collapsible=icon]:hidden" />
+          <div className="flex items-center gap-1 group-data-[collapsible=icon]:hidden">
+            <ThemeToggle className="size-8 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground" />
+            <SidebarTrigger className="size-8 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground" />
+          </div>
         </div>
       </SidebarHeader>
 
@@ -229,8 +232,12 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
-        <SidebarSeparator />
-        <SidebarTrilha />
+        {/* Separador e trilha somem juntos no colapso — um wrapper `contents` evita
+            que sobre uma barra órfã sem nada entre as duas. */}
+        <div className="contents group-data-[collapsible=icon]:hidden">
+          <SidebarSeparator />
+          <SidebarTrilha />
+        </div>
         <SidebarSeparator />
         <div className="px-4">
           <div className="rounded-[12px] border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
@@ -245,8 +252,6 @@ export function AppSidebar() {
                   {session?.email ?? "—"}
                 </p>
               </div>
-
-              <ThemeToggle className="shrink-0 rounded-[10px] text-sidebar-foreground/62 hover:bg-muted hover:text-sidebar-foreground" />
 
               <DropdownMenu>
                 <DropdownMenuTrigger
