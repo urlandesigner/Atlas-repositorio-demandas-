@@ -49,7 +49,7 @@ export function MyNetworkCard({
             {profile?.headline}
           </p>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-brand">
+        <span className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink">
           Meu perfil
           <ArrowUpRight className="size-3.5" />
         </span>

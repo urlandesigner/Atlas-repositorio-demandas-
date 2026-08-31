@@ -141,7 +141,7 @@ export default function EvolutionRecognitionsPage() {
                   </div>
                   <Link
                     href="/people"
-                    className="inline-flex items-center gap-1 text-xs font-medium text-brand hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-medium text-accent-ink hover:underline"
                   >
                     Ver na rede
                     <ArrowUpRight className="size-3.5" />

@@ -108,7 +108,7 @@ export function PromotionRequestPanel({
           {pendingRequest ? (
             <Badge variant="secondary">{STATUS_LABEL.pending}</Badge>
           ) : null}
-          {saved ? <span className="text-sm text-brand">{saved}</span> : null}
+          {saved ? <span className="text-sm text-accent-ink">{saved}</span> : null}
         </div>
         <p className="text-sm text-muted-foreground">
           Ao fim do ciclo, recomende a evolução na trilha para aprovação do admin de área.

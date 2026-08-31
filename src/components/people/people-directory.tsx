@@ -162,12 +162,12 @@ export function PeopleDirectory() {
                       ) : null}
                       <div className="mt-1 flex items-center justify-between border-t border-border/60 pt-3">
                         <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                          <Sparkles className="size-3.5 text-brand" />
+                          <Sparkles className="size-3.5 text-accent-ink" />
                           {kudosCount === 1
                             ? "1 reconhecimento"
                             : `${kudosCount} reconhecimentos`}
                         </span>
-                        <span className="inline-flex items-center gap-1 text-xs font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
+                        <span className="inline-flex items-center gap-1 text-xs font-medium text-accent-ink opacity-0 transition-opacity group-hover:opacity-100">
                           Ver perfil
                           <ArrowUpRight className="size-3.5" />
                         </span>
@@ -226,7 +226,7 @@ export function PeopleDirectory() {
                           reconheceu{" "}
                           <Link
                             href={`/people/${to.id}`}
-                            className="font-medium text-brand hover:underline"
+                            className="font-medium text-accent-ink hover:underline"
                           >
                             {to.name}
                           </Link>

@@ -169,7 +169,7 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
           </p>
         </div>
         <div className="flex items-center gap-2">
-          {saved ? <span className="text-sm text-brand">{saved}</span> : null}
+          {saved ? <span className="text-sm text-accent-ink">{saved}</span> : null}
           <Button onClick={handleSave}>
             <Save data-icon="inline-start" />
             Salvar

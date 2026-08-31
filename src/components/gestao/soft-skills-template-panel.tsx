@@ -80,7 +80,7 @@ export function SoftSkillsTemplatePanel({ readOnlyHint }: { readOnlyHint?: strin
             na ficha de cada liderado.
           </p>
         </div>
-        {saved ? <span className="text-sm text-brand">{saved}</span> : null}
+        {saved ? <span className="text-sm text-accent-ink">{saved}</span> : null}
       </CardHeader>
       <CardContent className="space-y-4">
         {!canEdit ? (

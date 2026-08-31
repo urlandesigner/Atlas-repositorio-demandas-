@@ -78,7 +78,7 @@ export function AdminPermissionsPanel() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-base">Visibilidade e permissões</CardTitle>
-        {saved ? <span className="text-sm text-brand">{saved}</span> : null}
+        {saved ? <span className="text-sm text-accent-ink">{saved}</span> : null}
       </CardHeader>
       <CardContent className="space-y-3">
         <ToggleRow

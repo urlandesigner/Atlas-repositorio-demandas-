@@ -57,7 +57,7 @@ export function AiInsightsPanel({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-1.5 text-sm font-medium">
-          <Sparkles className="size-4 text-brand" />
+          <Sparkles className="size-4 text-accent-ink" />
           Insights da IA
         </CardTitle>
       </CardHeader>
