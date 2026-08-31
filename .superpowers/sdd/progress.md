@@ -55,3 +55,4 @@ diagnósticos falsos nesta sessão.
 
 Estado dos gates no ponto de parada: tsc limpo, build limpo, check:contrast 0 falhas
 nos dois temas, lint com os mesmos 13 erros pré-existentes (fora de escopo).
+Task 5: completa (commit 32ebc55, review limpa, sem achados)
