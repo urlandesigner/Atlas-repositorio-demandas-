@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -25,10 +25,17 @@ import {
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
+import { Trilha } from "@/components/career/trilha"
 import { shellHeaderClassName } from "@/components/shell/shell-header-styles"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { PersonAvatar } from "@/components/ui/person-avatar"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
+import {
+  getProfileServerSnapshot,
+  getProfileSnapshot,
+  subscribeProfileStore,
+} from "@/lib/profile/store"
 import { cn } from "@/lib/utils"
 import {
   Sidebar,
@@ -160,6 +167,28 @@ function NavGroup({
   )
 }
 
+/** Trilha compacta na sidebar — a posição na carreira fica sempre visível. */
+function SidebarTrilha() {
+  const profile = useSyncExternalStore(
+    subscribeProfileStore,
+    getProfileSnapshot,
+    getProfileServerSnapshot
+  )
+
+  if (!profile.ladder.length) return null
+
+  return (
+    <div className="px-4 group-data-[collapsible=icon]:hidden">
+      <Trilha
+        ladder={profile.ladder}
+        currentLevelId={profile.identity.levelId}
+        targetLevelId={profile.goal.targetLevelId}
+        variant="mini"
+      />
+    </div>
+  )
+}
+
 export function AppSidebar() {
   const pathname = usePathname()
   const { session, logout } = useAuth()
@@ -201,6 +230,8 @@ export function AppSidebar() {
 
       <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
         <SidebarSeparator />
+        <SidebarTrilha />
+        <SidebarSeparator />
         <div className="px-4">
           <div className="rounded-[12px] border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
             <div className="flex items-start gap-3">
@@ -214,6 +245,8 @@ export function AppSidebar() {
                   {session?.email ?? "—"}
                 </p>
               </div>
+
+              <ThemeToggle className="shrink-0 rounded-[10px] text-sidebar-foreground/62 hover:bg-muted hover:text-sidebar-foreground" />
 
               <DropdownMenu>
                 <DropdownMenuTrigger
