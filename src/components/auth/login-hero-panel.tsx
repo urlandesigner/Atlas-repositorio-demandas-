@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"
 
 const HeroGeometric = dynamic(() => import("@/components/ui/hero-geometric"), {
   ssr: false,
-  loading: () => <div className="absolute inset-0 bg-brand" />,
+  loading: () => <div className="absolute inset-0 bg-[#0B0A07]" />,
 })
 
 export function LoginHeroPanel() {
@@ -13,10 +13,17 @@ export function LoginHeroPanel() {
     <div className="relative flex h-full min-h-full w-full flex-1 flex-col overflow-hidden rounded-[16px]">
       <HeroGeometric
         className="absolute inset-0 min-h-0 h-full bg-transparent"
-        // tons de --brand para o shader (three não lê CSS vars)
-        color1="#2f3fc3"
-        color2="#6d7ef7"
-        speed={0.65}
+        // Campo escuro com luz ouro — o painel lê como o resto do produto
+        // (quase-preto com ouro pontual). O three não lê CSS vars, daí os literais.
+        color1="#141005"
+        color2="#9C6F1A"
+        speed={0.45}
+      />
+
+      {/* Scrim: garante contraste do texto sobre o shader sem apagar o brilho ouro do painel. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-[58%] bg-gradient-to-t from-[#0B0A07] via-[#0B0A07]/80 to-transparent"
       />
 
       <div className="relative z-10 flex min-h-full flex-col px-[2.4rem] xl:px-[3.2rem]">
@@ -33,10 +40,10 @@ export function LoginHeroPanel() {
 
         <div className="flex flex-1 flex-col justify-end pb-[2.4rem] text-left">
           <div className="w-full max-w-lg space-y-4">
-            <h1 className="text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-brand-foreground">
+            <h1 className="text-[2.35rem] font-semibold leading-[1.12] tracking-tight text-[#FBF6EA]">
               Evolução profissional, com método.
             </h1>
-            <p className="max-w-md text-base leading-7 text-brand-foreground/80">
+            <p className="max-w-md text-base leading-7 text-[#FBF6EA]/80">
               PDIs, objetivos e registros em ambiente confidencial.
             </p>
           </div>

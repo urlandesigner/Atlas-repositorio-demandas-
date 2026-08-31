@@ -161,11 +161,11 @@ function ProjectTable({
                       href={createProjectPath(WORKSPACE, project.id)}
                       className="group flex min-w-0 items-center gap-3"
                     >
-                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground transition-colors group-hover:border-primary/25 group-hover:text-primary">
+                      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border bg-background text-muted-foreground transition-colors group-hover:border-primary/25 group-hover:text-accent-ink">
                         <FolderOpen className="size-4" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate font-medium text-foreground transition-colors group-hover:text-primary">
+                        <span className="block truncate font-medium text-foreground transition-colors group-hover:text-accent-ink">
                           {project.name}
                         </span>
                         <span className="mt-0.5 block max-w-md truncate text-xs text-muted-foreground">

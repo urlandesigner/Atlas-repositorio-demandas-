@@ -359,7 +359,7 @@ function CommandDialogDemo() {
 
 // SVG inline (sem dependência de rede) só pra provar que AvatarImage/imageUrl renderizam uma imagem de verdade.
 const DEMO_AVATAR_SRC =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%233a4adf'/%3E%3Ccircle cx='32' cy='24' r='12' fill='%23ffffff' fill-opacity='0.85'/%3E%3Ccircle cx='32' cy='60' r='22' fill='%23ffffff' fill-opacity='0.85'/%3E%3C/svg%3E"
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%23E8B44A'/%3E%3Ccircle cx='32' cy='24' r='12' fill='%23ffffff' fill-opacity='0.85'/%3E%3Ccircle cx='32' cy='60' r='22' fill='%23ffffff' fill-opacity='0.85'/%3E%3C/svg%3E"
 
 const NAV = [
   {
@@ -443,14 +443,23 @@ const NAV = [
 ] as const
 
 const TOKENS = [
-  ["--primary", "bg-primary", "Azul de marca. Ações primárias, links, destaques."],
+  [
+    "--primary",
+    "bg-primary",
+    "Acento ouro (#E8B44A). Preenchimento de ações primárias — sempre com glifo/texto escuro por cima. Para texto e links de acento, use --accent-ink, não --primary: o ouro puro não passa em contraste sobre fundo claro.",
+  ],
   ["--primary-hover", "bg-primary-hover", "Hover do botão primário."],
-  ["--brand-muted", "bg-brand-muted", "Azul claro. Estado ativo de navegação."],
+  [
+    "--accent-ink",
+    "bg-accent-ink",
+    "Token de TEXTO de acento — o par legível de --primary. Vale ouro puro no escuro e um ouro mais escuro (#8A6212) no claro, porque texto ouro puro sobre fundo claro cai a ~1.9:1. Use em links e destaques textuais no lugar de --primary/--brand.",
+  ],
+  ["--brand-muted", "bg-brand-muted", "Ouro claro/esmaecido. Estado ativo de navegação."],
   ["--secondary", "bg-secondary", "Quase preto. Ações de alto contraste."],
   ["--secondary-hover", "bg-secondary-hover", "Hover do botão secondary."],
   ["--destructive", "bg-destructive", "Vermelho. Ações destrutivas e erros."],
   ["--success", "bg-success", "Verde. Estados concluídos/positivos."],
-  ["--warning", "bg-warning", "Âmbar. Estados de atenção/pausa."],
+  ["--warning", "bg-warning", "Laranja (#FB923C/#C2410C). Estados de atenção/pausa — escolhido para não colidir com o ouro do acento."],
   ["--info", "bg-info", "Azul-céu. Estados planejados/informativos."],
   ["--impact", "bg-impact", "Violeta. Escala de impacto dos registros."],
   ["--muted", "bg-muted", "Cinza de fundo. Superfícies secundárias."],
@@ -458,7 +467,7 @@ const TOKENS = [
   ["--card", "bg-card", "Fundo de card (branco no tema claro)."],
   ["--border", "bg-border", "Bordas e divisores."],
   ["--hairline-strong", "bg-hairline-strong", "Borda de botão outline — mais forte que --border."],
-  ["--shadow-brand", "bg-brand shadow-brand", "Sombra azulada do logo da marca. Aplicada pela classe shadow-brand."],
+  ["--shadow-brand", "bg-brand shadow-brand", "Sombra dourada do acento de marca. Aplicada pela classe shadow-brand."],
 ] as const
 
 const GAPS = [
@@ -557,8 +566,8 @@ export default function DesignSystemPage() {
                 ))}
               </div>
               <div className="rounded-[10px] border border-primary/20 bg-primary/10 px-4 py-3">
-                <p className="text-sm font-medium text-primary">Radius e densidade</p>
-                <p className="mt-0.5 text-sm text-primary/80">
+                <p className="text-sm font-medium text-accent-ink">Radius e densidade</p>
+                <p className="mt-0.5 text-sm text-accent-ink/80">
                   <code className="font-mono text-xs">--radius: 0.75rem</code> · cards usam 12px fixo · a escala de
                   espaçamento parte de <code className="font-mono text-xs">--spacing: 0.25rem</code>.
                 </p>
@@ -755,7 +764,7 @@ export default function DesignSystemPage() {
               <PageBanner
                 variant="warning"
                 title="Atenção"
-                description="variant=warning — usa amber cru (sem token dedicado, mesma ressalva dos status hardcoded)."
+                description="variant=warning — usa o token dedicado --warning (laranja, escolhido para não colidir com o ouro do acento)."
               />
               <PageBanner
                 variant="destructive"
@@ -1448,7 +1457,7 @@ export default function DesignSystemPage() {
             <Group label="badge + group">
               <Avatar>
                 <AvatarFallback>UD</AvatarFallback>
-                <AvatarBadge className="bg-emerald-500" />
+                <AvatarBadge className="bg-success" />
               </Avatar>
               <AvatarGroup>
                 <Avatar size="sm"><AvatarFallback>A</AvatarFallback></Avatar>
@@ -1547,13 +1556,13 @@ export default function DesignSystemPage() {
               <div className="flex flex-col gap-3">
                 {GAPS.map((gap, i) => (
                   <div key={gap.title} className="flex gap-3 rounded-[10px] border border-border bg-muted/20 p-4">
-                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-[11px] font-semibold text-primary">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-[11px] font-semibold text-accent-ink">
                       {i + 1}
                     </span>
                     <div className="min-w-0">
                       <p className="text-sm font-medium">{gap.title}</p>
                       <p className="mt-1 text-sm text-muted-foreground">{gap.detail}</p>
-                      <p className="mt-2 flex items-start gap-1.5 text-sm text-primary">
+                      <p className="mt-2 flex items-start gap-1.5 text-sm text-accent-ink">
                         <Check className="mt-0.5 size-3.5 shrink-0" />
                         <span>{gap.fix}</span>
                       </p>

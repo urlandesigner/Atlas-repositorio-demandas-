@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 const pageBannerVariants = cva("flex items-start gap-3 rounded-[12px] border px-4 py-3", {
   variants: {
     variant: {
-      info: "border-primary/20 bg-primary/10 text-primary",
+      info: "border-primary/20 bg-primary/10 text-accent-ink",
       warning: "border-warning/20 bg-warning/10 text-warning-foreground",
       destructive: "border-destructive/20 bg-destructive/10 text-destructive",
       success: "border-success/20 bg-success/10 text-success-foreground",

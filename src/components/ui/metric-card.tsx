@@ -31,12 +31,10 @@ export function MetricCard({
   const body = (
     <>
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
-          {label}
-        </p>
+        <p className="label-mono text-muted-foreground">{label}</p>
         {Icon ? <Icon className="size-4 shrink-0 text-muted-foreground" /> : null}
       </div>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-foreground">
+      <p className="figure mt-2.5 text-[28px]! text-foreground">
         {value}
         {suffix ? (
           <span className="ml-0.5 text-sm font-medium text-muted-foreground">{suffix}</span>

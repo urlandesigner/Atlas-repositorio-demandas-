@@ -20,7 +20,7 @@ Todo requisito abaixo vale implicitamente para **todas** as tasks.
 - **Contraste WCAG AA:** 4.5:1 para texto corrido, 3:1 para elementos de interface e texto grande, nos dois temas.
 - **Nenhuma cor pode ser definida exclusivamente dentro de um bloco de tema.** Todo token existe no `:root`; `.light` apenas redefine.
 - **Não alterar modelo de dados, stores, ou arquitetura de informação.** Ver seção "Fora de escopo" da spec.
-- **Gates de cada task:** `npx tsc --noEmit`, `npm run lint` e `npm run build` devem passar limpos antes do commit.
+- **Gates de cada task:** `npx tsc --noEmit` e `npm run build` devem passar limpos antes do commit. `npm run lint` **já falha na linha de base** com 13 erros pré-existentes, em arquivos fora do escopo deste redesign (`quick-capture.tsx`, `use-evolution-data.ts`, `auth-provider.tsx`, `hero-geometric.tsx`, `page-banner.tsx`, `use-mobile.ts`, entre outros). O gate real é: **nenhum erro novo nos arquivos que a task tocou**. Verifique com `npm run lint 2>&1 | grep <arquivo-tocado>`.
 - Diretório de trabalho: `/Users/urlandipre/ProjetosYbera/Atlas (registros)/atlas-profissional`.
 
 ---
@@ -42,7 +42,10 @@ Todo requisito abaixo vale implicitamente para **todas** as tasks.
 - `src/components/ui/metric-card.tsx` — figura em mono.
 - `src/components/ui/progress.tsx` — tom `brand` → ouro.
 - `src/components/ui/segmented-progress.tsx` — `bg-brand` → `bg-primary`.
-- `src/components/profile/ladder-stepper.tsx` — passa a delegar para `Trilha`.
+- `src/components/profile/career-goal-card.tsx`, `src/components/profile/evolution-panel.tsx`, `src/components/evolution/career-context-bar.tsx` — migram de `LadderStepper` para `Trilha`.
+
+**Remover:**
+- `src/components/profile/ladder-stepper.tsx` — substituído por `Trilha`.
 - `src/components/shell/app-sidebar.tsx` — hospeda `Trilha` variante `mini` e o `ThemeToggle`.
 - `src/app/(app)/dashboard/page.tsx` — `CareerProgressCard` passa a usar `Trilha` variante `hero`.
 - `src/components/auth/login-hero-panel.tsx` — cores do shader.
@@ -683,17 +686,23 @@ git commit -m "Troca Open Sans por Archivo e cria utilitários de figura em mono
 
 ---
 
-### Task 4: Badge e StatusBadge
+### Task 4: Badge, StatusBadge e legibilidade do acento
 
-As variantes `*-soft` e os tons de `StatusBadge` assumem fundo claro. Sobre `#0B0C0E` uma tinta a 10% some.
+Dois problemas juntos, porque têm a mesma causa. Primeiro: as variantes `*-soft`
+e os tons de `StatusBadge` assumem fundo claro — sobre `#0B0C0E` uma tinta a 10%
+some. Segundo, e mais grave: **o app usa `text-primary` em 24 lugares**, e no tema
+claro isso renderiza ouro `#E8B44A` sobre `#EDEEF0` — ilegível, e violação direta
+da constraint global. Verificado visualmente no navegador após a Task 2: o badge
+"Novo" fica praticamente invisível no tema claro.
 
 **Files:**
 - Modify: `src/components/ui/badge.tsx`
 - Modify: `src/components/ui/status-badge.tsx`
+- Modify (varredura `text-primary` → `text-accent-ink`): `src/app/(app)/professional/presentations/page.tsx`, `src/app/(app)/projects/page.tsx`, `src/app/(app)/dashboard/page.tsx`, `src/app/design-system/page.tsx`, `src/components/ui/page-banner.tsx`, `src/components/ui/button.tsx`, `src/components/records/quick-capture.tsx`, `src/components/ui/empty-state-card.tsx`
 
 **Interfaces:**
-- Consumes: tokens da Task 2.
-- Produces: nomes de variante inalterados (`default`, `secondary`, `primary-soft`, `secondary-soft`, `destructive`, `outline`, `ghost`, `link`) e `StatusTone` inalterado (`success | warning | info | neutral | danger | impact`). Nenhum consumidor precisa mudar.
+- Consumes: tokens da Task 2, em especial `--accent-ink` (ouro no escuro, `#8A6212` no claro).
+- Produces: nomes de variante inalterados (`default`, `secondary`, `primary-soft`, `secondary-soft`, `destructive`, `outline`, `ghost`, `link`) e `StatusTone` inalterado (`success | warning | info | neutral | danger | impact`). Nenhum consumidor precisa mudar de API.
 
 - [ ] **Step 1: Ajustar as variantes soft do Badge**
 
@@ -701,7 +710,7 @@ Em `src/components/ui/badge.tsx`, dentro de `badgeVariants`, substituir as varia
 
 ```tsx
         "primary-soft":
-          "border-primary/25 bg-primary/15 text-primary [a]:hover:bg-primary/25",
+          "border-primary/25 bg-primary/15 text-accent-ink [a]:hover:bg-primary/25",
         "secondary-soft":
           "border-hairline-strong bg-muted text-foreground [a]:hover:bg-muted/70",
         destructive:
@@ -727,23 +736,59 @@ const STATUS_TONE_CLASS: Record<StatusTone, string> = {
 }
 ```
 
-- [ ] **Step 3: Rodar os gates**
+- [ ] **Step 3: Varrer `text-primary` → `text-accent-ink`**
+
+`text-primary` renderiza ouro. No tema escuro isso é legível; no claro, não.
+`text-accent-ink` resolve para ouro no escuro e `#8A6212` no claro, então a troca
+preserva a aparência escura e conserta a clara.
+
+Substituir em todos os arquivos, **sem tocar em `text-primary-foreground`**
+(que é outro token — a tinta escura *sobre* o ouro):
 
 ```bash
-npx tsc --noEmit && npm run lint && npm run build
+grep -rl 'text-primary\([^-]\|$\)' src --include="*.tsx" \
+  | xargs sed -i '' 's/text-primary\([^-]\)/text-accent-ink\1/g; s/text-primary$/text-accent-ink/'
 ```
 
-Esperado: os três passam.
-
-- [ ] **Step 4: Verificar os dois temas no navegador**
-
-Abrir `/professional/objectives` no preview. Confirmar que os badges `Em andamento`, `Definido pelo gestor`, `Influência` e `Novo` estão legíveis no tema escuro; trocar para claro via `ThemeToggle` e confirmar de novo. Nenhum badge pode sumir no fundo.
-
-- [ ] **Step 5: Commit**
+Depois conferir que nada de `text-primary` sobrou e que `text-primary-foreground` ficou intacto:
 
 ```bash
-git add src/components/ui/badge.tsx src/components/ui/status-badge.tsx
-git commit -m "Corrige variantes de badge e tons de status para fundo escuro"
+grep -rn 'text-primary\([^-]\|$\)' src --include="*.tsx"
+grep -roh 'text-primary-foreground' src --include="*.tsx" | wc -l
+```
+
+Esperado: o primeiro comando não retorna nada; o segundo retorna um número maior que zero.
+
+Atenção a `hover:text-primary` e `group-hover:text-primary` — a varredura também
+os converte, o que é correto: a cor de destaque no hover tem o mesmo problema.
+
+- [ ] **Step 4: Rodar os gates**
+
+```bash
+npx tsc --noEmit && npm run build
+```
+
+Esperado: ambos passam. Para o lint, confirmar que nenhum arquivo tocado ganhou erro novo:
+
+```bash
+npm run lint 2>&1 | grep -E "badge|status-badge|page-banner|empty-state-card|quick-capture|dashboard|projects|presentations|design-system" || echo "nenhum erro novo nos arquivos tocados"
+```
+
+- [ ] **Step 5: Verificar os dois temas no navegador**
+
+Abrir `/dashboard` e `/professional/objectives` no preview, **nos dois temas**.
+Alternar o tema com `localStorage.setItem('theme','light')` / `'dark'` seguido de reload
+(o `ThemeToggle` só chega à sidebar na Task 9).
+
+Confirmar especificamente: o badge `Novo` está legível no tema claro (era o caso
+que falhava), e os badges `Em andamento`, `Definido pelo gestor` e `Influência`
+estão legíveis nos dois temas. Nenhum badge pode sumir no fundo.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add -A src
+git commit -m "Corrige badges para fundo escuro e usa accent-ink como texto de acento"
 ```
 
 ---
@@ -953,14 +998,17 @@ O elemento-assinatura. Evolui `LadderStepper` sem alterar o modelo de dados.
 **Files:**
 - Create: `src/components/career/trilha-gauge.tsx`
 - Create: `src/components/career/trilha.tsx`
-- Modify: `src/components/profile/ladder-stepper.tsx`
+- Delete: `src/components/profile/ladder-stepper.tsx`
+- Modify: `src/components/profile/career-goal-card.tsx`
+- Modify: `src/components/profile/evolution-panel.tsx`
+- Modify: `src/components/evolution/career-context-bar.tsx`
 
 **Interfaces:**
 - Consumes: `LevelDef` de `@/lib/profile/types`, `levelIndex` de `@/lib/profile/store`, `SegmentedProgress` e `StepConnector` da Task 7, `.figure` e `.label-mono` da Task 3.
 - Produces:
   - `TrilhaGauge({ value, segments?, className? }: { value: number; segments?: number; className?: string })` — medidor de barras discretas; `value` é 0-100, `segments` padrão 12.
-  - `Trilha({ ladder, currentLevelId, targetLevelId?, readiness?, variant?, className? })` com `variant?: "hero" | "detail" | "mini"` (padrão `"detail"`).
-  - `LadderStepper` mantém a assinatura atual `{ ladder, currentLevelId, size?, showCurrentHint? }` e passa a delegar para `Trilha`.
+  - `Trilha({ ladder, currentLevelId, targetLevelId?, readiness?, variant?, size?, showCurrentHint?, className? })` com `variant?: "hero" | "detail" | "mini"` (padrão `"detail"`), `size?: "sm" | "lg"` (padrão `"sm"`, só afeta `detail`) e `showCurrentHint?: boolean` (padrão `false`).
+  - `LadderStepper` deixa de existir; seus três consumidores passam a usar `Trilha` diretamente.
 
 - [ ] **Step 1: Criar o medidor**
 
@@ -1037,32 +1085,44 @@ function stateFor(index: number, currentIndex: number): LevelState {
   return "future"
 }
 
+const NODE_SIZE = {
+  sm: "size-6",
+  lg: "size-8",
+} as const
+
 function TrilhaNode({
   level,
   state,
   variant,
+  size,
+  showCurrentHint,
 }: {
   level: LevelDef
   state: LevelState
   variant: TrilhaVariant
+  size: "sm" | "lg"
+  showCurrentHint: boolean
 }) {
-  const size = variant === "hero" ? "size-7" : variant === "detail" ? "size-6" : "size-2"
+  const nodeSize =
+    variant === "mini" ? "size-2" : variant === "hero" ? "size-7" : NODE_SIZE[size]
 
   return (
     <div className="flex shrink-0 flex-col items-center gap-1.5">
       <div
         className={cn(
           "flex items-center justify-center rounded-full",
-          size,
+          nodeSize,
           state === "done" && "bg-primary text-primary-foreground",
           state === "current" &&
             "bg-primary text-primary-foreground ring-2 ring-primary/35 ring-offset-2 ring-offset-card motion-safe:animate-pulse",
           state === "future" && "border border-hairline-strong bg-muted"
         )}
       >
-        {variant !== "mini" && state === "done" ? <Check className="size-3.5" /> : null}
+        {variant !== "mini" && state === "done" ? (
+          <Check className={size === "lg" ? "size-4" : "size-3.5"} />
+        ) : null}
         {variant !== "mini" && state === "current" ? (
-          <span className="size-2 rounded-full bg-primary-foreground" />
+          <span className={cn("rounded-full bg-primary-foreground", size === "lg" ? "size-2.5" : "size-2")} />
         ) : null}
       </div>
       {variant !== "mini" ? (
@@ -1074,6 +1134,9 @@ function TrilhaNode({
         >
           {level.name}
         </span>
+      ) : null}
+      {showCurrentHint && state === "current" && variant !== "mini" ? (
+        <span className="text-[10px] font-medium text-accent-ink">você está aqui</span>
       ) : null}
     </div>
   )
@@ -1090,6 +1153,8 @@ export function Trilha({
   targetLevelId,
   readiness,
   variant = "detail",
+  size = "sm",
+  showCurrentHint = false,
   className,
 }: {
   ladder: LevelDef[]
@@ -1097,6 +1162,8 @@ export function Trilha({
   targetLevelId?: string
   readiness?: number
   variant?: TrilhaVariant
+  size?: "sm" | "lg"
+  showCurrentHint?: boolean
   className?: string
 }) {
   if (!ladder.length) return null
@@ -1111,11 +1178,19 @@ export function Trilha({
     <div className="flex items-start">
       {ladder.map((level, index) => (
         <div key={level.id} className="flex flex-1 items-start last:flex-none">
-          <TrilhaNode level={level} state={stateFor(index, currentIndex)} variant={variant} />
+          <TrilhaNode
+            level={level}
+            state={stateFor(index, currentIndex)}
+            variant={variant}
+            size={size}
+            showCurrentHint={showCurrentHint}
+          />
           {index < ladder.length - 1 ? (
             <StepConnector
               filled={index < currentIndex}
-              className={variant === "hero" ? "mt-3.5" : variant === "detail" ? "mt-3" : "mt-1"}
+              className={
+                variant === "mini" ? "mt-1" : variant === "hero" ? "mt-3.5" : size === "lg" ? "mt-4" : "mt-3"
+              }
             />
           ) : null}
         </div>
@@ -1167,30 +1242,49 @@ export function Trilha({
 }
 ```
 
-- [ ] **Step 3: Fazer o LadderStepper delegar para a Trilha**
+- [ ] **Step 3: Migrar os consumidores e remover o LadderStepper**
 
-Substituir **todo** o conteúdo de `src/components/profile/ladder-stepper.tsx` por:
+Três call sites passam props que a `Trilha` precisa honrar — uma fachada que as
+aceitasse e ignorasse seria regressão silenciosa. Migrar cada um e apagar o arquivo.
+
+Em `src/components/profile/career-goal-card.tsx`, trocar o import de
+`LadderStepper` por `import { Trilha } from "@/components/career/trilha"` e a
+chamada por:
 
 ```tsx
-import { Trilha } from "@/components/career/trilha"
-import type { LevelDef } from "@/lib/profile/types"
-
-/**
- * Mantido como fachada da Trilha para não quebrar os consumidores existentes.
- * Código novo deve usar `Trilha` diretamente.
- */
-export function LadderStepper({
-  ladder,
-  currentLevelId,
-}: {
-  ladder: LevelDef[]
-  currentLevelId: string
-  size?: "sm" | "lg"
-  showCurrentHint?: boolean
-}) {
-  return <Trilha ladder={ladder} currentLevelId={currentLevelId} variant="detail" />
-}
+        <Trilha ladder={ladder} currentLevelId={currentLevelId} />
 ```
+
+Em `src/components/profile/evolution-panel.tsx`, mesmo import, e a chamada por:
+
+```tsx
+          <Trilha
+            ladder={ladder}
+            currentLevelId={currentLevelId}
+            size="lg"
+            showCurrentHint
+          />
+```
+
+Em `src/components/evolution/career-context-bar.tsx`, mesmo import, e a chamada por:
+
+```tsx
+        <Trilha ladder={ladder} currentLevelId={currentLevelId} size="sm" />
+```
+
+Depois remover o arquivo antigo:
+
+```bash
+git rm src/components/profile/ladder-stepper.tsx
+```
+
+Confirmar que não sobrou referência:
+
+```bash
+grep -rn "LadderStepper" src
+```
+
+Esperado: nenhuma saída.
 
 - [ ] **Step 4: Rodar os gates**
 
@@ -1207,7 +1301,7 @@ Abrir `/professional/profile` e confirmar que a trilha renderiza com nós ouro, 
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/components/career/trilha.tsx src/components/career/trilha-gauge.tsx src/components/profile/ladder-stepper.tsx
+git add -A src/components/career src/components/profile src/components/evolution
 git commit -m "Cria o componente Trilha com variantes hero, detail e mini"
 ```
 
@@ -1446,9 +1540,11 @@ Primeira coisa que os diretores veem.
 Em `src/components/auth/login-hero-panel.tsx`, substituir as props de cor do `HeroGeometric` por:
 
 ```tsx
-        // tons do acento ouro para o shader (three não lê CSS vars)
-        color1="#8A6212"
-        color2="#E8B44A"
+        // Campo escuro com luz ouro — o painel precisa ler como o resto do
+        // produto (quase-preto com ouro pontual), não como uma chapa dourada.
+        // O three não lê CSS vars, por isso os literais.
+        color1="#0B0A07"
+        color2="#8A6212"
         speed={0.45}
 ```
 

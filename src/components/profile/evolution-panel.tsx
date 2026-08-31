@@ -4,7 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { LadderStepper } from "@/components/profile/ladder-stepper"
+import { Trilha } from "@/components/career/trilha"
 import { PdiBaselineMatrix } from "@/components/profile/pdi-baseline-matrix"
 import { PdiObjectiveProgressMatrix } from "@/components/profile/pdi-objective-progress-matrix"
 import { PdiRubricSheet } from "@/components/profile/pdi-rubric-sheet"
@@ -44,7 +44,7 @@ export function EvolutionPanel({
           </p>
         </CardHeader>
         <CardContent className="pt-2">
-          <LadderStepper
+          <Trilha
             ladder={ladder}
             currentLevelId={currentLevelId}
             size="lg"

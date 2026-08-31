@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils"
  */
 function SegmentedProgress({
   segments,
+  tone = "primary",
   className,
   ...props
-}: { segments: boolean[] } & React.ComponentProps<"div">) {
+}: { segments: boolean[]; tone?: "primary" | "muted" } & React.ComponentProps<"div">) {
   const completed = segments.filter(Boolean).length
   return (
     <div
@@ -23,7 +24,14 @@ function SegmentedProgress({
       {segments.map((done, i) => (
         <span
           key={i}
-          className={cn("h-1.5 flex-1 rounded-full", done ? "bg-brand" : "bg-border")}
+          className={cn(
+            "h-1.5 flex-1 rounded-full transition-colors",
+            done
+              ? tone === "primary"
+                ? "bg-primary"
+                : "bg-muted-foreground"
+              : "bg-border"
+          )}
         />
       ))}
     </div>
@@ -40,7 +48,7 @@ function StepConnector({
     <span
       data-slot="step-connector"
       aria-hidden="true"
-      className={cn("h-0.5 flex-1", filled ? "bg-brand" : "bg-border", className)}
+      className={cn("h-0.5 flex-1", filled ? "bg-primary" : "bg-border", className)}
       {...props}
     />
   )

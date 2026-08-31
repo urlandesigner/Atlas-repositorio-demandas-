@@ -126,7 +126,7 @@ function LideradoDetailContent({ userId }: { userId: string }) {
           </div>
           </div>
         </div>
-        {saved ? <p className="text-sm text-brand">{saved}</p> : null}
+        {saved ? <p className="text-sm text-accent-ink">{saved}</p> : null}
       </div>
 
       <Card>
@@ -189,7 +189,7 @@ function LideradoDetailContent({ userId }: { userId: string }) {
           <CardTitle className="text-base">Radar de competências</CardTitle>
           <p className="text-sm text-muted-foreground">
             Pilares e notas customizáveis por liderado. Use o{" "}
-            <Link href="/gestao/soft-skills" className="text-brand hover:underline">
+            <Link href="/gestao/soft-skills" className="text-accent-ink hover:underline">
               template da área
             </Link>{" "}
             como ponto de partida.

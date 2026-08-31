@@ -1,11 +1,20 @@
 import type { Metadata } from "next"
-import { JetBrains_Mono } from "next/font/google"
+import { Archivo, JetBrains_Mono } from "next/font/google"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
+
+const archivo = Archivo({
+  variable: "--font-archivo",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+})
 
 const jetBrainsMono = JetBrains_Mono({
   variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
@@ -21,10 +30,13 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
-      className={`${jetBrainsMono.variable} h-full antialiased`}
+      className={`${archivo.variable} ${jetBrainsMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full">
-        <TooltipProvider>{children}</TooltipProvider>
+        <ThemeProvider>
+          <TooltipProvider>{children}</TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
