@@ -37,7 +37,12 @@ function TrilhaNode({
     variant === "mini" ? "size-2" : variant === "hero" ? "size-7" : NODE_SIZE[size]
 
   return (
-    <div className="flex shrink-0 flex-col items-center gap-1.5">
+    <div
+      className={cn(
+        "flex flex-col items-center gap-1.5",
+        variant === "hero" ? "min-w-0" : "shrink-0"
+      )}
+    >
       <div
         className={cn(
           "flex items-center justify-center rounded-full",
@@ -58,7 +63,8 @@ function TrilhaNode({
       {variant !== "mini" ? (
         <span
           className={cn(
-            "label-mono whitespace-nowrap",
+            "label-mono",
+            variant === "hero" ? "w-full truncate text-center" : "whitespace-nowrap",
             state === "current" ? "text-foreground" : "text-muted-foreground"
           )}
         >
@@ -119,7 +125,13 @@ export function Trilha({
             <StepConnector
               filled={index < currentIndex}
               className={
-                variant === "mini" ? "mt-1" : variant === "hero" ? "mt-3.5" : size === "lg" ? "mt-4" : "mt-3"
+                variant === "mini"
+                  ? "mt-1"
+                  : variant === "hero"
+                    ? "mt-3.5 min-w-3"
+                    : size === "lg"
+                      ? "mt-4"
+                      : "mt-3"
               }
             />
           ) : null}
