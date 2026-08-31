@@ -78,3 +78,13 @@ Task 8: completa (commits 364fd4f..f7e84d0, review limpa após 1 rodada de fix)
   (showCurrentHint) que só o EvolutionPanel ativa.
   Minor (triagem final): text-[10px] arbitrário em vez de token tipográfico (herdado
   do componente antigo); sem aria-current="step" no nó atual.
+Task 9: completa (commits 86dd56d..528bad2, review + 1 rodada de fix)
+  Important corrigido: o ThemeToggle na linha do card de usuário tirou ~34% da
+  largura do texto e truncava o nome. Movido para o SidebarHeader, ao lado do
+  SidebarTrigger. Verificado: scrollWidth == clientWidth, "Colaborador Demo" inteiro.
+  Minor corrigido: separador + Trilha envolvidos em wrapper "contents" +
+  group-data-[collapsible=icon]:hidden, somem juntos.
+  FALSO POSITIVO da re-revisão: alegou que o 2o separador ficava órfão ao colapsar.
+  Medi no navegador: separador em y=823 tem o bloco do avatar colapsado logo abaixo
+  (y=840, h=44, display flex). A leitura estática ignorou o segundo bloco
+  group-data-[collapsible=icon]:flex. Nenhuma ação necessária.
