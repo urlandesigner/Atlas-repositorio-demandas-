@@ -117,3 +117,13 @@ Task 11: completa (commits 714e42b..4ca53fc — 4 rodadas)
   Achado estrutural do agente: hero-geometric.tsx tem mix(vec3(1.0), color, fadeMask)
   que puxa o canto inferior-esquerdo para BRANCO, limitando o contraste a 4.07:1 ali
   mesmo com cores pretas. O scrim contorna; a linha do shader segue como dívida.
+Task 12: completa (commit ce58d8f)
+  1 ocorrência corrigida (bg-emerald-500 -> bg-success no design-system).
+  bg-brand/text-brand preservados: --brand hoje É ouro. Literais do login/shader
+  preservados: three não lê CSS vars.
+  Controlador verificou o "TypeError" que o agente reportou sem localizar: não
+  reproduz em servidor limpo — eram resquícios de WebSocket HMR de instâncias mortas.
+  Gates finais: check:contrast 0 falhas nos 2 temas, tsc limpo, build limpo,
+  lint com os mesmos 13 pré-existentes.
+
+TODAS AS 12 TASKS COMPLETAS. Próximo: revisão final da branch inteira.
