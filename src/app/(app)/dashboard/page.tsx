@@ -541,6 +541,21 @@ export default function DashboardPage() {
         />
       </div>
 
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 min-[1100px]:grid-cols-2">{kpiCards}</div>
+
+        <CareerProgressCard
+          ladder={profile.ladder}
+          currentLevelId={profile.identity.levelId}
+          targetLevelId={profile.goal.targetLevelId}
+          targetRole={profile.goal.targetRole}
+          targetYear={profile.goal.targetYear}
+          readiness={readiness}
+          recordCount={records.length}
+          strongCount={strongCount}
+        />
+      </div>
+
       <CardList>
         <CardListHeader
           title="Últimas movimentações"
@@ -578,21 +593,6 @@ export default function DashboardPage() {
           )}
         </CardListBody>
       </CardList>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="grid grid-cols-1 gap-4 min-[1100px]:grid-cols-2">{kpiCards}</div>
-
-        <CareerProgressCard
-          ladder={profile.ladder}
-          currentLevelId={profile.identity.levelId}
-          targetLevelId={profile.goal.targetLevelId}
-          targetRole={profile.goal.targetRole}
-          targetYear={profile.goal.targetYear}
-          readiness={readiness}
-          recordCount={records.length}
-          strongCount={strongCount}
-        />
-      </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <CardList>
