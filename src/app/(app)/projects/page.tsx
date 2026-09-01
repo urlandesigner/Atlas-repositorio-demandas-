@@ -241,7 +241,7 @@ function NewProjectSheet({
 
   return (
     <Sheet open={open} onOpenChange={(value) => !value && handleClose()}>
-      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[45vw] sm:data-[side=right]:max-w-[45vw]" side="right">
+      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[45vw] sm:data-[side=right]:max-w-[45vw]" side="right" size="custom">
         <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
           <SheetTitle className="text-base">Novo projeto</SheetTitle>
           <p className="text-xs text-muted-foreground">Profissional</p>

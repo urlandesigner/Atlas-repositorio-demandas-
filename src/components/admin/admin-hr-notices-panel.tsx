@@ -312,7 +312,7 @@ function HrNoticeFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
+      <SheetContent className="w-full overflow-y-auto" size="xl">
         <SheetHeader>
           <SheetTitle>{editing ? "Editar aviso do RH" : "Novo aviso do RH"}</SheetTitle>
           <SheetDescription>

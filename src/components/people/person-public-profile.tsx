@@ -457,7 +457,7 @@ function ProfileEditSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-md">
+      <SheetContent className="w-full" size="md">
         <SheetHeader>
           <SheetTitle>Editar perfil público</SheetTitle>
           <SheetDescription>

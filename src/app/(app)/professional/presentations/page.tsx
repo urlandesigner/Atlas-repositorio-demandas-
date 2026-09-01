@@ -90,7 +90,7 @@ function PresentationSheet({
 
   return (
     <Sheet open={open} onOpenChange={(value) => !value && handleClose()}>
-      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[34rem] sm:data-[side=right]:max-w-[34rem]" side="right">
+      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[34rem] sm:data-[side=right]:max-w-[34rem]" side="right" size="custom">
         <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
           <SheetTitle className="text-base">{mode === "create" ? "Nova apresentação" : "Editar apresentação"}</SheetTitle>
           <p className="text-xs text-muted-foreground">
@@ -253,7 +253,7 @@ function PresentationDrawer({
 }) {
   return (
     <Sheet open={!!item} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[34rem] sm:data-[side=right]:max-w-[34rem]" side="right">
+      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[34rem] sm:data-[side=right]:max-w-[34rem]" side="right" size="custom">
         {item && (
           <>
             <SheetHeader className="px-5 pt-5 pb-4 border-b pr-12">

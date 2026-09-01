@@ -27,7 +27,7 @@ export function FrameworkRubricSheet({
 
   return (
     <Sheet open={Boolean(theme)} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full gap-0 overflow-y-auto sm:max-w-md">
+      <SheetContent className="w-full gap-0 overflow-y-auto" size="md">
         {theme ? (
           <>
             <SheetHeader>

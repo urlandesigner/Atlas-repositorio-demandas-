@@ -181,7 +181,7 @@ function ObjectiveSheet({
 
   return (
     <Sheet open={open} onOpenChange={(value) => !value && handleClose()}>
-      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right">
+      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right" size="custom">
         <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
           <SheetTitle className="text-base">
             {mode === "create" ? "Novo objetivo" : "Editar objetivo"}
@@ -537,7 +537,7 @@ function ObjectiveDrawer({
 
   return (
     <Sheet open={!!item} onOpenChange={(open) => !open && onClose()}>
-      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right">
+      <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right" size="custom">
         {item && (
           <>
             <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">

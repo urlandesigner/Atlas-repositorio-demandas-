@@ -368,7 +368,10 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="sidebar-content"
       data-sidebar="content"
       className={cn(
-        "no-scrollbar flex min-h-0 flex-1 flex-col gap-4 overflow-auto py-1 group-data-[collapsible=icon]:overflow-hidden",
+        // Sem `no-scrollbar`: a navegação precisa mostrar que continua abaixo.
+        // Em Gestão são 7 itens e, em telas de 720px de altura, 5 ficavam
+        // escondidos sem nenhuma pista visual.
+        "sidebar-scroll flex min-h-0 flex-1 flex-col gap-4 overflow-auto py-1 group-data-[collapsible=icon]:overflow-hidden",
         className
       )}
       {...props}

@@ -107,7 +107,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
       </div>
 
       <Sheet open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
-        <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right">
+        <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right" size="custom">
           {selected && (
             <>
               <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">

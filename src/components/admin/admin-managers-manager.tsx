@@ -256,7 +256,7 @@ function ManagerFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-md">
+      <SheetContent className="w-full" size="md">
         <SheetHeader>
           <SheetTitle>{editing ? "Editar gestor" : "Novo gestor"}</SheetTitle>
           <SheetDescription>

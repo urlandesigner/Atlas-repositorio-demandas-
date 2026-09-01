@@ -166,7 +166,7 @@ export function LideradoObjectivesPanel({
       </Card>
 
       <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        <SheetContent className="w-full overflow-y-auto sm:max-w-md">
+        <SheetContent className="w-full overflow-y-auto" size="md">
           <SheetHeader>
             <SheetTitle>{editing ? "Editar objetivo" : "Novo objetivo"}</SheetTitle>
             <SheetDescription>
