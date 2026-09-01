@@ -32,6 +32,7 @@ import {
   CardList,
   CardListBody,
   CardListHeader,
+  CardListItem,
   CardListRow,
   CardListRowMeta,
   CardListRowTitle,
@@ -100,23 +101,21 @@ function getObjectiveActivity(objective: ObjectiveEntry): ActivityItem {
 function ActivityRow({ item }: { item: ActivityItem }) {
   return (
     <Link href={item.href} className="block transition-colors hover:bg-muted/40">
-      <CardListRow>
-        <div className="flex min-w-0 flex-1 items-start gap-3">
-          <div className="icon-well mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg">
+      <CardListItem
+        icon={
+          <div className="icon-well flex size-8 items-center justify-center rounded-lg">
             <item.icon className="size-4" />
           </div>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2">
-              <CardListRowTitle className="line-clamp-1">{item.title}</CardListRowTitle>
-              <Badge variant="outline" className="h-5 shrink-0 font-normal">
-                {item.label}
-              </Badge>
-            </div>
-            <CardListRowMeta className="line-clamp-2">{item.description}</CardListRowMeta>
-          </div>
-        </div>
-        <span className="shrink-0 text-xs text-muted-foreground">{formatDate(item.date)}</span>
-      </CardListRow>
+        }
+        badges={
+          <Badge variant="outline" className="font-normal">
+            {item.label}
+          </Badge>
+        }
+        title={item.title}
+        text={item.description}
+        date={formatDate(item.date)}
+      />
     </Link>
   )
 }
@@ -160,10 +159,9 @@ function ObjectiveRow({ objective }: { objective: ObjectiveEntry }) {
 
   return (
     <Link href="/professional/objectives" className="block transition-colors hover:bg-muted/40">
-      <CardListRow>
-        <div className="min-w-0 flex-1">
-          <CardListRowTitle className="line-clamp-1">{objective.title}</CardListRowTitle>
-          <div className="mt-2 flex flex-wrap gap-1.5">
+      <CardListItem
+        badges={
+          <>
             <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]} className="font-normal">
               {OBJECTIVE_STATUS_LABEL[objective.status]}
             </StatusBadge>
@@ -172,19 +170,20 @@ function ObjectiveRow({ objective }: { objective: ObjectiveEntry }) {
                 {PDI_DIMENSION_LABEL[dimension]}
               </Badge>
             ) : null}
-          </div>
-        </div>
-        <div className="shrink-0 text-right text-xs text-muted-foreground">
-          <CalendarDays className="ml-auto size-3.5" />
-          <span className="mt-1 block">
+          </>
+        }
+        title={objective.title}
+        date={
+          <span className="inline-flex items-center gap-1.5">
+            <CalendarDays className="size-3.5" />
             {daysUntil === null
               ? "Sem prazo"
               : daysUntil < 0
                 ? `${Math.abs(daysUntil)}d atraso`
                 : `${daysUntil}d`}
           </span>
-        </div>
-      </CardListRow>
+        }
+      />
     </Link>
   )
 }

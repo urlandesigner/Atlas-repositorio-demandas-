@@ -11,6 +11,7 @@ import {
   CardList,
   CardListBody,
   CardListHeader,
+  CardListItem,
   CardListRows,
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
@@ -96,44 +97,36 @@ export function KudosReceivedCard({ className }: { className?: string }) {
               const meta = KUDO_TYPE_META[kudo.type]
 
               return (
-                <div key={kudo.id} className="flex gap-3 px-4 py-3.5">
-                  <span
-                    aria-hidden="true"
-                    className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-muted text-sm"
-                  >
-                    {meta.emoji}
-                  </span>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                      {from ? (
-                        <Link
-                          href={`/people/${from.id}`}
-                          className="text-sm font-medium text-foreground hover:text-accent-ink hover:underline"
-                        >
-                          {from.name}
-                        </Link>
-                      ) : (
-                        <span className="text-sm font-medium text-foreground">
-                          Ex-colaborador
-                        </span>
-                      )}
-                      {/* outline e não secondary: `--secondary` é chip invertido
-                          (quase-branco no escuro, quase-preto no claro) e, numa
-                          linha compacta, roubaria o palco do nome e da mensagem.
-                          Em /people/<id> o kudo é o conteúdo principal e lá o
-                          peso de secondary faz sentido. */}
-                      <Badge variant="outline" className="font-normal">
-                        {meta.label}
-                      </Badge>
-                      <span className="text-[11px] text-muted-foreground">
-                        {formatKudoDate(kudo.createdAt)}
-                      </span>
-                    </div>
-                    <p className="mt-1 line-clamp-2 text-sm leading-relaxed text-foreground/85">
-                      {kudo.message}
-                    </p>
-                  </div>
-                </div>
+                <CardListItem
+                  key={kudo.id}
+                  icon={
+                    <span
+                      aria-hidden="true"
+                      className="flex size-8 items-center justify-center rounded-full bg-brand-muted text-sm"
+                    >
+                      {meta.emoji}
+                    </span>
+                  }
+                  badges={
+                    <Badge variant="outline" className="font-normal">
+                      {meta.label}
+                    </Badge>
+                  }
+                  title={
+                    from ? (
+                      <Link
+                        href={`/people/${from.id}`}
+                        className="hover:text-accent-ink hover:underline"
+                      >
+                        {from.name}
+                      </Link>
+                    ) : (
+                      "Ex-colaborador"
+                    )
+                  }
+                  text={kudo.message}
+                  date={formatKudoDate(kudo.createdAt)}
+                />
               )
             })}
           </CardListRows>

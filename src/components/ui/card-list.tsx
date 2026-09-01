@@ -70,6 +70,62 @@ export function CardListRow({ className, ...props }: React.ComponentProps<"div">
   )
 }
 
+/**
+ * Linha canônica de lista: **badge, título, texto, data** — nessa ordem, sempre
+ * empilhados.
+ *
+ * Existe porque as quatro listas da Início (Avisos do RH, Foco do ciclo,
+ * Elogios de colegas, Últimas movimentações) tinham inventado cada uma a sua
+ * própria ordem: umas com badge à direita do título, outras abaixo, e a data
+ * numa coluna à direita cuja largura cada lista escolhia sozinha — então as
+ * fileiras não se alinhavam entre cards vizinhos.
+ *
+ * O badge vem primeiro porque é o que classifica a linha antes da leitura. A
+ * data fecha, no mesmo eixo do resto. `action` fica entre texto e data: é a
+ * saída da linha, não um metadado dela.
+ *
+ * A tipografia é do componente, não de quem chama — foi a liberdade de escolher
+ * `line-clamp` e peso caso a caso que produziu a divergência original.
+ */
+export function CardListItem({
+  badges,
+  title,
+  text,
+  date,
+  icon,
+  action,
+  className,
+  ...props
+}: {
+  badges?: ReactNode
+  title: ReactNode
+  text?: ReactNode
+  date?: ReactNode
+  /** Ícone, avatar ou bolha à esquerda, alinhado à faixa de badges. */
+  icon?: ReactNode
+  /** CTA da linha (link, botão). */
+  action?: ReactNode
+} & Omit<React.ComponentProps<"div">, "title">) {
+  return (
+    <div className={cn("flex gap-3 px-4 py-3.5", className)} {...props}>
+      {icon ? <div className="shrink-0">{icon}</div> : null}
+      <div className="min-w-0 flex-1">
+        {badges ? (
+          <div className="flex flex-wrap items-center gap-1.5">{badges}</div>
+        ) : null}
+        <CardListRowTitle className={cn("line-clamp-2", badges && "mt-1.5")}>
+          {title}
+        </CardListRowTitle>
+        {text ? <CardListRowMeta className="line-clamp-2">{text}</CardListRowMeta> : null}
+        {action ? <div className="mt-2.5">{action}</div> : null}
+        {date ? (
+          <p className="mt-2 text-xs leading-none text-muted-foreground">{date}</p>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
 /** Título de linha — menor e mais leve que o título do card. */
 export function CardListRowTitle({ className, ...props }: React.ComponentProps<"p">) {
   return (
