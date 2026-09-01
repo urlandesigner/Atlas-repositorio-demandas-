@@ -55,16 +55,23 @@ export function LideradosMatrix() {
 
   if (!reports.length) return null
 
+  // Ninguém posicionado: a grade 2x2 gastava ~640px de altura, com quatro
+  // quadrantes zerados e dois eixos rotulados, para não mostrar informação
+  // nenhuma. Nesse estado a seção vira só o convite e a lista de quem falta.
+  const ninguemMapeado = byDominant.size === 0
+
   return (
     <section className="flex flex-col gap-3">
       <div>
-        <h2 className="text-sm font-medium text-muted-foreground">Mapa comportamental</h2>
+        <h2 className="text-sm font-medium">Mapa comportamental</h2>
         <p className="text-xs text-muted-foreground">
-          Cada liderado posicionado pelo perfil dominante. Clique para abrir a ficha.
+          {ninguemMapeado
+            ? "Ninguém do time tem perfil comportamental definido ainda. Abra uma ficha para registrar o primeiro."
+            : "Cada liderado posicionado pelo perfil dominante. Clique para abrir a ficha."}
         </p>
       </div>
 
-      <div className="grid grid-cols-[auto_1fr] gap-2">
+      <div className={ninguemMapeado ? "hidden" : "grid grid-cols-[auto_1fr] gap-2"}>
         {/* eixo vertical superior */}
         <div aria-hidden className="col-start-2 text-center text-[11px] text-muted-foreground">
           Ativo · Extrovertido
@@ -130,10 +137,13 @@ export function LideradosMatrix() {
 
       {semPerfil.length ? (
         <div className="rounded-xl border border-dashed bg-muted/20 p-3">
-          <p className="text-xs font-medium text-muted-foreground">
-            Sem perfil comportamental definido
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5">
+          {/* Com a grade escondida, a descrição da seção já disse isto. */}
+          {ninguemMapeado ? null : (
+            <p className="text-xs font-medium text-muted-foreground">
+              Sem perfil comportamental definido
+            </p>
+          )}
+          <div className={ninguemMapeado ? "flex flex-wrap gap-1.5" : "mt-2 flex flex-wrap gap-1.5"}>
             {semPerfil.map((user) => (
               <Link
                 key={user.id}
