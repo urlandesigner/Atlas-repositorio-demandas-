@@ -149,13 +149,16 @@ export function GestaoPdiHub() {
         <PageHeaderActions>
           <Link
             href="/gestao/pdi/frameworks/novo"
-            className={cn(buttonVariants(), "gap-1.5", !canEditFrameworks && "pointer-events-none opacity-50")}
+            className={cn(
+              buttonVariants({ size: "sm" }),
+              !canEditFrameworks && "pointer-events-none opacity-50"
+            )}
             aria-disabled={!canEditFrameworks}
             onClick={(event) => {
               if (!canEditFrameworks) event.preventDefault()
             }}
           >
-            <Plus className="size-4" />
+            <Plus data-icon="inline-start" />
             Nova trilha
           </Link>
         </PageHeaderActions>

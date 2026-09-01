@@ -91,7 +91,7 @@ export function AdminManagersManager() {
         description="Pessoas responsáveis por liderar times e operar o fluxo de acompanhamento da área."
       >
         <PageHeaderActions>
-          <Button onClick={openCreate}>
+          <Button size="sm" onClick={openCreate}>
             <Plus data-icon="inline-start" />
             Novo gestor
           </Button>

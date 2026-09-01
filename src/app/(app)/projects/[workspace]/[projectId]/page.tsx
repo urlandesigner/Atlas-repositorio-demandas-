@@ -549,10 +549,10 @@ function ProjectDetailSurface({
         descriptionClassName="max-w-2xl"
       >
         <PageHeaderActions>
-          <Button variant="ghost" className="flex-1 sm:flex-none" onClick={handleReset}>
+          <Button variant="ghost" size="sm" className="flex-1 sm:flex-none" onClick={handleReset}>
             Desfazer
           </Button>
-          <Button className="flex-1 sm:flex-none" onClick={handleSave} disabled={!editName.trim()}>
+          <Button size="sm" className="flex-1 sm:flex-none" onClick={handleSave} disabled={!editName.trim()}>
             Salvar alterações
           </Button>
         </PageHeaderActions>

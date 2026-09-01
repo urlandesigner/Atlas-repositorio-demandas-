@@ -106,6 +106,7 @@ export function AdminHrNoticesPanel() {
         >
           <PageHeaderActions>
             <Button
+              size="sm"
               onClick={() => {
                 setEditing(null)
                 setSheetOpen(true)

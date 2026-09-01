@@ -538,8 +538,8 @@ export default function TimelinePage() {
         description="Histórico das suas entregas, decisões e impactos."
       >
         <PageHeaderActions>
-          <Button size="sm" className="gap-1.5" onClick={() => openCapture()}>
-            <SparklesIcon className="size-3.5" />
+          <Button size="sm" onClick={() => openCapture()}>
+            <SparklesIcon data-icon="inline-start" />
             Registrar progresso
           </Button>
         </PageHeaderActions>

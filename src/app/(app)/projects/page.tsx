@@ -359,7 +359,7 @@ export default function ProjectsPage() {
         >
           <PageHeaderActions>
             <Button size="sm" onClick={() => setIsAdding(true)}>
-              <Plus className="size-4" />
+              <Plus data-icon="inline-start" />
               Novo projeto
             </Button>
           </PageHeaderActions>

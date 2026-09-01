@@ -104,7 +104,7 @@ export function AdminCollaboratorsManager() {
         description="Pessoas da área vinculadas a um gestor, prontas para acompanhamento e PDI."
       >
         <PageHeaderActions>
-          <Button onClick={openCreate} disabled={!managers.length}>
+          <Button size="sm" onClick={openCreate} disabled={!managers.length}>
             <Plus data-icon="inline-start" />
             Novo colaborador
           </Button>
