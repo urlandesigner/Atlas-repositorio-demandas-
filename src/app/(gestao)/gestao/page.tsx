@@ -7,7 +7,11 @@ import { ArrowUpRight, Flag, Target, Users } from "lucide-react"
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { StatusBadge } from "@/components/ui/status-badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  CardList,
+  CardListBody,
+  CardListHeader,
+} from "@/components/ui/card-list"
 import { buttonVariants } from "@/components/ui/button"
 import { MetricCard } from "@/components/ui/metric-card"
 import { PageHeader } from "@/components/ui/page-header"
@@ -131,14 +135,12 @@ export default function GestaoHomePage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-        <Card className="border-border/60">
-          <CardHeader className="flex flex-row items-start justify-between gap-4">
-            <div>
-              <CardTitle className="text-sm font-medium">Meu time</CardTitle>
-            </div>
-            <Users className="size-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-2">
+        <CardList className="border-border/60">
+          <CardListHeader
+            title="Meu time"
+            action={<Users className="size-4 text-muted-foreground" />}
+          />
+          <CardListBody className="space-y-2 p-4">
             {directReports.length ? (
               directReports.slice(0, 5).map((user) => (
                 <div
@@ -182,17 +184,15 @@ export default function GestaoHomePage() {
                 Cadastro do time
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
 
-        <Card className="border-border/60">
-          <CardHeader className="flex flex-row items-start justify-between gap-4">
-            <div>
-              <CardTitle className="text-sm font-medium">Metas do time</CardTitle>
-            </div>
-            <Flag className="size-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="space-y-2">
+        <CardList className="border-border/60">
+          <CardListHeader
+            title="Metas do time"
+            action={<Flag className="size-4 text-muted-foreground" />}
+          />
+          <CardListBody className="space-y-2 p-4">
             {teamObjectives.length ? (
               teamObjectives.slice(0, 5).map((objective) => {
                 const user = directReports.find((report) => report.id === objective.userId)
@@ -239,18 +239,16 @@ export default function GestaoHomePage() {
                 <ArrowUpRight className="size-3.5" />
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
       </div>
 
-      <Card className="border-border/60">
-        <CardHeader className="flex flex-row items-start justify-between gap-4">
-          <div>
-            <CardTitle className="text-sm font-medium">Por onde começar</CardTitle>
-          </div>
-          <Target className="size-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
+      <CardList className="border-border/60">
+        <CardListHeader
+          title="Por onde começar"
+          action={<Target className="size-4 text-muted-foreground" />}
+        />
+        <CardListBody className="flex flex-wrap gap-2 p-4">
           <Link href="/gestao/liderados" className={buttonVariants({ variant: "outline", size: "sm" })}>
             Meu time
           </Link>
@@ -263,8 +261,8 @@ export default function GestaoHomePage() {
           <Link href="/gestao/objetivos" className={buttonVariants({ variant: "outline", size: "sm" })}>
             Metas do time
           </Link>
-        </CardContent>
-      </Card>
+        </CardListBody>
+      </CardList>
     </div>
   )
 }
