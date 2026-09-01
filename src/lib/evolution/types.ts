@@ -66,9 +66,21 @@ export interface RecognitionEntry {
   projectName?: string
   linkedRecordIds: string[]
   evidenceUrl?: string
+  /**
+   * Id do `Kudo` (lib/org/social) que originou esta entrada, quando ela veio de
+   * um elogio da rede interna. Serve de dedupe: o elogio já convertido sai da
+   * lista de "ainda não usados como evidência".
+   */
+  sourceKudoId?: string
   createdAt: string
   updatedAt: string
 }
+
+/** Payload de criação/edição de reconhecimento — o que o formulário devolve. */
+export type RecognitionDraft = Omit<
+  RecognitionEntry,
+  "id" | "createdAt" | "updatedAt"
+>
 
 export interface ReportSection {
   id: string

@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/sheet"
 import {
   RECOGNITION_TYPE_LABEL,
+  type RecognitionDraft,
   type RecognitionEntry,
   type RecognitionType,
 } from "@/lib/evolution/types"
@@ -28,11 +29,18 @@ export function RecognitionFormSheet({
   onOpenChange,
   onSubmit,
   editing,
+  draft,
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSubmit: (data: Omit<RecognitionEntry, "id" | "createdAt" | "updatedAt">) => void
+  onSubmit: (data: RecognitionDraft) => void
   editing?: RecognitionEntry | null
+  /**
+   * Rascunho para uma entrada nova — usado quando ela nasce de outro lugar
+   * (hoje, um elogio da rede). A pessoa revisa antes de salvar; nada entra no
+   * dossiê sem passar por aqui.
+   */
+  draft?: RecognitionDraft | null
 }) {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -43,14 +51,15 @@ export function RecognitionFormSheet({
   const [evidenceUrl, setEvidenceUrl] = useState("")
 
   useEffect(() => {
-    if (editing) {
-      setTitle(editing.title)
-      setDescription(editing.description)
-      setRecognizedBy(editing.recognizedBy)
-      setRecognizerArea(editing.recognizerArea ?? "")
-      setDate(editing.date)
-      setType(editing.type)
-      setEvidenceUrl(editing.evidenceUrl ?? "")
+    const source = editing ?? draft
+    if (source) {
+      setTitle(source.title)
+      setDescription(source.description)
+      setRecognizedBy(source.recognizedBy)
+      setRecognizerArea(source.recognizerArea ?? "")
+      setDate(source.date)
+      setType(source.type)
+      setEvidenceUrl(source.evidenceUrl ?? "")
     } else if (open) {
       setTitle("")
       setDescription("")
@@ -60,7 +69,7 @@ export function RecognitionFormSheet({
       setType("impacto")
       setEvidenceUrl("")
     }
-  }, [editing, open])
+  }, [draft, editing, open])
 
   function handleSubmit() {
     if (!title.trim() || !recognizedBy.trim()) return
@@ -71,10 +80,11 @@ export function RecognitionFormSheet({
       recognizerArea: recognizerArea.trim() || undefined,
       date,
       type,
-      linkedRecordIds: editing?.linkedRecordIds ?? [],
+      linkedRecordIds: editing?.linkedRecordIds ?? draft?.linkedRecordIds ?? [],
       evidenceUrl: evidenceUrl.trim() || undefined,
-      projectId: editing?.projectId,
-      projectName: editing?.projectName,
+      projectId: editing?.projectId ?? draft?.projectId,
+      projectName: editing?.projectName ?? draft?.projectName,
+      sourceKudoId: editing?.sourceKudoId ?? draft?.sourceKudoId,
     })
     onOpenChange(false)
   }
@@ -83,9 +93,17 @@ export function RecognitionFormSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full overflow-y-auto" size="md">
         <SheetHeader>
-          <SheetTitle>{editing ? "Editar reconhecimento" : "Novo reconhecimento"}</SheetTitle>
+          <SheetTitle>
+            {editing
+              ? "Editar reconhecimento"
+              : draft?.sourceKudoId
+                ? "Usar elogio como evidência"
+                : "Novo reconhecimento"}
+          </SheetTitle>
           <SheetDescription>
-            Registre feedbacks positivos como evidência profissional — não é uma rede social.
+            {draft?.sourceKudoId
+              ? "Revise antes de salvar: o texto veio de um elogio da rede e vai entrar no seu dossiê."
+              : "Registre feedbacks positivos como evidência profissional — não é uma rede social."}
           </SheetDescription>
         </SheetHeader>
 

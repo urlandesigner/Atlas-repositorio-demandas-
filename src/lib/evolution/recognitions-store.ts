@@ -23,6 +23,7 @@ function normalizeEntry(value: Partial<RecognitionEntry>): RecognitionEntry | nu
     projectName: value.projectName?.trim() || undefined,
     linkedRecordIds: Array.isArray(value.linkedRecordIds) ? value.linkedRecordIds : [],
     evidenceUrl: value.evidenceUrl?.trim() || undefined,
+    sourceKudoId: value.sourceKudoId?.trim() || undefined,
     createdAt: value.createdAt || now,
     updatedAt: value.updatedAt || now,
   }
