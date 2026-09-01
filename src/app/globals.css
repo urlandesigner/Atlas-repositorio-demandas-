@@ -38,6 +38,7 @@
   --color-input: var(--input);
   --color-border: var(--border);
   --color-hairline-strong: var(--hairline-strong);
+  --color-hairline-chip: var(--hairline-chip);
   --color-destructive: var(--destructive);
   --color-danger-foreground: var(--danger-foreground);
   --color-success: var(--success);
@@ -128,9 +129,16 @@
   --secondary-hover: #C9CED6;
   --secondary-foreground: #0B0C0E;
 
-  /* Linhas — `--border` é hairline decorativo; `--hairline-strong` é contorno
-     de controle interativo e por isso precisa passar 3:1 contra o card. */
+  /* Linhas, do mais leve ao mais forte:
+     `--border`         hairline decorativo (divisórias, separadores)
+     `--hairline-chip`  contorno de chip — badge outline, status neutro. Fica
+                        deliberadamente abaixo de 3:1: o significado do chip
+                        está no texto, não no contorno, e a 3:1 uma fileira de
+                        badges lia como grade em vez de metadado.
+     `--hairline-strong` contorno de controle interativo (botão, input, filter
+                        pill), que precisa passar 3:1 contra o card. */
   --border: #1F242A;
+  --hairline-chip: #3D444C;
   --hairline-strong: #61666B;
   --input: #61666B;
   --ring: #7B8CFF;
@@ -225,6 +233,10 @@
   --secondary-foreground: #FFFFFF;
 
   --border: #DFE2E7;
+  /* 1,58:1 no claro contra 1,86:1 no escuro, de propósito: borda escura sobre
+     fundo escuro lê mais fraca do que a razão sugere, então o escuro pede um
+     degrau a mais para os dois temas parecerem do mesmo peso. */
+  --hairline-chip: #C9CED6;
   --hairline-strong: #8E9197;
   --input: #8E9197;
   --ring: #3A4ADF;

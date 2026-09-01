@@ -44,6 +44,15 @@ const PAIRS = [
 // pelo par --primary-foreground/--primary (verificado acima) e sua perceptibilidade
 // como controle vem da borda e do anel de foco. Exigir 3:1 de um preenchimento
 // ouro contra fundo claro obrigaria a abandonar o ouro no tema claro.
+//
+// Nota: `--hairline-chip` contra `--card` também NÃO é verificado, e isso é uma
+// decisão, não um esquecimento. Ele fica em 1,58:1 no claro e 1,86:1 no escuro.
+// É o contorno de um chip não interativo (badge outline, status neutro): o
+// significado está no rótulo, que já é verificado por --foreground/--card, e o
+// chip não tem estado que dependa da borda para ser percebido. A 3:1 — que é o
+// que `--hairline-strong` cumpre para botões e inputs — uma fileira de badges
+// lia como grade em vez de metadado. Se um dia um chip virar controle, ele deve
+// usar `--hairline-strong`, não afrouxar este limite.
 
 function extractBlock(css, selector) {
   // Localiza `selector {` no início de uma linha e captura até a chave que fecha.

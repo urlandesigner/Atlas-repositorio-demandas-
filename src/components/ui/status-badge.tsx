@@ -12,7 +12,7 @@ const STATUS_TONE_CLASS: Record<StatusTone, string> = {
   warning: "border-warning/30 bg-warning/12 text-warning-foreground",
   info: "border-info/30 bg-info/12 text-info-foreground",
   danger: "border-destructive/30 bg-destructive/12 text-danger-foreground",
-  neutral: "border-hairline-strong bg-muted text-muted-foreground",
+  neutral: "border-hairline-chip bg-muted text-muted-foreground",
   impact: "border-impact/30 bg-impact/12 text-impact-foreground",
 }
 

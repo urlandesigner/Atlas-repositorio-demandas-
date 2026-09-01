@@ -466,8 +466,9 @@ const TOKENS = [
   ["--background", "bg-background", "Fundo da página."],
   ["--card", "bg-card", "Fundo de card (branco no tema claro)."],
   ["--border", "bg-border", "Bordas e divisores."],
-  ["--hairline-strong", "bg-hairline-strong", "Borda de botão outline — mais forte que --border."],
-  ["--shadow-brand", "bg-brand shadow-brand", "Sombra dourada do acento de marca. Aplicada pela classe shadow-brand."],
+  ["--hairline-chip", "bg-hairline-chip", "Contorno de chip (badge outline, status neutro) — entre --border e --hairline-strong."],
+  ["--hairline-strong", "bg-hairline-strong", "Contorno de controle interativo (botão outline, input, filter pill). Passa 3:1 contra o card."],
+  ["--shadow-brand", "bg-brand shadow-brand", "Sombra índigo do acento de marca. Aplicada pela classe shadow-brand."],
 ] as const
 
 const GAPS = [
