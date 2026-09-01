@@ -104,25 +104,25 @@
   --popover-foreground: #E7E9ED;
   --muted: #1A1F25;
   --muted-foreground: #8B94A2;
-  --accent: #1A1F25;
-  --accent-foreground: #E8B44A;
+  --accent: #171B2E;
+  --accent-foreground: #7B8CFF;
 
   /* Tinta */
   --foreground: #E7E9ED;
 
-  /* Acento ouro — único. */
-  --primary: #E8B44A;
-  --primary-hover: #F5CE7E;
+  /* Acento índigo — único. */
+  --primary: #7B8CFF;
+  --primary-hover: #9AA7FF;
   --primary-foreground: #0B0C0E;
-  --accent-ink: #E8B44A;
-  --brand: #E8B44A;
+  --accent-ink: #7B8CFF;
+  --brand: #7B8CFF;
   --brand-foreground: #0B0C0E;
-  --brand-muted: #2A2314;
-  --brand-muted-foreground: #F0CE8C;
+  --brand-muted: #1B1F3A;
+  --brand-muted-foreground: #C3CBFF;
   /* "Aceso" de medidores/nós sem glifo por cima (TrilhaGauge, nó da Trilha
-     mini): no claro precisa de um ouro mais escuro para não sumir contra a
-     superfície — ver --primary abaixo, que fica ouro puro nos dois temas. */
-  --gauge-on: #E8B44A;
+     mini): cada tema usa o azul afinado para o seu fundo — índigo claro no
+     escuro, azul Ybera no claro. */
+  --gauge-on: #7B8CFF;
 
   --secondary: #E7E9ED;
   --secondary-hover: #C9CED6;
@@ -133,9 +133,9 @@
   --border: #1F242A;
   --hairline-strong: #61666B;
   --input: #61666B;
-  --ring: #E8B44A;
+  --ring: #7B8CFF;
 
-  /* Semânticas — warning é laranja para não colidir com o ouro. */
+  /* Semânticas — warning segue laranja, separado do acento. */
   --success: #4ADE80;
   --success-foreground: #4ADE80;
   --warning: #FB923C;
@@ -149,7 +149,7 @@
   --impact-foreground: #A78BFA;
 
   /* Charts — retunados para fundo escuro. */
-  --chart-1: #E8B44A;
+  --chart-1: #7B8CFF;
   --chart-2: #60A5FA;
   --chart-3: #4ADE80;
   --chart-4: #A78BFA;
@@ -158,19 +158,19 @@
   /* Sidebar */
   --sidebar: #0F1113;
   --sidebar-foreground: #E7E9ED;
-  --sidebar-primary: #E8B44A;
+  --sidebar-primary: #7B8CFF;
   --sidebar-primary-foreground: #0B0C0E;
   --sidebar-accent: #1A1F25;
-  --sidebar-accent-foreground: #E8B44A;
+  --sidebar-accent-foreground: #7B8CFF;
   --sidebar-border: #1F242A;
-  --sidebar-ring: #E8B44A;
+  --sidebar-ring: #7B8CFF;
 
   /* Timeline */
   --timeline-thinking: #DFA88F;
   --timeline-grep: #9FC9A2;
   --timeline-read: #9FBBE0;
   --timeline-edit: #C0A8DD;
-  --timeline-done: #E8B44A;
+  --timeline-done: #7B8CFF;
 
   /* Sombras — no escuro só a elevação nível 2 projeta sombra. */
   --shadow-card: none;
@@ -200,25 +200,25 @@
   --popover-foreground: #14171C;
   --muted: #F3F4F6;
   --muted-foreground: #5A626F;
-  --accent: #F6F1E4;
-  --accent-foreground: #8A6212;
+  --accent: #EDEFFB;
+  --accent-foreground: #3A4ADF;
 
   --foreground: #14171C;
 
-  --primary: #E8B44A;
-  --primary-hover: #D9A233;
-  --primary-foreground: #1A1407;
-  /* Ouro não tem contraste sobre fundo claro — texto de acento usa este token. */
-  --accent-ink: #8A6212;
-  --brand: #E8B44A;
-  --brand-foreground: #1A1407;
-  --brand-muted: #FAF3E2;
-  --brand-muted-foreground: #8A6212;
-  /* Ouro puro (#E8B44A) some contra card/sidebar claros — precisa de um tom
+  --primary: #3A4ADF;
+  --primary-hover: #2F3EBE;
+  --primary-foreground: #FFFFFF;
+  /* Texto de acento no claro: o azul Ybera, que mede 6.5:1 sobre branco. */
+  --accent-ink: #3A4ADF;
+  --brand: #3A4ADF;
+  --brand-foreground: #FFFFFF;
+  --brand-muted: #EDEFFB;
+  --brand-muted-foreground: #3A4ADF;
+  /* O índigo claro do tema escuro some contra card/sidebar claros — usa o
      mais escuro para o "aceso" ser percebido como aceso, não apagado. Mesmo
      tom de --accent-ink: também precisa se distinguir do segmento "apagado"
      (--border), não só da superfície por trás. */
-  --gauge-on: #8A6212;
+  --gauge-on: #3A4ADF;
 
   --secondary: #14171C;
   --secondary-hover: #2A2F38;
@@ -227,7 +227,7 @@
   --border: #DFE2E7;
   --hairline-strong: #8E9197;
   --input: #8E9197;
-  --ring: #A87D1B;
+  --ring: #3A4ADF;
 
   --success: #16A34A;
   --success-foreground: #15803D;
@@ -241,7 +241,7 @@
   --impact: #8B5CF6;
   --impact-foreground: #6D28D9;
 
-  --chart-1: #A87D1B;
+  --chart-1: #3A4ADF;
   --chart-2: #1D4ED8;
   --chart-3: #15803D;
   --chart-4: #6D28D9;
@@ -249,18 +249,18 @@
 
   --sidebar: #F6F7F8;
   --sidebar-foreground: #14171C;
-  --sidebar-primary: #8A6212;
+  --sidebar-primary: #3A4ADF;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #F6F1E4;
-  --sidebar-accent-foreground: #8A6212;
+  --sidebar-accent: #EDEFFB;
+  --sidebar-accent-foreground: #3A4ADF;
   --sidebar-border: #DFE2E7;
-  --sidebar-ring: #A87D1B;
+  --sidebar-ring: #3A4ADF;
 
   --timeline-thinking: #B96A45;
   --timeline-grep: #3F7A45;
   --timeline-read: #2C5E96;
   --timeline-edit: #6B4A9B;
-  --timeline-done: #8A6212;
+  --timeline-done: #3A4ADF;
 
   --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 8px 20px rgba(15, 23, 42, 0.05);
   --shadow-card-hover: 0 1px 2px rgba(15, 23, 42, 0.05), 0 14px 28px rgba(15, 23, 42, 0.075);

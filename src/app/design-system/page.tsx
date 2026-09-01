@@ -359,7 +359,7 @@ function CommandDialogDemo() {
 
 // SVG inline (sem dependência de rede) só pra provar que AvatarImage/imageUrl renderizam uma imagem de verdade.
 const DEMO_AVATAR_SRC =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%23E8B44A'/%3E%3Ccircle cx='32' cy='24' r='12' fill='%23ffffff' fill-opacity='0.85'/%3E%3Ccircle cx='32' cy='60' r='22' fill='%23ffffff' fill-opacity='0.85'/%3E%3C/svg%3E"
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'%3E%3Crect width='64' height='64' fill='%237B8CFF'/%3E%3Ccircle cx='32' cy='24' r='12' fill='%23ffffff' fill-opacity='0.85'/%3E%3Ccircle cx='32' cy='60' r='22' fill='%23ffffff' fill-opacity='0.85'/%3E%3C/svg%3E"
 
 const NAV = [
   {
@@ -446,13 +446,13 @@ const TOKENS = [
   [
     "--primary",
     "bg-primary",
-    "Acento ouro (#E8B44A). Preenchimento de ações primárias — sempre com glifo/texto escuro por cima. Para texto e links de acento, use --accent-ink, não --primary: o ouro puro não passa em contraste sobre fundo claro.",
+    "Acento índigo (#7B8CFF no escuro, #3A4ADF no claro). Preenchimento de ações primárias. No escuro leva glifo/texto escuro por cima; no claro, texto branco. Para texto e links de acento use --accent-ink, não --primary.",
   ],
   ["--primary-hover", "bg-primary-hover", "Hover do botão primário."],
   [
     "--accent-ink",
     "bg-accent-ink",
-    "Token de TEXTO de acento — o par legível de --primary. Vale ouro puro no escuro e um ouro mais escuro (#8A6212) no claro, porque texto ouro puro sobre fundo claro cai a ~1.9:1. Use em links e destaques textuais no lugar de --primary/--brand.",
+    "Token de TEXTO de acento — o par legível de --primary. Vale o índigo claro (#7B8CFF) no escuro e o azul Ybera (#3A4ADF) no claro. Use em links e destaques textuais no lugar de --primary/--brand.",
   ],
   ["--brand-muted", "bg-brand-muted", "Ouro claro/esmaecido. Estado ativo de navegação."],
   ["--secondary", "bg-secondary", "Quase preto. Ações de alto contraste."],
