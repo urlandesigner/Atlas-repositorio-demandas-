@@ -2,7 +2,7 @@
 
 import { useState, useSyncExternalStore } from "react"
 import Link from "next/link"
-import { ArrowLeft, ArrowUpRight, Pencil, Send } from "lucide-react"
+import { ArrowLeft, Pencil, Send } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
@@ -127,15 +127,6 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
             <Pencil className="size-3.5" data-icon="inline-start" />
             Editar perfil público
           </Button>
-        ) : null}
-        {person.managerId ? (
-          <Link
-            href={`/people/${person.managerId}`}
-            className={buttonVariants({ variant: "outline", size: "sm" })}
-          >
-            Ver gestor
-            <ArrowUpRight data-icon="inline-end" />
-          </Link>
         ) : null}
       </div>
 
