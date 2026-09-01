@@ -14,6 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { formatListDate } from "@/lib/utils"
 import type { HrNotice } from "@/lib/hr/store"
 
 function formatNoticeDate(value: string) {
@@ -24,31 +25,21 @@ function formatNoticeDate(value: string) {
   })
 }
 
-function formatShortDate(value: string) {
-  return new Date(value).toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "short",
-  })
-}
-
 export function HrNoticeCard({
   notice,
   isUnread = false,
   onMarkRead,
   preview = false,
-  compact = false,
 }: {
   notice: HrNotice
   isUnread?: boolean
   onMarkRead?: () => void
   preview?: boolean
-  compact?: boolean
 }) {
   const [open, setOpen] = useState(false)
 
   const row = (
     <CardListItem
-      className={compact ? "py-3" : undefined}
       badges={
         <>
           {isUnread ? <Badge variant="primary-soft">Novo</Badge> : null}
@@ -57,7 +48,7 @@ export function HrNoticeCard({
       }
       title={notice.title}
       text={notice.body}
-      date={formatShortDate(notice.publishedAt)}
+      date={formatListDate(notice.publishedAt)}
     />
   )
 

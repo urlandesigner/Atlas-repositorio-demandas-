@@ -5,7 +5,6 @@ import { useMemo, useSyncExternalStore } from "react"
 import {
   ArrowRight,
   ArrowUpRight,
-  CalendarDays,
   CheckCircle2,
   Clock3,
   FileText,
@@ -42,7 +41,7 @@ import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { MetricCard } from "@/components/ui/metric-card"
 import { Overline } from "@/components/ui/overline"
 import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
+import { cn, formatListDate } from "@/lib/utils"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { OBJECTIVE_STATUS_TONE, PROJECT_STATUS_TONE } from "@/lib/status-tone"
 import {
@@ -103,8 +102,8 @@ function ActivityRow({ item }: { item: ActivityItem }) {
     <Link href={item.href} className="block transition-colors hover:bg-muted/40">
       <CardListItem
         icon={
-          <div className="icon-well flex size-8 items-center justify-center rounded-lg">
-            <item.icon className="size-4" />
+          <div className="icon-well flex size-6 items-center justify-center rounded-md">
+            <item.icon className="size-3.5" />
           </div>
         }
         badges={
@@ -114,7 +113,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
         }
         title={item.title}
         text={item.description}
-        date={formatDate(item.date)}
+        date={formatListDate(item.date)}
       />
     </Link>
   )
@@ -174,8 +173,7 @@ function ObjectiveRow({ objective }: { objective: ObjectiveEntry }) {
         }
         title={objective.title}
         date={
-          <span className="inline-flex items-center gap-1.5">
-            <CalendarDays className="size-3.5" />
+          <span className={daysUntil !== null && daysUntil < 0 ? "text-danger-foreground" : undefined}>
             {daysUntil === null
               ? "Sem prazo"
               : daysUntil < 0

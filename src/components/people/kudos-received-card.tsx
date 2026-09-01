@@ -27,7 +27,7 @@ import {
   getOrgSnapshot,
   subscribeOrgStore,
 } from "@/lib/org/store"
-import { cn } from "@/lib/utils"
+import { cn, formatListDate } from "@/lib/utils"
 
 const MAX_ON_HOME = 3
 
@@ -102,7 +102,7 @@ export function KudosReceivedCard({ className }: { className?: string }) {
                   icon={
                     <span
                       aria-hidden="true"
-                      className="flex size-8 items-center justify-center rounded-full bg-brand-muted text-sm"
+                      className="flex size-6 items-center justify-center rounded-full bg-brand-muted text-[13px]"
                     >
                       {meta.emoji}
                     </span>
@@ -125,7 +125,7 @@ export function KudosReceivedCard({ className }: { className?: string }) {
                     )
                   }
                   text={kudo.message}
-                  date={formatKudoDate(kudo.createdAt)}
+                  date={formatListDate(kudo.createdAt)}
                 />
               )
             })}
@@ -153,14 +153,4 @@ export function KudosReceivedCard({ className }: { className?: string }) {
       </CardListBody>
     </CardList>
   )
-}
-
-function formatKudoDate(iso: string) {
-  const date = new Date(iso)
-  const sameYear = date.getFullYear() === new Date().getFullYear()
-  return new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    month: "short",
-    ...(sameYear ? {} : { year: "numeric" }),
-  }).format(date)
 }

@@ -44,7 +44,6 @@ export function HrNoticesPanel({
                 notice={notice}
                 isUnread={isUnread(notice.id)}
                 onMarkRead={markRead ? () => markRead(notice.id) : undefined}
-                compact={compact}
               />
             ))}
           </CardListRows>

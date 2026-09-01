@@ -34,14 +34,27 @@ export function CardListHeader({
       className={cn("border-b border-border/60 px-4 pt-4 pb-3.5", className)}
       {...props}
     >
-      <div className="flex w-full items-start justify-between gap-4">
+      {/* `min-h-9` é a altura de um Button size="sm" (36px). Sem isso o header
+          media 55px quando a ação era um badge de contagem e 69px quando era um
+          botão — então cards vizinhos começavam a lista em Y diferentes, e três
+          deles lado a lado na Início liam como desalinhados. Com a faixa fixa,
+          badge e botão se centralizam no mesmo espaço e o corpo sempre começa
+          na mesma linha. */}
+      <div
+        className={cn(
+          "flex w-full justify-between gap-4",
+          description ? "items-start" : "min-h-9 items-center"
+        )}
+      >
         <div className="min-w-0 space-y-1">
           <CardTitle className="text-base font-semibold tracking-tight">{title}</CardTitle>
           {description ? (
             <CardDescription className="text-xs leading-relaxed">{description}</CardDescription>
           ) : null}
         </div>
-        {action ? <div className="shrink-0 pt-0.5">{action}</div> : null}
+        {action ? (
+          <div className="flex h-9 shrink-0 items-center">{action}</div>
+        ) : null}
       </div>
     </CardHeader>
   )
@@ -107,30 +120,49 @@ export function CardListItem({
   action?: ReactNode
 } & Omit<React.ComponentProps<"div">, "title">) {
   return (
-    <div className={cn("flex gap-3 px-4 py-3.5", className)} {...props}>
-      {icon ? <div className="shrink-0">{icon}</div> : null}
-      <div className="min-w-0 flex-1">
-        {badges ? (
-          <div className="flex flex-wrap items-center gap-1.5">{badges}</div>
-        ) : null}
-        <CardListRowTitle className={cn("line-clamp-2", badges && "mt-1.5")}>
-          {title}
-        </CardListRowTitle>
-        {text ? <CardListRowMeta className="line-clamp-2">{text}</CardListRowMeta> : null}
-        {action ? <div className="mt-2.5">{action}</div> : null}
-        {date ? (
-          <p className="mt-2 text-xs leading-none text-muted-foreground">{date}</p>
-        ) : null}
-      </div>
+    <div className={cn("px-4 py-3.5", className)} {...props}>
+      {/* O ícone vive na faixa de badges, não numa coluna à esquerda. Como
+          coluna, ele empurrava título, texto e data 44px para dentro — e numa
+          fileira de três cards onde só um tem ícone, era o suficiente para o
+          conjunto parecer torto. Inline, ele é o que também é: um
+          classificador, ao lado do badge. */}
+      {icon || badges ? (
+        <div className="flex min-h-6 flex-wrap items-center gap-2">
+          {icon}
+          {badges}
+        </div>
+      ) : null}
+      <CardListRowTitle className={cn("line-clamp-2", (icon || badges) && "mt-2")}>
+        {title}
+      </CardListRowTitle>
+      {text ? (
+        <CardListRowMeta className="line-clamp-2 leading-snug">{text}</CardListRowMeta>
+      ) : null}
+      {action ? <div className="mt-2.5">{action}</div> : null}
+      {/* Data em mono tabular: é o último item de toda linha, em toda lista, e
+          em tabular os dígitos ocupam a mesma largura — então a coluna fecha
+          reta em vez de dançar conforme o número. */}
+      {date ? (
+        <p className="mt-2.5 font-mono text-[11px] leading-none font-medium tracking-[0.08em] uppercase tabular-nums text-muted-foreground">
+          {date}
+        </p>
+      ) : null}
     </div>
   )
 }
 
-/** Título de linha — menor e mais leve que o título do card. */
+/**
+ * Título de linha — menor que o título do card, mas o ponto de entrada da linha.
+ *
+ * Estava em 14px/500 com opacidade 90%, contra um badge de 13px/500 em cor
+ * cheia. Um pixel e nenhum peso de diferença: o badge, que vem primeiro na
+ * pilha, disputava o olho com o título e a linha ficava sem hierarquia. 15px/600
+ * em cor cheia dá o degrau que faltava, contra os 13px/400 do corpo.
+ */
 export function CardListRowTitle({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
-      className={cn("text-sm font-medium leading-snug text-foreground/90", className)}
+      className={cn("text-[15px] font-semibold leading-snug text-foreground", className)}
       {...props}
     />
   )
