@@ -33,7 +33,8 @@ const PAIRS = [
   ["--impact-foreground", "--card", 4.5, "texto de impacto"],
   ["--sidebar-foreground", "--sidebar", 4.5, "texto da sidebar"],
   ["--sidebar-primary-foreground", "--sidebar-primary", 4.5, "texto do item ativo da sidebar"],
-  ["--hairline-strong", "--card", 3, "borda de controle sobre card"],
+  ["--input", "--card", 3, "borda de campo de formulário sobre card"],
+  ["--hairline-strong", "--card", 2, "borda de botão outline sobre card"],
   ["--ring", "--background", 3, "anel de foco"],
   ["--gauge-on", "--card", 3, "medidor aceso (TrilhaGauge) sobre card"],
   ["--gauge-on", "--sidebar", 3, "nó aceso da Trilha mini sobre a sidebar"],
@@ -53,6 +54,17 @@ const PAIRS = [
 // que `--hairline-strong` cumpre para botões e inputs — uma fileira de badges
 // lia como grade em vez de metadado. Se um dia um chip virar controle, ele deve
 // usar `--hairline-strong`, não afrouxar este limite.
+//
+// Nota: `--hairline-strong` foi de 3,16:1 para 2,4:1, e o limite deste par caiu
+// de 3 para 2. É uma troca deliberada, com o custo declarado: numa superfície
+// branca não existe borda mais clara que #8E9197 que ainda passe 3:1, e a 3:1 o
+// botão outline lia visivelmente mais pesado que tudo em volta. O que sustenta a
+// decisão é que o botão nunca depende só da borda — tem rótulo em texto acima de
+// 4,5:1, quase sempre um ícone, e um anel de foco em `--ring` que este arquivo
+// verifica em 3:1, então quem navega por teclado continua com boundary forte.
+// Em compensação, `--input` passou a ser verificado explicitamente em 3:1: campo
+// de formulário é onde a borda de fato carrega a identificação do controle, e
+// esse limite não deve cair junto.
 
 function extractBlock(css, selector) {
   // Localiza `selector {` no início de uma linha e captura até a chave que fecha.
