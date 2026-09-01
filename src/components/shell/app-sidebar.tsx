@@ -1,9 +1,10 @@
 "use client"
 
-import { useEffect, useSyncExternalStore } from "react"
+import { useEffect, useState, useSyncExternalStore } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
+  ChevronDown,
   CircleDot,
   Download,
   Flag,
@@ -144,24 +145,75 @@ function NavGroup({
     <SidebarGroup>
       {label && <SidebarGroupLabel>{label}</SidebarGroupLabel>}
       <SidebarMenu>
-        {items.map((item) => {
-          const matchers = [item.href, ...(item.activePaths ?? [])]
-          const isActive = item.exact
-            ? pathname === item.href
-            : matchers.some((path) => pathname === path || pathname.startsWith(path + "/"))
-          return (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                render={<Link href={item.href} />}
-                isActive={isActive}
-                tooltip={item.label}
-              >
-                <item.icon />
-                <span>{item.label}</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )
-        })}
+        {items.map((item) => (
+          <NavRow key={item.href} item={item} pathname={pathname} />
+        ))}
+      </SidebarMenu>
+    </SidebarGroup>
+  )
+}
+
+function NavRow({ item, pathname }: { item: NavItem; pathname: string }) {
+  const matchers = [item.href, ...(item.activePaths ?? [])]
+  const isActive = item.exact
+    ? pathname === item.href
+    : matchers.some((path) => pathname === path || pathname.startsWith(path + "/"))
+
+  return (
+    <SidebarMenuItem>
+      <SidebarMenuButton
+        render={<Link href={item.href} />}
+        isActive={isActive}
+        tooltip={item.label}
+      >
+        <item.icon />
+        <span>{item.label}</span>
+      </SidebarMenuButton>
+    </SidebarMenuItem>
+  )
+}
+
+/**
+ * Grupo de navegação que abre e fecha — usado só pelo gestor.
+ *
+ * É o único papel que carrega duas navegações completas: 6 itens da área
+ * pessoal mais 7 de Gestão, 13 no total. O colaborador tem 6 e o admin 9, cada
+ * um com uma navegação só, e por isso seguem na lista plana — colapsar um grupo
+ * único não esconde nada, só adiciona um clique.
+ *
+ * No trilho colapsado em ícones os itens voltam a aparecer sempre: ali não há
+ * rótulo de grupo para clicar, e esconder metade dos ícones deixaria a
+ * navegação sem saída.
+ */
+function CollapsibleNavGroup({
+  label,
+  items,
+  pathname,
+  open,
+  onToggle,
+}: {
+  label: string
+  items: NavItem[]
+  pathname: string
+  open: boolean
+  onToggle: () => void
+}) {
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel
+        render={<button type="button" onClick={onToggle} aria-expanded={open} />}
+        className="w-full justify-between gap-2 text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground/80"
+      >
+        <span>{label}</span>
+        <ChevronDown
+          aria-hidden
+          className={cn("size-3.5 transition-transform duration-150", !open && "-rotate-90")}
+        />
+      </SidebarGroupLabel>
+      <SidebarMenu className={cn(!open && "hidden group-data-[collapsible=icon]:flex")}>
+        {items.map((item) => (
+          <NavRow key={item.href} item={item} pathname={pathname} />
+        ))}
       </SidebarMenu>
     </SidebarGroup>
   )
@@ -201,6 +253,32 @@ export function AppSidebar() {
     }
   }, [pathname, isMobile, setOpenMobile])
 
+  // O grupo do contexto em que a rota está abre; o outro recolhe. Um toggle
+  // manual vale só até a pessoa navegar para o outro contexto — aí o padrão
+  // volta a valer, e ela não precisa fechar nada à mão. Derivado no render, sem
+  // efeito: `manualGroups` guarda o contexto em que a escolha foi feita, e
+  // quando ele não bate mais com o atual a escolha simplesmente caduca.
+  const activeGroup = pathname.startsWith("/gestao") ? "gestao" : "workspace"
+  const [manualGroups, setManualGroups] = useState<{
+    context: string
+    open: { workspace: boolean; gestao: boolean }
+  } | null>(null)
+
+  const openGroups =
+    manualGroups && manualGroups.context === activeGroup
+      ? manualGroups.open
+      : {
+          workspace: activeGroup === "workspace",
+          gestao: activeGroup === "gestao",
+        }
+
+  function toggleGroup(group: "workspace" | "gestao") {
+    setManualGroups({
+      context: activeGroup,
+      open: { ...openGroups, [group]: !openGroups[group] },
+    })
+  }
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className={cn("gap-0 bg-sidebar p-0", shellHeaderClassName)}>
@@ -219,16 +297,30 @@ export function AppSidebar() {
       </SidebarHeader>
 
       <SidebarContent className="pt-4">
-        {role !== "admin" && <NavGroup items={workspaceNavItems} pathname={pathname} />}
-
-        {role === "gestor" && (
+        {role === "gestor" ? (
           <>
+            <CollapsibleNavGroup
+              label="Minha área"
+              items={workspaceNavItems}
+              pathname={pathname}
+              open={openGroups.workspace}
+              onToggle={() => toggleGroup("workspace")}
+            />
             <SidebarSeparator />
-            <NavGroup items={gestaoNavItems} pathname={pathname} label="Gestão" />
+            <CollapsibleNavGroup
+              label="Gestão"
+              items={gestaoNavItems}
+              pathname={pathname}
+              open={openGroups.gestao}
+              onToggle={() => toggleGroup("gestao")}
+            />
           </>
+        ) : (
+          <NavGroup
+            items={role === "admin" ? adminNavItems : workspaceNavItems}
+            pathname={pathname}
+          />
         )}
-
-        {role === "admin" && <NavGroup items={adminNavItems} pathname={pathname} />}
       </SidebarContent>
 
       <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
