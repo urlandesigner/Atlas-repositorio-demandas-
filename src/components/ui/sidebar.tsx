@@ -371,7 +371,7 @@ function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
         // Sem `no-scrollbar`: a navegação precisa mostrar que continua abaixo.
         // Em Gestão são 7 itens e, em telas de 720px de altura, 5 ficavam
         // escondidos sem nenhuma pista visual.
-        "sidebar-scroll flex min-h-0 flex-1 flex-col gap-4 overflow-auto py-1 group-data-[collapsible=icon]:overflow-hidden",
+        "sidebar-scroll flex min-h-0 flex-1 flex-col gap-4 overflow-auto py-1 md:gap-3 group-data-[collapsible=icon]:overflow-hidden",
         className
       )}
       {...props}
@@ -484,7 +484,13 @@ const sidebarMenuButtonVariants = cva(
           "border border-border/70 bg-background hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
       },
       size: {
-        default: "h-11",
+        // 44px no mobile, onde a sidebar é um Sheet e 44 é o alvo de toque
+        // mínimo; 36px do md para cima, onde ela é trilho fixo e a altura é
+        // disputada. Com 13 itens (6 do colaborador + 7 de Gestão), 44px dava
+        // 572px só de itens contra 548px disponíveis numa tela de 800px — os
+        // itens não cabiam nem antes de contar rótulo e espaçamentos, e cinco
+        // ficavam fora da vista. O modo colapsado tem seu próprio `size-11!`.
+        default: "h-11 md:h-9",
         sm: "h-10 text-sm",
         lg: "h-11 text-[15px] group-data-[collapsible=icon]:p-0!",
       },

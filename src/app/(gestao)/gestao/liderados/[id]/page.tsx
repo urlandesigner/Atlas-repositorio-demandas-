@@ -101,7 +101,7 @@ function LideradoDetailContent({ userId }: { userId: string }) {
   }
 
   return (
-    <div className="flex max-w-4xl flex-col gap-6">
+    <div className="flex flex-col gap-6">
       {/* O "Voltar" saiu de dentro da coluna de texto: enquanto ele morava lá, o
           avatar precisava de um `mt-7` chutado para chegar perto do nome. */}
       <Link
