@@ -5,7 +5,14 @@ import { useMemo, useState, useSyncExternalStore } from "react"
 import { FrameworkPdiMatrix } from "@/components/gestao/framework-pdi-matrix"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import {
@@ -200,15 +207,20 @@ export function AssignedPdiSection({
   return (
     <Card>
       <CardHeader>
-        <div className="flex flex-wrap items-center gap-2">
-          <CardTitle className="text-base">{framework.name}</CardTitle>
-          <Badge variant="outline">{cycleLabel}</Badge>
-          {readOnly ? <Badge variant="secondary">Definido pelo gestor</Badge> : null}
-        </div>
-        <p className="text-sm text-muted-foreground">
+        <CardTitle className="text-base">{framework.name}</CardTitle>
+        <CardDescription>
           Nível na trilha: {currentLevelName}
           {targetLevelName ? ` · meta: ${targetLevelName}` : ""}
-        </p>
+        </CardDescription>
+        {/* CardAction põe os badges na coluna da direita, alinhados ao topo e
+            atravessando as duas linhas do header (título + descrição). É o slot
+            que o próprio card.tsx já previa — o CardHeader vira
+            grid-cols-[1fr_auto] quando encontra um data-slot=card-action — e que
+            até agora só existia no catálogo do design system. */}
+        <CardAction className="flex flex-wrap items-center gap-1.5 @md/card-header:justify-end">
+          <Badge variant="outline">{cycleLabel}</Badge>
+          {readOnly ? <Badge variant="secondary">Definido pelo gestor</Badge> : null}
+        </CardAction>
       </CardHeader>
       <CardContent>
         <FrameworkPdiMatrix
