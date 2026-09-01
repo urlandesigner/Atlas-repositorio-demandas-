@@ -16,6 +16,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
+import { PageHeader } from "@/components/ui/page-header"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { logAudit } from "@/lib/gestao/audit/store"
@@ -115,9 +117,16 @@ function LideradoDetailContent({ userId }: { userId: string }) {
         Voltar
       </Link>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="flex items-start gap-4">
-          {/* Avatar na linha do nome, não no centro do bloco. */}
+      {/* O bloco anterior copiava a estrutura do PageHeader à mão — mesmo
+          flex/justify-between, mesmo h1, mesmo parágrafo — sem ser ele. O custo
+          não era só duplicação: PageHeaderActions é quem traz o sino de
+          notificações, então sem ele a página caía no sino flutuante do shell,
+          que ficava solto no canto, desalinhado do nome. */}
+      <PageHeader
+        title={user.name}
+        description={user.email}
+        leading={
+          // Avatar na linha do nome, não no centro do bloco.
           <div className="relative h-14 w-14 shrink-0 sm:h-8">
             <PersonAvatar
               name={user.name}
@@ -126,19 +135,20 @@ function LideradoDetailContent({ userId }: { userId: string }) {
               className="absolute top-1/2 left-0 -translate-y-1/2"
             />
           </div>
-          <div>
-          <h1 className="text-2xl font-semibold tracking-tight">{user.name}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
-          <div className="mt-2 flex flex-wrap gap-2">
+        }
+        meta={
+          <>
             <Badge variant="outline">{user.kind ?? "colaborador"}</Badge>
             {user.managementTitle ? (
               <Badge variant="secondary">{user.managementTitle}</Badge>
             ) : null}
-          </div>
-          </div>
-        </div>
-        {saved ? <p className="text-sm text-accent-ink">{saved}</p> : null}
-      </div>
+          </>
+        }
+      >
+        <PageHeaderActions>
+          {saved ? <p className="text-sm text-accent-ink">{saved}</p> : null}
+        </PageHeaderActions>
+      </PageHeader>
 
       <Card>
         <CardHeader>

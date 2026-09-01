@@ -12,6 +12,8 @@ function PageHeader({
   title,
   description,
   descriptionClassName,
+  leading,
+  meta,
   children,
   className,
   ...props
@@ -19,6 +21,10 @@ function PageHeader({
   title: React.ReactNode
   description?: React.ReactNode
   descriptionClassName?: string
+  /** Avatar ou ícone antes do título — para páginas que abrem uma entidade. */
+  leading?: React.ReactNode
+  /** Badges e atributos logo abaixo da descrição. */
+  meta?: React.ReactNode
 } & React.ComponentProps<"div">) {
   return (
     <div
@@ -29,13 +35,19 @@ function PageHeader({
       )}
       {...props}
     >
-      <div className="min-w-0">
-        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-        {description ? (
-          <p className={cn("mt-1 text-sm text-muted-foreground", descriptionClassName)}>
-            {description}
-          </p>
-        ) : null}
+      <div className="flex min-w-0 items-start gap-4">
+        {leading}
+        <div className="min-w-0">
+          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+          {description ? (
+            <p className={cn("mt-1 text-sm text-muted-foreground", descriptionClassName)}>
+              {description}
+            </p>
+          ) : null}
+          {meta ? (
+            <div className="mt-2 flex flex-wrap items-center gap-2">{meta}</div>
+          ) : null}
+        </div>
       </div>
       {children}
     </div>
