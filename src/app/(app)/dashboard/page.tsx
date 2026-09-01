@@ -483,7 +483,16 @@ export default function DashboardPage() {
         </PageHeaderActions>
       </PageHeader>
 
-      <div className={cn("grid grid-cols-1 gap-4", hrNotices.length > 0 && "lg:grid-cols-2")}>
+      {/* Faixa de abertura: o que chegou (RH), o que falta fazer (Foco) e o que
+          já foi notado (Elogios). Em lg três colunas ficariam com ~220px cada,
+          então os elogios descem e ocupam a linha inteira; a partir de xl cabem
+          as três lado a lado. */}
+      <div
+        className={cn(
+          "grid grid-cols-1 gap-4",
+          hrNotices.length > 0 ? "lg:grid-cols-2 xl:grid-cols-3" : "lg:grid-cols-2"
+        )}
+      >
         {hrNotices.length > 0 ? <HrNoticesPanel hideWhenEmpty compact /> : null}
 
         <CardList>
@@ -526,11 +535,11 @@ export default function DashboardPage() {
             )}
           </CardListBody>
         </CardList>
-      </div>
 
-      {/* Depois do Foco do ciclo de propósito: primeiro o que ainda falta fazer,
-          depois o lembrete de que o que já foi feito foi notado por alguém. */}
-      <KudosReceivedCard />
+        <KudosReceivedCard
+          className={cn(hrNotices.length > 0 && "lg:col-span-2 xl:col-span-1")}
+        />
+      </div>
 
       <CardList>
         <CardListHeader

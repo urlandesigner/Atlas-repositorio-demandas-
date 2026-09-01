@@ -144,7 +144,10 @@ export function KudosReceivedCard({ className }: { className?: string }) {
             <EmptyStateCard
               icon={Heart}
               title="Nenhum elogio por aqui ainda"
-              description="Eles aparecem assim que um colega deixar o primeiro. Reconhecer alguém é um bom jeito de começar."
+              // Descrição curta: agora o card divide a linha de abertura com
+              // Avisos do RH e Foco do ciclo, e é o vazio que define a altura
+              // da faixa. O convite já está no botão.
+              description="Aparecem aqui assim que um colega deixar o primeiro."
               action={
                 <Link href="/people" className={cn(buttonVariants({ size: "sm" }))}>
                   Reconhecer um colega
