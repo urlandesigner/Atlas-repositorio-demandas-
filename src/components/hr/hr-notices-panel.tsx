@@ -1,7 +1,10 @@
 "use client"
 
+import Link from "next/link"
+import { ArrowUpRight } from "lucide-react"
+
 import { HrNoticeCard } from "@/components/hr/hr-notice-card"
-import { Badge } from "@/components/ui/badge"
+import { buttonVariants } from "@/components/ui/button"
 import {
   CardList,
   CardListBody,
@@ -14,27 +17,50 @@ import { useHrNotices } from "@/hooks/use-hr-notices"
 export function HrNoticesPanel({
   hideWhenEmpty = false,
   compact = false,
+  showAll = false,
+  hideHeader = false,
 }: {
   hideWhenEmpty?: boolean
+  /** Dashboard: menos avisos, para dividir a fileira com outros blocos. */
   compact?: boolean
+  /** Página /avisos: sem corte, é o lugar onde tudo aparece. */
+  showAll?: boolean
+  /** A página já tem o próprio PageHeader; o card não repete o título. */
+  hideHeader?: boolean
 }) {
-  // Modo compacto (dashboard): menos avisos e corpo em uma linha, para dividir a
-  // fileira com outros blocos em vez de ocupar a largura toda.
-  const { notices, isUnread, markRead } = useHrNotices(compact ? 3 : 4)
+  const { notices, isUnread, markRead } = useHrNotices(
+    showAll ? Number.POSITIVE_INFINITY : compact ? 3 : 4
+  )
 
   if (hideWhenEmpty && notices.length === 0) return null
 
   return (
     <CardList className="h-full">
-      <CardListHeader
-        title="Avisos do RH"
-        description={
-          compact
-            ? undefined
-            : "Comunicados importantes para orientar prazos, benefícios e rituais do ciclo."
-        }
-        action={<Badge variant="outline">{notices.length}</Badge>}
-      />
+      {hideHeader ? null : (
+        <CardListHeader
+          title="Avisos do RH"
+          description={
+            compact
+              ? undefined
+              : "Comunicados importantes para orientar prazos, benefícios e rituais do ciclo."
+          }
+          // "Ver todos" no lugar do badge de contagem: o badge mostrava
+          // `notices.length`, que já vem cortado em 3 — então dizia "3" tanto
+          // com três avisos quanto com dez. Contagem errada não é informação, e
+          // o link resolve o que ela tentava sinalizar.
+          action={
+            showAll ? null : (
+              <Link
+                href="/avisos"
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                Ver todos
+                <ArrowUpRight data-icon="inline-end" />
+              </Link>
+            )
+          }
+        />
+      )}
       <CardListBody>
         {notices.length ? (
           <CardListRows>
