@@ -310,6 +310,31 @@
     @apply bg-primary/80 text-primary-foreground;
   }
 
+  /* Barra de rolagem da navegação lateral: discreta, mas presente — sem ela
+     itens de menu somem sem nenhuma pista de que a lista continua. */
+  .sidebar-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--hairline-strong) transparent;
+    /* Sombra de rolagem: no macOS a barra é overlay e some em repouso, então
+       sozinha ela não avisa que a lista continua. Os gradientes `local` rolam
+       junto com o conteúdo e revelam os `scroll` só quando há o que rolar. */
+    background:
+      linear-gradient(var(--sidebar) 30%, transparent) top / 100% 20px no-repeat local,
+      linear-gradient(transparent, var(--sidebar) 70%) bottom / 100% 20px no-repeat local,
+      radial-gradient(farthest-side at 50% 0, rgb(0 0 0 / 0.28), transparent) top / 100% 8px no-repeat scroll,
+      radial-gradient(farthest-side at 50% 100%, rgb(0 0 0 / 0.28), transparent) bottom / 100% 8px no-repeat scroll;
+  }
+  .sidebar-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  .sidebar-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .sidebar-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--hairline-strong);
+    border-radius: 999px;
+  }
+
   /* Números do produto: mono, tabular, tracking apertado. */
   .figure {
     font-family: var(--font-mono);

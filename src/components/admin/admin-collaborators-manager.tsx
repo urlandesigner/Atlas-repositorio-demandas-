@@ -298,7 +298,7 @@ function CollaboratorFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-md">
+      <SheetContent className="w-full" size="md">
         <SheetHeader>
           <SheetTitle>{editing ? "Editar colaborador" : "Novo colaborador"}</SheetTitle>
           <SheetDescription>
@@ -319,7 +319,11 @@ function CollaboratorFormSheet({
           <Field label="Gestor">
             <Select value={managerId} onValueChange={(value) => value && setManagerId(value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione o gestor" />
+                <SelectValue placeholder="Selecione o gestor">
+                  {(value: string) =>
+                    managers.find((manager) => manager.id === value)?.name ?? value
+                  }
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {managers.map((manager) => (

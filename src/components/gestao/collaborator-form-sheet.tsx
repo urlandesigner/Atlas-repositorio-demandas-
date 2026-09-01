@@ -73,7 +73,7 @@ export function CollaboratorFormSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full overflow-y-auto sm:max-w-md">
+      <SheetContent className="w-full overflow-y-auto" size="md">
         <SheetHeader>
           <SheetTitle>{editing ? "Editar colaborador" : "Novo colaborador"}</SheetTitle>
           <SheetDescription>
