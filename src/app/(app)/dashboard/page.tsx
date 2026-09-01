@@ -20,6 +20,7 @@ import {
 import { useAuth } from "@/components/auth/auth-provider"
 import { Trilha } from "@/components/career/trilha"
 import { HrNoticesPanel } from "@/components/hr/hr-notices-panel"
+import { KudosReceivedCard } from "@/components/people/kudos-received-card"
 import { useEvolutionData } from "@/hooks/use-evolution-data"
 import { useHrNotices } from "@/hooks/use-hr-notices"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
@@ -526,6 +527,10 @@ export default function DashboardPage() {
           </CardListBody>
         </CardList>
       </div>
+
+      {/* Depois do Foco do ciclo de propósito: primeiro o que ainda falta fazer,
+          depois o lembrete de que o que já foi feito foi notado por alguém. */}
+      <KudosReceivedCard />
 
       <CardList>
         <CardListHeader
