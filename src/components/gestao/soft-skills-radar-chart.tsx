@@ -10,6 +10,37 @@ const CENTER = SIZE / 2
 const MAX_RADIUS = 88
 const LEVELS = [1, 2, 3, 4, 5]
 
+/**
+ * Rótulo do eixo em até duas linhas, quebrando no espaço mais próximo do meio.
+ *
+ * Antes cortava em 12 caracteres, então "Inteligência emocional" virava
+ * "Inteligência…" — perdia justamente a palavra que distingue o pilar. A razão
+ * do corte era geométrica: com 6 pilares os rótulos laterais caem em x=28 e
+ * x=212 num viewBox de 240, e uma linha de ~95px vaza pela esquerda. Em duas
+ * linhas de ~11 caracteres cada, ~48px, cabe.
+ *
+ * Só corta o que não tem como quebrar: uma única palavra longa demais.
+ */
+function labelLines(label: string, max = 14): string[] {
+  if (label.length <= max) return [label]
+  const words = label.trim().split(/\s+/)
+  if (words.length === 1) {
+    return [label.length > 16 ? `${label.slice(0, 15)}…` : label]
+  }
+  let split = 1
+  let smallestDiff = Infinity
+  for (let i = 1; i < words.length; i += 1) {
+    const diff = Math.abs(
+      words.slice(0, i).join(" ").length - words.slice(i).join(" ").length
+    )
+    if (diff < smallestDiff) {
+      smallestDiff = diff
+      split = i
+    }
+  }
+  return [words.slice(0, split).join(" "), words.slice(split).join(" ")]
+}
+
 function polarPoint(index: number, total: number, radius: number) {
   const angle = (Math.PI * 2 * index) / total - Math.PI / 2
   return {
@@ -113,9 +144,15 @@ export function SoftSkillsRadarChart({
               dominantBaseline="middle"
               className="fill-muted-foreground text-[9px]"
             >
-              {pillar.label.length > 14
-                ? `${pillar.label.slice(0, 12)}…`
-                : pillar.label}
+              {labelLines(pillar.label).map((line, lineIndex, lines) => (
+                <tspan
+                  key={line}
+                  x={labelPoint.x}
+                  dy={lineIndex === 0 ? (lines.length > 1 ? "-0.45em" : "0") : "1.05em"}
+                >
+                  {line}
+                </tspan>
+              ))}
             </text>
           )
         })}
