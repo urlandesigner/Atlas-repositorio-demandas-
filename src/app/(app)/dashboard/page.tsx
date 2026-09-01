@@ -562,104 +562,113 @@ export default function DashboardPage() {
         />
       </div>
 
-      <CardList>
-        <CardListHeader
-          title="Últimas movimentações"
-          action={
-            <Link
-              href="/professional/timeline"
-              className={buttonVariants({ variant: "outline", size: "sm" })}
-            >
-              Ver registros
-              <ArrowUpRight data-icon="inline-end" />
-            </Link>
-          }
-        />
-        <CardListBody>
-          {recentActivity.length ? (
-            <CardListRows>
-              {recentActivity.map((item) => (
-                <ActivityRow key={item.id} item={item} />
-              ))}
-            </CardListRows>
-          ) : (
-            <div className="px-4 py-4">
-              <EmptyStateCard
-                icon={Zap}
-                title="Ainda sem registros nem objetivos"
-                description="Documente uma entrega ou defina uma meta para o ciclo."
-                action={
-                  <Button size="sm" onClick={() => openCapture()}>
-                    <Zap data-icon="inline-start" />
-                    Criar registro
-                  </Button>
-                }
-              />
-            </div>
-          )}
-        </CardListBody>
-      </CardList>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <CardList>
+      {/* Dois terços para o feed, um terço com Projetos e Apresentações
+          empilhados. O feed é a lista mais pesada da página — até 5 linhas de
+          badge + título + duas linhas de descrição + data, ~126px cada — e é
+          quem precisa de largura; os outros dois são compactos e parecidos.
+          Com 5 registros as duas colunas fecham quase iguais (697px contra
+          750px); com poucos registros o feed fica curto e sobra vazio à
+          esquerda. */}
+      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
+        <CardList className="lg:col-span-2">
           <CardListHeader
-            title="Projetos recentes"
-            action={<FolderOpen className="size-4 text-muted-foreground" />}
+            title="Últimas movimentações"
+            action={
+              <Link
+                href="/professional/timeline"
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                Ver registros
+                <ArrowUpRight data-icon="inline-end" />
+              </Link>
+            }
           />
           <CardListBody>
-            {latestProjects.length ? (
+            {recentActivity.length ? (
               <CardListRows>
-                {latestProjects.map((project) => (
-                  <ProjectRow key={`${project.workspace}-${project.id}`} project={project} />
+                {recentActivity.map((item) => (
+                  <ActivityRow key={item.id} item={item} />
                 ))}
               </CardListRows>
             ) : (
               <div className="px-4 py-4">
                 <EmptyStateCard
-                  icon={FolderOpen}
-                  title="Nenhum projeto cadastrado"
-                  description="Os projetos que você criar aparecem aqui."
+                  icon={Zap}
+                  title="Ainda sem registros nem objetivos"
+                  description="Documente uma entrega ou defina uma meta para o ciclo."
+                  action={
+                    <Button size="sm" onClick={() => openCapture()}>
+                      <Zap data-icon="inline-start" />
+                      Criar registro
+                    </Button>
+                  }
                 />
               </div>
             )}
           </CardListBody>
         </CardList>
 
-        <CardList>
-          <CardListHeader
-            title="Apresentações"
-            action={<Presentation className="size-4 text-muted-foreground" />}
-          />
-          <CardListBody className="flex flex-col gap-4 px-4 py-4">
-            <div className="grid grid-cols-2 gap-3">
-              <MetricCard
-                label="Realizadas"
-                value={completedPresentations.length}
-                icon={CheckCircle2}
-              />
-              <MetricCard
-                label="Agendadas"
-                value={scheduledPresentations.length}
-                icon={Clock3}
-              />
-            </div>
+        <div className="grid grid-cols-1 gap-4">
+          <CardList>
+            <CardListHeader
+              title="Projetos recentes"
+              action={<FolderOpen className="size-4 text-muted-foreground" />}
+            />
+            <CardListBody>
+              {latestProjects.length ? (
+                <CardListRows>
+                  {latestProjects.map((project) => (
+                    <ProjectRow key={`${project.workspace}-${project.id}`} project={project} />
+                  ))}
+                </CardListRows>
+              ) : (
+                <div className="px-4 py-4">
+                  <EmptyStateCard
+                    icon={FolderOpen}
+                    title="Nenhum projeto cadastrado"
+                    description="Os projetos que você criar aparecem aqui."
+                  />
+                </div>
+              )}
+            </CardListBody>
+          </CardList>
 
-            {presentations.length ? <Separator /> : null}
+          <CardList>
+            <CardListHeader
+              title="Apresentações"
+              action={<Presentation className="size-4 text-muted-foreground" />}
+            />
+            <CardListBody className="flex flex-col gap-4 px-4 py-4">
+              <div className="grid grid-cols-2 gap-3">
+                <MetricCard
+                  label="Realizadas"
+                  value={completedPresentations.length}
+                  icon={CheckCircle2}
+                />
+                <MetricCard
+                  label="Agendadas"
+                  value={scheduledPresentations.length}
+                  icon={Clock3}
+                />
+              </div>
 
-            {presentations.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                Nenhuma apresentação registrada ainda.
-              </p>
+              {presentations.length ? <Separator /> : null}
+
+              {presentations.length === 0 ? (
+                <p className="text-sm text-muted-foreground">
+                  Nenhuma apresentação registrada ainda.
+                </p>
+              ) : null}
+            </CardListBody>
+            {presentations.length ? (
+              <CardListRows>
+                {presentations.slice(0, 3).map((item) => (
+                  <PresentationRow key={item.id} presentation={item} />
+                ))}
+              </CardListRows>
             ) : null}
-          </CardListBody>
-          {presentations.length ? (
-            <CardListRows>
-              {presentations.slice(0, 3).map((item) => (
-                <PresentationRow key={item.id} presentation={item} />
-              ))}
-            </CardListRows>
-          ) : null}
-        </CardList>
+          </CardList>
+        </div>
       </div>
 
       {records.length === 0 ? (
