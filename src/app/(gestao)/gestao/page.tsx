@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useMemo, useState, useSyncExternalStore } from "react"
-import { ArrowUpRight, Flag, Target, Users } from "lucide-react"
+import { ArrowUpRight, Flag, Users } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
@@ -242,27 +242,6 @@ export default function GestaoHomePage() {
           </CardListBody>
         </CardList>
       </div>
-
-      <CardList className="border-border/60">
-        <CardListHeader
-          title="Por onde começar"
-          action={<Target className="size-4 text-muted-foreground" />}
-        />
-        <CardListBody className="flex flex-wrap gap-2 p-4">
-          <Link href="/gestao/liderados" className={buttonVariants({ variant: "outline", size: "sm" })}>
-            Meu time
-          </Link>
-          <Link href="/gestao/colaboradores" className={buttonVariants({ variant: "outline", size: "sm" })}>
-            Cadastro do time
-          </Link>
-          <Link href="/gestao/pdi" className={buttonVariants({ variant: "outline", size: "sm" })}>
-            PDIs
-          </Link>
-          <Link href="/gestao/objetivos" className={buttonVariants({ variant: "outline", size: "sm" })}>
-            Metas do time
-          </Link>
-        </CardListBody>
-      </CardList>
     </div>
   )
 }
