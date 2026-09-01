@@ -135,13 +135,20 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
         <div className="h-28 sm:h-36" style={getPersonCoverStyle(person.name)} />
         <CardContent className="px-6 pb-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-              <PersonAvatar
-                name={person.name}
-                imageUrl={person.avatarUrl}
-                size="lg"
-                className="-mt-10 size-20 ring-4 ring-card"
-              />
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+              {/* O avatar acompanha a linha do nome, não o bloco inteiro: a
+                  caixa tem a altura da linha do h1 e o círculo é centralizado
+                  nela, transbordando para cima (sobre a capa) e para baixo.
+                  Com `items-end` o subtítulo puxava o avatar para o meio do
+                  bloco, e era isso que dava a sensação de desalinhamento. */}
+              <div className="relative -mt-10 h-20 w-20 shrink-0 sm:mt-0 sm:h-8 md:h-9">
+                <PersonAvatar
+                  name={person.name}
+                  imageUrl={person.avatarUrl}
+                  size="2xl"
+                  className="absolute top-1/2 left-0 -translate-y-1/2 ring-4 ring-card"
+                />
+              </div>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">

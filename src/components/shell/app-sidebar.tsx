@@ -242,7 +242,7 @@ export function AppSidebar() {
         <div className="px-4">
           <div className="rounded-[12px] border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
             <div className="flex items-start gap-3">
-              <PersonAvatar name={session?.name ?? "Usuário"} size="lg" className="size-10" />
+              <PersonAvatar name={session?.name ?? "Usuário"} size="lg" />
 
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-sidebar-foreground/92">

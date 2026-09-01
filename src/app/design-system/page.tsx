@@ -1447,7 +1447,7 @@ export default function DesignSystemPage() {
             file="avatar.tsx"
             usage={1}
             description="Avatar do base-ui com imagem, fallback, badge de status e agrupamento sobreposto. Na prática o app usa quase sempre o PersonAvatar."
-            api={["size: sm|default|lg", "AvatarImage", "AvatarFallback", "AvatarBadge", "AvatarGroup", "AvatarGroupCount"]}
+            api={["size: sm|default|lg|xl|2xl", "AvatarImage", "AvatarFallback", "AvatarBadge", "AvatarGroup", "AvatarGroupCount"]}
           >
             <Group label="size">
               <Avatar size="sm"><AvatarFallback>SM</AvatarFallback></Avatar>
@@ -1480,12 +1480,18 @@ export default function DesignSystemPage() {
             file="person-avatar.tsx"
             usage={15}
             description="Wrapper do Avatar que resolve imagem-ou-iniciais a partir do nome e aplica as cores de marca. É o que se usa no app para representar pessoas."
-            api={["name: string", "imageUrl?: string | null", "size: sm|default|lg"]}
+            api={[
+              "name: string",
+              "imageUrl?: string | null",
+              "size: sm|default|lg|xl|2xl",
+            ]}
           >
             <Group label="size">
               <PersonAvatar name="Urlan Dipré" size="sm" />
               <PersonAvatar name="Urlan Dipré" />
               <PersonAvatar name="Urlan Dipré" size="lg" />
+              <PersonAvatar name="Urlan Dipré" size="xl" />
+              <PersonAvatar name="Urlan Dipré" size="2xl" />
             </Group>
             <Group label="outros nomes">
               <PersonAvatar name="Maria Silva" />

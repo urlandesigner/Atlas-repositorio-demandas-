@@ -26,7 +26,17 @@ export function ProfileHeader({
 
   return (
     <div className="flex flex-col gap-4 rounded-[12px] border border-border/60 bg-card p-5 shadow-card sm:flex-row sm:items-start">
-      <PersonAvatar name={identity.name} imageUrl={avatarUrl} size="lg" className="size-14" />
+      {/* Avatar na linha do nome: a caixa tem a altura da linha do h2 e o
+          círculo é centralizado nela, transbordando para fora. Assim subtítulo
+          e chips não puxam o avatar para o meio do bloco. */}
+      <div className="relative h-14 w-14 shrink-0 sm:h-7">
+        <PersonAvatar
+          name={identity.name}
+          imageUrl={avatarUrl}
+          size="xl"
+          className="absolute top-1/2 left-0 -translate-y-1/2"
+        />
+      </div>
 
       <div className="min-w-0 flex-1">
         <h2 className="text-xl font-semibold tracking-tight">{identity.name}</h2>

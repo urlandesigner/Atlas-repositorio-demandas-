@@ -129,8 +129,8 @@ export function PeopleDirectory() {
                         <PersonAvatar
                           name={person.name}
                           imageUrl={person.avatarUrl}
-                          size="lg"
-                          className="-mt-6 size-13 ring-4 ring-card"
+                          size="xl"
+                          className="-mt-6 ring-4 ring-card"
                         />
                         {isCurrentUser ? <Badge variant="secondary">Você</Badge> : null}
                       </div>

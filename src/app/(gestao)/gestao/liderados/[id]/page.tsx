@@ -102,20 +102,31 @@ function LideradoDetailContent({ userId }: { userId: string }) {
 
   return (
     <div className="flex max-w-4xl flex-col gap-6">
+      {/* O "Voltar" saiu de dentro da coluna de texto: enquanto ele morava lá, o
+          avatar precisava de um `mt-7` chutado para chegar perto do nome. */}
+      <Link
+        href="/gestao/liderados"
+        className={cn(
+          buttonVariants({ variant: "ghost", size: "sm" }),
+          "-ml-2 w-fit gap-1 text-muted-foreground"
+        )}
+      >
+        <ArrowLeft className="size-3.5" />
+        Voltar
+      </Link>
+
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
-          <PersonAvatar name={user.name} imageUrl={user.avatarUrl} size="lg" className="mt-7 size-14" />
+          {/* Avatar na linha do nome, não no centro do bloco. */}
+          <div className="relative h-14 w-14 shrink-0 sm:h-8">
+            <PersonAvatar
+              name={user.name}
+              imageUrl={user.avatarUrl}
+              size="xl"
+              className="absolute top-1/2 left-0 -translate-y-1/2"
+            />
+          </div>
           <div>
-          <Link
-            href="/gestao/liderados"
-            className={cn(
-              buttonVariants({ variant: "ghost", size: "sm" }),
-              "-ml-2 mb-2 gap-1 text-muted-foreground"
-            )}
-          >
-            <ArrowLeft className="size-3.5" />
-            Voltar
-          </Link>
           <h1 className="text-2xl font-semibold tracking-tight">{user.name}</h1>
           <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
           <div className="mt-2 flex flex-wrap gap-2">
