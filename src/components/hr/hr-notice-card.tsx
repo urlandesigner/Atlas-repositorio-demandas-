@@ -1,14 +1,30 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
-import { ArrowUpRight, Check } from "lucide-react"
+import { ArrowUpRight } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
 import { CardListItem } from "@/components/ui/card-list"
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import type { HrNotice } from "@/lib/hr/store"
 
 function formatNoticeDate(value: string) {
+  return new Date(value).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })
+}
+
+function formatShortDate(value: string) {
   return new Date(value).toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "short",
@@ -28,7 +44,9 @@ export function HrNoticeCard({
   preview?: boolean
   compact?: boolean
 }) {
-  return (
+  const [open, setOpen] = useState(false)
+
+  const row = (
     <CardListItem
       className={compact ? "py-3" : undefined}
       badges={
@@ -39,37 +57,66 @@ export function HrNoticeCard({
       }
       title={notice.title}
       text={notice.body}
-      action={
-        notice.ctaHref && notice.ctaLabel ? (
-          <Link
-            href={notice.ctaHref}
-            onClick={onMarkRead}
-            className={buttonVariants({ variant: "outline", size: "xs" })}
-          >
-            {notice.ctaLabel}
-            <ArrowUpRight data-icon="inline-end" />
-          </Link>
-        ) : null
-      }
-      date={
-        <span className="inline-flex items-center gap-3">
-          {formatNoticeDate(notice.publishedAt)}
-          {/* Também no modo compacto: era a única variante renderizada no app, e
-              sem esta ação um aviso sem CTA nunca podia ser lido — o "Novo"
-              ficava para sempre. Vive na linha da data para não quebrar a ordem
-              badge/título/texto/data. */}
-          {!preview && isUnread && onMarkRead ? (
-            <button
-              type="button"
-              onClick={onMarkRead}
-              className="inline-flex items-center gap-1 font-medium text-accent-ink hover:underline"
-            >
-              <Check className="size-3" />
-              Marcar como lido
-            </button>
-          ) : null}
-        </span>
-      }
+      date={formatShortDate(notice.publishedAt)}
     />
+  )
+
+  // No preview do admin a linha é ilustração, não afordância: abrir um modal ali
+  // colocaria o editor dentro do que ele está editando.
+  if (preview) return row
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => {
+          // Abrir é o ato de ler. Por isso não existe um botão separado de
+          // "marcar como lido": ele obrigaria a pessoa a confirmar algo que ela
+          // acabou de fazer, e deixava sem saída os avisos que não têm CTA.
+          onMarkRead?.()
+          setOpen(true)
+        }}
+        className="block w-full cursor-pointer text-left transition-colors hover:bg-muted/40"
+        aria-label={`Abrir aviso: ${notice.title}`}
+      >
+        {row}
+      </button>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader className="pr-8">
+            <div className="flex flex-wrap items-center gap-1.5">
+              <Badge variant="outline">{notice.category}</Badge>
+              <span className="text-xs text-muted-foreground">
+                {formatNoticeDate(notice.publishedAt)}
+              </span>
+            </div>
+            <DialogTitle className="text-base leading-snug">{notice.title}</DialogTitle>
+          </DialogHeader>
+
+          {/* Sem line-clamp e com whitespace preservado: o modal existe para ser
+              o lugar onde o aviso aparece inteiro, inclusive as quebras que o RH
+              escreveu. */}
+          <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/85">
+            {notice.body}
+          </p>
+
+          {/* Rodapé só quando há CTA: o X do canto já fecha, e um "Fechar"
+              sozinho seria um segundo caminho competindo com ele. */}
+          {notice.ctaHref && notice.ctaLabel ? (
+            <DialogFooter showCloseButton>
+              <Link
+                href={notice.ctaHref}
+                onClick={() => setOpen(false)}
+                className={buttonVariants({ size: "sm" })}
+              >
+                {notice.ctaLabel}
+                <ArrowUpRight data-icon="inline-end" />
+              </Link>
+            </DialogFooter>
+          ) : null}
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
