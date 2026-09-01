@@ -338,6 +338,7 @@ function CareerProgressCard({
   readiness,
   recordCount,
   strongCount,
+  className,
 }: {
   ladder: LevelDef[]
   currentLevelId: string
@@ -347,6 +348,7 @@ function CareerProgressCard({
   readiness: number
   recordCount: number
   strongCount: number
+  className?: string
 }) {
   const evidenceLabel =
     recordCount === 0
@@ -356,7 +358,7 @@ function CareerProgressCard({
         }.`
 
   return (
-    <Card className="overflow-hidden">
+    <Card className={cn("overflow-hidden", className)}>
       <CardContent className="flex flex-col gap-5">
         <Trilha
           ladder={ladder}
@@ -538,10 +540,17 @@ export default function DashboardPage() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="grid grid-cols-1 gap-4 min-[1100px]:grid-cols-2">{kpiCards}</div>
+      {/* Um terço para os dois KPIs empilhados, dois terços para a Trilha. Os
+          KPIs são label + número + apoio: lado a lado sobrava metade do card
+          vazio, e a Trilha, que precisa de largura para caber cinco nós com
+          rótulo mais o medidor, ficava apertada em metade da fileira.
+          `lg:grid-rows-2` faz os dois dividirem a altura da Trilha em vez de
+          deixarem sobra embaixo. */}
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-rows-2">{kpiCards}</div>
 
         <CareerProgressCard
+          className="lg:col-span-2"
           ladder={profile.ladder}
           currentLevelId={profile.identity.levelId}
           targetLevelId={profile.goal.targetLevelId}
