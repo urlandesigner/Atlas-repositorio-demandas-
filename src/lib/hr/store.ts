@@ -175,24 +175,40 @@ export function emitHrNoticeReadsChange() {
 export function subscribeHrNoticesStore(onChange: () => void) {
   if (!isClient()) return () => {}
 
-  const handler = () => onChange()
-  window.addEventListener("storage", handler)
-  window.addEventListener(HR_NOTICES_STORAGE_EVENT, handler)
+  // O evento `storage` só dispara para *outras* abas. Nesta aba o cache em
+  // memória já foi atualizado pela própria mutação; na aba que recebe o evento
+  // ele está velho, e sem invalidar o snapshot volta idêntico — o React é
+  // notificado e não re-renderiza nada. Mesmo padrão de lib/org/social.ts.
+  const onStorage = (event: StorageEvent) => {
+    if (event.key && event.key !== HR_NOTICES_STORAGE_KEY) return
+    cached = null
+    onChange()
+  }
+  const onLocal = () => onChange()
+  window.addEventListener("storage", onStorage)
+  window.addEventListener(HR_NOTICES_STORAGE_EVENT, onLocal)
   return () => {
-    window.removeEventListener("storage", handler)
-    window.removeEventListener(HR_NOTICES_STORAGE_EVENT, handler)
+    window.removeEventListener("storage", onStorage)
+    window.removeEventListener(HR_NOTICES_STORAGE_EVENT, onLocal)
   }
 }
 
 export function subscribeHrNoticeReadsStore(onChange: () => void) {
   if (!isClient()) return () => {}
 
-  const handler = () => onChange()
-  window.addEventListener("storage", handler)
-  window.addEventListener(HR_NOTICE_READS_STORAGE_EVENT, handler)
+  // Idem: sem `cachedReads = null`, marcar um aviso como lido numa aba não
+  // fazia o badge "Novo" sumir nas outras.
+  const onStorage = (event: StorageEvent) => {
+    if (event.key && event.key !== HR_NOTICE_READS_STORAGE_KEY) return
+    cachedReads = null
+    onChange()
+  }
+  const onLocal = () => onChange()
+  window.addEventListener("storage", onStorage)
+  window.addEventListener(HR_NOTICE_READS_STORAGE_EVENT, onLocal)
   return () => {
-    window.removeEventListener("storage", handler)
-    window.removeEventListener(HR_NOTICE_READS_STORAGE_EVENT, handler)
+    window.removeEventListener("storage", onStorage)
+    window.removeEventListener(HR_NOTICE_READS_STORAGE_EVENT, onLocal)
   }
 }
 

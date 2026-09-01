@@ -32,10 +32,14 @@ export function HrNoticeCard({
   return (
     <CardListRow className={compact ? "gap-2 py-3 lg:flex-col lg:items-start" : undefined}>
       <div className="min-w-0 flex-1">
+        {/* No máximo dois badges na leitura: "Novo" enquanto não lido, e a
+            categoria. O "Destaque" saiu daqui — `pinned` já se expressa pela
+            ordem (destacados vêm primeiro, como o formulário do RH promete), e
+            como badge só competia com a informação que o leitor precisa. Na
+            lista de gestão do admin ele continua, porque lá é o que se edita. */}
         <div className="flex flex-wrap items-center gap-2">
           <CardListRowTitle>{notice.title}</CardListRowTitle>
           {isUnread ? <Badge variant="primary-soft">Novo</Badge> : null}
-          {notice.pinned ? <Badge variant="outline">Destaque</Badge> : null}
           <Badge variant="outline">{notice.category}</Badge>
         </div>
         <CardListRowMeta className={compact ? "line-clamp-1" : undefined}>
