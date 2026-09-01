@@ -180,9 +180,6 @@ export default function GestaoHomePage() {
               <Link href="/gestao/liderados" className={buttonVariants({ variant: "outline", size: "sm" })}>
                 Ver time completo
               </Link>
-              <Link href="/gestao/colaboradores" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-                Cadastro do time
-              </Link>
             </div>
           </CardListBody>
         </CardList>

@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useMemo, useState, useSyncExternalStore } from "react"
-import { ArrowUpRight, Copy, Layers, Plus, Trash2 } from "lucide-react"
+import { ArrowUpRight, Copy, Plus, Trash2 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
@@ -192,7 +192,6 @@ export function GestaoPdiHub() {
                       </CardListRowMeta>
                     </div>
                     <div className="flex flex-wrap items-center gap-2 lg:justify-end">
-                      <Layers className="size-4 text-muted-foreground" />
                       {canEditFrameworks ? (
                         <>
                           <Button variant="ghost" size="sm" onClick={() => handleDuplicate(framework.id)}>

@@ -16,7 +16,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
-import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Textarea } from "@/components/ui/textarea"
 import { logAudit } from "@/lib/gestao/audit/store"
@@ -123,8 +122,10 @@ function LideradoDetailContent({ userId }: { userId: string }) {
           fala precisa de um bloco que a ancore, como em /people/<id>. Os fatos
           vêm do mesmo helper daquela tela, para as duas contarem a mesma coisa.
 
-          PageHeaderActions vive aqui dentro: é ele que traz o sino, e a moldura
-          esconde o sino flutuante quando encontra um `data-page-actions`. */}
+          O sino de notificações NÃO vive aqui: ele é cromo do shell, não parte
+          da identidade da pessoa. Sem `data-page-actions` na página, a moldura
+          mostra o sino flutuante dela mesma — que é o comportamento previsto
+          para telas sem CTA primário. */}
       <Card>
         <CardContent className="flex flex-col gap-4 px-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex min-w-0 items-start gap-4">
@@ -154,9 +155,9 @@ function LideradoDetailContent({ userId }: { userId: string }) {
               </div>
             </div>
           </div>
-          <PageHeaderActions>
-            {saved ? <p className="text-sm text-accent-ink">{saved}</p> : null}
-          </PageHeaderActions>
+          {saved ? (
+            <p className="shrink-0 text-sm text-accent-ink">{saved}</p>
+          ) : null}
         </CardContent>
       </Card>
 

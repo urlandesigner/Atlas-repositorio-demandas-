@@ -78,7 +78,6 @@ const workspaceNavItems: NavItem[] = [
 const gestaoNavItems: NavItem[] = [
   { label: "Resumo", href: "/gestao", icon: LayoutDashboard, exact: true },
   { label: "Meu time", href: "/gestao/liderados", icon: Users },
-  { label: "Cadastro do time", href: "/gestao/colaboradores", icon: UserRound },
   { label: "PDIs", href: "/gestao/pdi", icon: Target },
   { label: "Competências", href: "/gestao/soft-skills", icon: Radar },
   { label: "Metas do time", href: "/gestao/objetivos", icon: Flag },
