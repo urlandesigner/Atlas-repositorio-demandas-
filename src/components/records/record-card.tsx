@@ -32,7 +32,7 @@ export function RecordCard({ record, onClick }: RecordCardProps) {
       onClick={onClick}
       onKeyDown={onClick ? (e) => e.key === "Enter" && onClick() : undefined}
       className={cn(
-        "group flex flex-col gap-3 rounded-[12px] border border-border/60 bg-card/[0.98] p-4 text-left shadow-card transition-all duration-200 ease-out",
+        "group flex flex-col gap-3 rounded-lg border border-border/60 bg-card/[0.98] p-4 text-left shadow-card transition-all duration-200 ease-out",
         onClick && "cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover"
       )}
     >

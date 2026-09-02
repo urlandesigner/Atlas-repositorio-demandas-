@@ -8,8 +8,8 @@ type ImpactCalloutSize = "default" | "sm"
 type ImpactCalloutLines = 1 | 2 | 3
 
 const SIZE_CLASS: Record<ImpactCalloutSize, { container: string; text: string }> = {
-  default: { container: "rounded-[18px] px-4 py-3", text: "text-md leading-6" },
-  sm: { container: "rounded-[14px] px-3 py-2.5", text: "text-xs leading-5" },
+  default: { container: "rounded-lg px-4 py-3", text: "text-md leading-6" },
+  sm: { container: "rounded-lg px-3 py-2.5", text: "text-xs leading-5" },
 }
 
 const LINE_CLAMP: Record<ImpactCalloutLines, string> = {

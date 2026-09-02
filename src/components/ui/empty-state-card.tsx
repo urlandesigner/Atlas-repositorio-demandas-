@@ -29,8 +29,8 @@ export function EmptyStateCard({
       className={cn(
         "border-dashed text-center",
         size === "page"
-          ? "rounded-[12px] border border-border/60 bg-muted/15 px-6 py-16"
-          : "rounded-[18px] border border-border/80 bg-muted/[0.16] px-4 py-8",
+          ? "rounded-lg border border-border/60 bg-muted/15 px-6 py-16"
+          : "rounded-lg border border-border/80 bg-muted/[0.16] px-4 py-8",
         className
       )}
       {...props}

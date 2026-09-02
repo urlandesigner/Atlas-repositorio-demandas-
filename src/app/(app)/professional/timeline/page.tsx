@@ -385,7 +385,7 @@ function FeaturedStoryCard({
   onOpen: (record: RecordEntry) => void
 }) {
   return (
-    <article className="flex h-full flex-col rounded-[12px] border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
+    <article className="flex h-full flex-col rounded-lg border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
       <div className="flex items-start justify-between gap-3">
         <Overline size="sm" className="min-w-0">
           {item.projectName || item.areaLabel}
@@ -446,7 +446,7 @@ function StoryCard({
         <ImpactDots level={item.impactLevel} className="mt-2.5" />
       </div>
 
-      <article className="rounded-[12px] border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
+      <article className="rounded-lg border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 space-y-1">
@@ -582,7 +582,7 @@ export default function TimelinePage() {
           )}
 
           {groupedStories.length === 0 ? (
-            <section className="rounded-[12px] border border-dashed border-border/80 bg-muted/15 px-6 py-16 text-center">
+            <section className="rounded-lg border border-dashed border-border/80 bg-muted/15 px-6 py-16 text-center">
               <div className="mx-auto max-w-lg">
                 <h2 className="text-lg font-semibold tracking-tight">Nenhuma entrega registrada ainda</h2>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">

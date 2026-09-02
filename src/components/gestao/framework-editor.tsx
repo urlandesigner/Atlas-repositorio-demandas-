@@ -303,7 +303,7 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
           {draft.themes.map((theme) => (
             <section
               key={theme.id}
-              className="rounded-[12px] border border-border/70 bg-background/50 p-4"
+              className="rounded-lg border border-border/70 bg-background/50 p-4"
             >
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
@@ -321,7 +321,7 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
                 {LEVELS.map((level) => (
                   <label
                     key={level}
-                    className="grid grid-cols-[38px_minmax(0,1fr)] items-start gap-3 rounded-[10px] border border-border/60 bg-card/70 px-3 py-2.5 transition-colors focus-within:border-brand/40 focus-within:bg-brand-muted/25"
+                    className="grid grid-cols-[38px_minmax(0,1fr)] items-start gap-3 rounded-md border border-border/60 bg-card/70 px-3 py-2.5 transition-colors focus-within:border-brand/40 focus-within:bg-brand-muted/25"
                   >
                     <span className="flex h-9 items-center justify-center rounded-full bg-muted text-xs font-semibold tabular-nums text-muted-foreground">
                       {formatPdiLevel(level)}

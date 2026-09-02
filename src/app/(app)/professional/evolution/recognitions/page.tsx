@@ -105,7 +105,7 @@ export default function EvolutionRecognitionsPage() {
                 {recognitions.map((item) => (
                   <article
                     key={item.id}
-                    className="rounded-[12px] border border-border/60 bg-card/[0.98] p-4"
+                    className="rounded-lg border border-border/60 bg-card/[0.98] p-4"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
@@ -179,7 +179,7 @@ export default function EvolutionRecognitionsPage() {
                   return (
                     <article
                       key={kudo.id}
-                      className="rounded-[12px] border border-border/60 bg-card/[0.98] p-4"
+                      className="rounded-lg border border-border/60 bg-card/[0.98] p-4"
                     >
                       <div className="flex items-start gap-3">
                         <span
@@ -226,7 +226,7 @@ export default function EvolutionRecognitionsPage() {
             ) : null}
           </div>
         ) : (
-          <div className="rounded-[12px] border border-dashed border-border/80 px-6 py-12 text-center">
+          <div className="rounded-lg border border-dashed border-border/80 px-6 py-12 text-center">
             <p className="text-sm text-muted-foreground">
               Nenhum reconhecimento registrado. Salve elogios e feedbacks que reforçam sua trajetória.
             </p>

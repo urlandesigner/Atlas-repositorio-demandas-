@@ -261,7 +261,7 @@ export default function AdminHomePage() {
                 return (
                   <div
                     key={request.id}
-                    className="flex flex-col gap-2 rounded-[12px] border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                    className="flex flex-col gap-2 rounded-lg border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="min-w-0">
                       <div className="flex items-center gap-3">
@@ -297,7 +297,7 @@ export default function AdminHomePage() {
               collaboratorsWithoutPdi.map((item) => (
                 <div
                   key={item.id}
-                  className="rounded-[12px] border border-border/60 px-4 py-3"
+                  className="rounded-lg border border-border/60 px-4 py-3"
                 >
                   <div className="flex items-center gap-3">
                     <PersonAvatar name={item.name} imageUrl={item.avatarUrl} />
@@ -328,7 +328,7 @@ export default function AdminHomePage() {
               managersWithReports.map((manager) => (
                 <div
                   key={manager.id}
-                  className="flex items-center justify-between rounded-[12px] border border-border/60 px-4 py-3"
+                  className="flex items-center justify-between rounded-lg border border-border/60 px-4 py-3"
                 >
                   <div className="flex items-center gap-3">
                     <PersonAvatar name={manager.name} imageUrl={manager.avatarUrl} />
@@ -388,7 +388,7 @@ function HealthRow({
   progress: number
 }) {
   return (
-    <div className="space-y-2 rounded-[12px] border border-border/60 bg-background/35 px-4 py-4">
+    <div className="space-y-2 rounded-lg border border-border/60 bg-background/35 px-4 py-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-medium">{label}</p>
         <span className="text-sm font-semibold">{value}</span>
@@ -401,7 +401,7 @@ function HealthRow({
 
 function PermissionRow({ label, enabled }: { label: string; enabled: boolean }) {
   return (
-    <div className="flex items-center justify-between rounded-[12px] border border-border/60 bg-background/35 px-4 py-3">
+    <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/35 px-4 py-3">
       <span className="text-sm">{label}</span>
       <Badge variant={enabled ? "default" : "outline"}>{enabled ? "Ativo" : "Oculto"}</Badge>
     </div>
@@ -410,7 +410,7 @@ function PermissionRow({ label, enabled }: { label: string; enabled: boolean }) 
 
 function EmptyMiniState({ text }: { text: string }) {
   return (
-    <div className="rounded-[12px] border border-dashed border-border/60 bg-background/35 px-4 py-8 text-center text-sm text-muted-foreground">
+    <div className="rounded-lg border border-dashed border-border/60 bg-background/35 px-4 py-8 text-center text-sm text-muted-foreground">
       {text}
     </div>
   )

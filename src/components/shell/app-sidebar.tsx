@@ -333,7 +333,7 @@ export function AppSidebar() {
         </div>
         <SidebarSeparator />
         <div className="px-4">
-          <div className="rounded-[12px] border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
+          <div className="rounded-lg border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
             <div className="flex items-start gap-3">
               <PersonAvatar name={session?.name ?? "Usuário"} size="lg" />
 
@@ -352,7 +352,7 @@ export function AppSidebar() {
                     <Button
                       variant="ghost"
                       size="icon-sm"
-                      className="shrink-0 rounded-[10px] text-sidebar-foreground/62 hover:bg-muted hover:text-sidebar-foreground"
+                      className="shrink-0 rounded-md text-sidebar-foreground/62 hover:bg-muted hover:text-sidebar-foreground"
                     />
                   }
                 >
@@ -375,7 +375,7 @@ export function AppSidebar() {
                   <Button
                     variant="outline"
                     size="icon-lg"
-                    className="rounded-[12px] border-border/70 bg-card/90"
+                    className="rounded-lg border-border/70 bg-card/90"
                   />
                 }
               >

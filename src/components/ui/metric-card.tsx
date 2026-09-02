@@ -46,8 +46,8 @@ export function MetricCard({
 
   const rootClassName = cn(
     variant === "card"
-      ? "rounded-[12px] border border-border bg-card px-4 py-4"
-      : "rounded-[14px] border border-border/70 bg-card/65 px-4 py-3",
+      ? "rounded-lg border border-border bg-card px-4 py-4"
+      : "rounded-xl border border-border/70 bg-card/65 px-4 py-3",
     href && "block transition-colors hover:border-foreground/15 hover:bg-card",
     className
   )

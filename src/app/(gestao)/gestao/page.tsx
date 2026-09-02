@@ -145,7 +145,7 @@ export default function GestaoHomePage() {
               directReports.slice(0, 5).map((user) => (
                 <div
                   key={user.id}
-                  className="flex flex-col gap-2 rounded-[12px] border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                  className="flex flex-col gap-2 rounded-lg border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <div className="flex min-w-0 items-start gap-3">
                     <PersonAvatar name={user.name} imageUrl={user.avatarUrl} />
@@ -196,7 +196,7 @@ export default function GestaoHomePage() {
                 return (
                   <div
                     key={objective.id}
-                    className="flex flex-col gap-2 rounded-[12px] border border-border/60 px-4 py-3"
+                    className="flex flex-col gap-2 rounded-lg border border-border/60 px-4 py-3"
                   >
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm font-medium">{objective.title}</p>

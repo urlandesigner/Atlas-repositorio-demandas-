@@ -25,7 +25,7 @@ export function ProfileHeader({
   const tenure = formatTenure(identity.startDate)
 
   return (
-    <div className="flex flex-col gap-4 rounded-[12px] border border-border/60 bg-card p-5 shadow-card sm:flex-row sm:items-start">
+    <div className="flex flex-col gap-4 rounded-lg border border-border/60 bg-card p-5 shadow-card sm:flex-row sm:items-start">
       {/* Avatar na linha do nome: a caixa tem a altura da linha do h2 e o
           círculo é centralizado nela, transbordando para fora. Assim subtítulo
           e chips não puxam o avatar para o meio do bloco. */}

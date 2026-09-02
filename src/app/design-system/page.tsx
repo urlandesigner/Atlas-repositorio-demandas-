@@ -112,7 +112,7 @@ function Section({
 }) {
   return (
     <section id={id} className="scroll-mt-6">
-      <div className="flex flex-col gap-4 rounded-[12px] border border-border bg-card p-5">
+      <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5">
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-base font-semibold tracking-tight">{title}</h3>
@@ -144,7 +144,7 @@ function Section({
 
         <Separator />
 
-        <div className="flex flex-wrap items-start gap-3 rounded-[10px] bg-muted/25 p-4">{children}</div>
+        <div className="flex flex-wrap items-start gap-3 rounded-md bg-muted/25 p-4">{children}</div>
       </div>
     </section>
   )
@@ -546,7 +546,7 @@ export default function DesignSystemPage() {
 
           {/* ─── tokens ─── */}
           <section id="tokens" className="scroll-mt-6">
-            <div className="flex flex-col gap-4 rounded-[12px] border border-border bg-card p-5">
+            <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5">
               <div>
                 <h3 className="text-base font-semibold tracking-tight">Design tokens</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -569,7 +569,7 @@ export default function DesignSystemPage() {
                   </div>
                 ))}
               </div>
-              <div className="rounded-[10px] border border-primary/20 bg-primary/10 px-4 py-3">
+              <div className="rounded-md border border-primary/20 bg-primary/10 px-4 py-3">
                 <p className="text-sm font-medium text-accent-ink">Radius e densidade</p>
                 <p className="mt-0.5 text-sm text-accent-ink/80">
                   <code className="font-mono text-xs">--radius: 0.75rem</code> · cards usam 12px fixo · a escala de
@@ -951,7 +951,7 @@ export default function DesignSystemPage() {
             api={["orientation: vertical|horizontal|both (default vertical)"]}
           >
             <Group label="orientation=vertical (default)">
-              <ScrollArea className="h-32 w-full rounded-[10px] border border-border bg-card">
+              <ScrollArea className="h-32 w-full rounded-md border border-border bg-card">
                 <div className="flex flex-col gap-2 p-3">
                   {Array.from({ length: 12 }, (_, i) => (
                     <p key={i} className="text-sm text-muted-foreground">Linha {i + 1} de conteúdo rolável</p>
@@ -960,7 +960,7 @@ export default function DesignSystemPage() {
               </ScrollArea>
             </Group>
             <Group label="orientation=horizontal">
-              <ScrollArea orientation="horizontal" className="w-full rounded-[10px] border border-border bg-card">
+              <ScrollArea orientation="horizontal" className="w-full rounded-md border border-border bg-card">
                 <div className="flex w-max gap-2 p-3">
                   {Array.from({ length: 12 }, (_, i) => (
                     <span key={i} className="flex h-16 w-24 shrink-0 items-center justify-center rounded-md border border-border text-xs text-muted-foreground">
@@ -1425,7 +1425,7 @@ export default function DesignSystemPage() {
             api={["Command", "CommandInput", "CommandList", "CommandEmpty", "CommandGroup", "CommandItem", "CommandDialog"]}
           >
             <Group label="Command (inline)">
-              <div className="w-full overflow-hidden rounded-[10px] border border-border bg-card">
+              <div className="w-full overflow-hidden rounded-md border border-border bg-card">
                 <Command>
                   <CommandInput placeholder="Buscar..." />
                   <CommandList>
@@ -1555,7 +1555,7 @@ export default function DesignSystemPage() {
 
           {/* ─── lacunas ─── */}
           <section id="gaps" className="scroll-mt-6">
-            <div className="flex flex-col gap-4 rounded-[12px] border border-border bg-card p-5">
+            <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-5">
               <div>
                 <h3 className="text-base font-semibold tracking-tight">O que falta padronizar</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -1565,7 +1565,7 @@ export default function DesignSystemPage() {
               <Separator />
               <div className="flex flex-col gap-3">
                 {GAPS.map((gap, i) => (
-                  <div key={gap.title} className="flex gap-3 rounded-[10px] border border-border bg-muted/20 p-4">
+                  <div key={gap.title} className="flex gap-3 rounded-md border border-border bg-muted/20 p-4">
                     <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-2xs font-semibold text-accent-ink">
                       {i + 1}
                     </span>

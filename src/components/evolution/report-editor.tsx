@@ -57,7 +57,7 @@ export function ReportEditor({
         {report.sections.map((section) => (
           <section
             key={section.id}
-            className="rounded-[12px] border border-border/60 bg-card/[0.98] p-4"
+            className="rounded-lg border border-border/60 bg-card/[0.98] p-4"
           >
             <div className="mb-2 flex items-center justify-between gap-2">
               <h3 className="text-sm font-medium">{section.title}</h3>

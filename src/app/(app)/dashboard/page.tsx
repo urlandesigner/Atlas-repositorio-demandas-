@@ -230,7 +230,7 @@ function WorkFlowGuide({
   onRecord: () => void
 }) {
   return (
-    <section className="overflow-hidden rounded-[12px] border border-border bg-card">
+    <section className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="flex flex-col gap-2 border-b border-border px-5 py-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <Overline size="sm" className="text-accent-ink">
@@ -279,7 +279,7 @@ function WorkFlowGuide({
         <button
           type="button"
           onClick={onRecord}
-          className="group relative m-2 overflow-hidden rounded-[10px] bg-primary px-5 py-4 text-left text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-3 focus-visible:ring-ring/40 md:m-3"
+          className="group relative m-2 overflow-hidden rounded-md bg-primary px-5 py-4 text-left text-primary-foreground outline-none transition-colors hover:bg-primary-hover focus-visible:ring-3 focus-visible:ring-ring/40 md:m-3"
         >
           <div className="absolute -right-6 -top-8 size-28 rounded-full border border-primary-foreground/15" />
           <div className="relative flex items-start gap-3">

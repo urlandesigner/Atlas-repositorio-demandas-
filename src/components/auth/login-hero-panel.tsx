@@ -10,7 +10,7 @@ const HeroGeometric = dynamic(() => import("@/components/ui/hero-geometric"), {
 
 export function LoginHeroPanel() {
   return (
-    <div className="relative flex h-full min-h-full w-full flex-1 flex-col overflow-hidden rounded-[16px]">
+    <div className="relative flex h-full min-h-full w-full flex-1 flex-col overflow-hidden rounded-lg">
       <HeroGeometric
         className="absolute inset-0 min-h-0 h-full bg-transparent"
         // Campo escuro com luz índigo — o painel lê como o resto do produto

@@ -39,7 +39,7 @@ export function NextPdiHighlight({
   return (
     <div
       className={cn(
-        "rounded-[12px] border px-4 py-4",
+        "rounded-lg border px-4 py-4",
         TONE_CLASSNAME[tone],
         compact ? "flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between" : "flex flex-col gap-4",
         className

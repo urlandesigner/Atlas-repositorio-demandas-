@@ -286,7 +286,7 @@ export function AdminPdiPanel() {
                       </CardListRowMeta>
                       <CardListRowMeta>Gestor: {row.managerName}</CardListRowMeta>
                       {row.type === "pending" && row.request.managerNotes ? (
-                        <p className="mt-3 rounded-[12px] border border-border/60 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
+                        <p className="mt-3 rounded-lg border border-border/60 bg-muted/20 px-3 py-2 text-xs text-muted-foreground">
                           {row.request.managerNotes}
                         </p>
                       ) : null}

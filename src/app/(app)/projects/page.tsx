@@ -135,7 +135,7 @@ function ProjectTable({
   onRecord: (project: ProjectEntry) => void
 }) {
   return (
-    <div className="overflow-hidden rounded-[12px] border border-border bg-card">
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <thead>

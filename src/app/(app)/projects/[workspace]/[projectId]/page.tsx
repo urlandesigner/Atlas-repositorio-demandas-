@@ -701,7 +701,7 @@ function ProjectDetailSurface({
             }
           >
             {linkedRecords.length === 0 ? (
-              <div className="flex flex-col items-center gap-3 rounded-[12px] border border-dashed border-border/60 bg-muted/15 px-4 py-8 text-center">
+              <div className="flex flex-col items-center gap-3 rounded-lg border border-dashed border-border/60 bg-muted/15 px-4 py-8 text-center">
                 <p className="text-sm text-muted-foreground">Nenhuma entrega registrada ainda.</p>
                 <Button
                   size="sm"
@@ -739,7 +739,7 @@ function ProjectDetailSurface({
           </DetailSection>
 
           <DetailSection title="Histórico" description="Mudanças de status, links, período e pagamentos.">
-            <div className="rounded-[12px] border border-border/70 bg-muted/10">
+            <div className="rounded-lg border border-border/70 bg-muted/10">
               {groupedTimeline.length === 0 ? (
                 <div className="px-4 py-5 text-sm text-muted-foreground">Nenhum evento registrado ainda.</div>
               ) : (
@@ -763,7 +763,7 @@ function ProjectDetailSurface({
                                 <div className={cn("absolute left-0 top-0 flex size-9 items-center justify-center rounded-xl border shadow-sm", meta.className)}>
                                   <Icon className="size-4" />
                                 </div>
-                                <div className="rounded-[12px] border border-border/70 bg-background/90 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover">
+                                <div className="rounded-lg border border-border/70 bg-background/90 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover">
                                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                     <div className="min-w-0">
                                       <div className="flex flex-wrap items-center gap-2">
@@ -808,7 +808,7 @@ function ProjectDetailSurface({
             </div>
 
             {isLinkComposerOpen && (
-              <div className="rounded-[12px] border border-border/70 bg-muted/30 p-3 sm:p-4">
+              <div className="rounded-lg border border-border/70 bg-muted/30 p-3 sm:p-4">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <div>
                     <label className="mb-1.5 block text-xs text-muted-foreground">Nome do link</label>
@@ -839,7 +839,7 @@ function ProjectDetailSurface({
             )}
 
             {editLinks.length === 0 ? (
-              <div className="rounded-[12px] border border-dashed border-border/60 bg-muted/15 px-4 py-5 text-sm text-muted-foreground">
+              <div className="rounded-lg border border-dashed border-border/60 bg-muted/15 px-4 py-5 text-sm text-muted-foreground">
                 Nenhum link importante cadastrado ainda.
               </div>
             ) : (
@@ -851,7 +851,7 @@ function ProjectDetailSurface({
                   return (
                     <div
                       key={`${link.label}-${link.url}-${index}`}
-                      className="group rounded-[12px] border border-border/70 bg-background/80 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover"
+                      className="group rounded-lg border border-border/70 bg-background/80 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover"
                     >
                       <div className="flex items-start gap-3">
                         <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl border", config.className)}>
@@ -924,7 +924,7 @@ function ProjectDetailSurface({
                 </div>
 
                 {addingPayment && (
-                  <div className="mb-3 rounded-[12px] border border-border/70 bg-muted/30 p-3">
+                  <div className="mb-3 rounded-lg border border-border/70 bg-muted/30 p-3">
                     <SegmentedControl aria-label="Tipo de lançamento" className="flex w-full">
                       {(["income", "expense"] as const).map((type) => (
                         <SegmentedControlItem

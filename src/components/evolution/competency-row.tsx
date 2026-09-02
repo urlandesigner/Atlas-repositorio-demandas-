@@ -32,7 +32,7 @@ export function CompetencyRow({
   return (
     <article
       className={cn(
-        "rounded-[12px] border p-4 transition-colors",
+        "rounded-lg border p-4 transition-colors",
         view.status === "forte" ? "border-border/60 bg-card/[0.98]" : "border-border bg-card/60"
       )}
     >

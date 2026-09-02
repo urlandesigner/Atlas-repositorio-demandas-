@@ -390,7 +390,7 @@ function HrNoticeFormSheet({
             </Field>
           </div>
 
-          <label className="flex items-center gap-3 rounded-[12px] border border-border/70 bg-card px-3 py-3">
+          <label className="flex items-center gap-3 rounded-lg border border-border/70 bg-card px-3 py-3">
             <Checkbox
               checked={pinned}
               onCheckedChange={(checked) => setPinned(checked)}
