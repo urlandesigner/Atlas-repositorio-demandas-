@@ -31,7 +31,7 @@ export function CardListHeader({
 } & React.ComponentProps<typeof CardHeader>) {
   return (
     <CardHeader
-      className={cn("border-b border-border/60 px-4 pt-4 pb-3.5", className)}
+      className={cn("px-6 pt-6 pb-4", className)}
       {...props}
     >
       {/* `min-h-9` é a altura de um Button size="sm" (36px). Sem isso o header
@@ -75,7 +75,7 @@ export function CardListRow({ className, ...props }: React.ComponentProps<"div">
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 px-4 py-3.5 lg:flex-row lg:items-center lg:justify-between",
+        "flex flex-col gap-3 px-6 py-4 lg:flex-row lg:items-center lg:justify-between",
         className
       )}
       {...props}
@@ -120,7 +120,7 @@ export function CardListItem({
   action?: ReactNode
 } & Omit<React.ComponentProps<"div">, "title">) {
   return (
-    <div className={cn("px-4 py-3.5", className)} {...props}>
+    <div className={cn("px-6 py-4", className)} {...props}>
       {/* O ícone vive na faixa de badges, não numa coluna à esquerda. Como
           coluna, ele empurrava título, texto e data 44px para dentro — e numa
           fileira de três cards onde só um tem ícone, era o suficiente para o

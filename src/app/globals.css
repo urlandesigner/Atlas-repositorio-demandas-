@@ -159,7 +159,7 @@
                         a nota em scripts/check-contrast.mjs. Campos de
                         formulário NÃO usam este token: eles têm `--input`, que
                         segue em 3:1. */
-  --border: #1F242A;
+  --border: #2F343B;
   --hairline-chip: #3D444C;
   --hairline-strong: #4E545B;
   --input: #6A6F75;
