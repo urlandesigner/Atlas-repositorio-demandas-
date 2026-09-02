@@ -8,6 +8,7 @@ import { getRecordImpactText } from "@/lib/records/display"
 import { ATUACOES } from "./atuacao-picker"
 import { AREAS } from "./area-picker"
 import { SCOPES } from "./impact-selector"
+import { CardListRowTitle } from "@/components/ui/card-list"
 
 interface RecordCardProps {
   record: RecordEntry
@@ -52,9 +53,9 @@ export function RecordCard({ record, onClick }: RecordCardProps) {
       </div>
 
       {/* Title */}
-      <h3 className="text-sm font-semibold leading-snug tracking-tight">
+      <CardListRowTitle as="h3" className="tracking-tight">
         {record.enriched.title}
-      </h3>
+      </CardListRowTitle>
 
       {/* Impact excerpt */}
       {impactText ? (

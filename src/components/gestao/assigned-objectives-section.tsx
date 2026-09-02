@@ -18,6 +18,7 @@ import {
 import { StatusBadge } from "@/components/ui/status-badge"
 import { OBJECTIVE_STATUS_TONE } from "@/lib/status-tone"
 import { getRecordImpactText } from "@/lib/records/display"
+import { CardListRowTitle } from "@/components/ui/card-list"
 import {
   countGestaoObjectiveEvidence,
   getGestaoObjectivesServerSnapshot,
@@ -75,7 +76,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
           >
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between gap-3">
-                <h3 className="min-w-0 flex-1 line-clamp-2 text-sm font-medium leading-snug">{objective.title}</h3>
+                <CardListRowTitle as="h3" className="min-w-0 flex-1 line-clamp-2">{objective.title}</CardListRowTitle>
                 <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]} className="shrink-0">
                   {OBJECTIVE_STATUS_LABEL[objective.status]}
                 </StatusBadge>

@@ -26,6 +26,7 @@ import {
 import { PRESENTATION_STATUS_TONE } from "@/lib/status-tone"
 import { CalendarDays, ExternalLink, Pencil, Plus, Presentation, Trash2, UsersRound } from "lucide-react"
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
+import { CardListRowTitle } from "@/components/ui/card-list"
 import {
   addPresentationToCollection,
   createPresentationForm,
@@ -180,7 +181,7 @@ function PresentationCard({
     >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-medium text-sm leading-snug">{item.title}</h3>
+          <CardListRowTitle as="h3">{item.title}</CardListRowTitle>
           <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="shrink-0 text-xs">
             {STATUS_LABEL[item.status]}
           </StatusBadge>

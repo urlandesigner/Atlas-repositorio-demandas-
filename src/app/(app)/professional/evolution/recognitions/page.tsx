@@ -36,6 +36,7 @@ import {
 } from "@/lib/org/store"
 import { useEvolutionData } from "@/hooks/use-evolution-data"
 import { useOptionalSession } from "@/hooks/use-optional-session"
+import { CardListRowTitle } from "@/components/ui/card-list"
 
 /**
  * `RecognitionEntry.date` é data-only (YYYY-MM-DD). `new Date("2026-06-28")`
@@ -110,7 +111,7 @@ export default function EvolutionRecognitionsPage() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
-                          <h3 className="text-sm font-medium">{item.title}</h3>
+                          <CardListRowTitle as="h3">{item.title}</CardListRowTitle>
                           <Badge variant="outline">
                             {RECOGNITION_TYPE_LABEL[item.type]}
                           </Badge>

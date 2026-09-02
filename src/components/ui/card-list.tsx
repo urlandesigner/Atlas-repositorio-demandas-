@@ -159,9 +159,22 @@ export function CardListItem({
  * pilha, disputava o olho com o título e a linha ficava sem hierarquia. 15px/600
  * em cor cheia dá o degrau que faltava, contra os 13px/400 do corpo.
  */
-export function CardListRowTitle({ className, ...props }: React.ComponentProps<"p">) {
+export function CardListRowTitle({
+  className,
+  as: Tag = "p",
+  ...props
+}: React.ComponentProps<"p"> & {
+  /**
+   * A tag renderizada. O padrão é `p`, para linha de lista dentro de um
+   * CardList. Use `h3` quando o item for um cartão próprio numa coleção —
+   * cartão de objetivo, de projeto, de apresentação — para o documento ter
+   * hierarquia. O tratamento visual é o mesmo nos dois casos, e é esse o ponto:
+   * o papel é "título de item", não "título de lista".
+   */
+  as?: "p" | "h2" | "h3" | "h4"
+}) {
   return (
-    <p
+    <Tag
       className={cn("text-md font-semibold leading-snug text-foreground", className)}
       {...props}
     />

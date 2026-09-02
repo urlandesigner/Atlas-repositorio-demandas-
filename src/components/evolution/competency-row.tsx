@@ -9,6 +9,7 @@ import type { CompetencyEvidenceView } from "@/lib/evolution/types"
 import { EVIDENCE_STATUS_LABEL } from "@/lib/evolution/types"
 import { PDI_THEME_LABEL } from "@/lib/profile/pdi"
 import { cn } from "@/lib/utils"
+import { CardListRowTitle } from "@/components/ui/card-list"
 
 const STATUS_STYLE = {
   forte: "border-brand/25 bg-brand-muted/40 text-brand-muted-foreground",
@@ -39,7 +40,7 @@ export function CompetencyRow({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 className="text-sm font-medium">{view.label}</h3>
+            <CardListRowTitle as="h3">{view.label}</CardListRowTitle>
             <Badge variant="outline" className={STATUS_STYLE[view.status]}>
               {EVIDENCE_STATUS_LABEL[view.status]}
             </Badge>

@@ -83,6 +83,7 @@ import {
 import type { RecordEntry } from "@/lib/records/types"
 import { getRecordImpactText } from "@/lib/records/display"
 import { cn } from "@/lib/utils"
+import { CardListRowTitle } from "@/components/ui/card-list"
 
 const STATUS_ICON: Record<ObjectiveStatus, LucideIcon> = {
   planned: CircleDot,
@@ -432,7 +433,7 @@ function ObjectiveCard({
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
-          <h3 className="min-w-0 flex-1 line-clamp-2 text-sm font-medium leading-snug">{item.title}</h3>
+          <CardListRowTitle as="h3" className="min-w-0 flex-1 line-clamp-2">{item.title}</CardListRowTitle>
           <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]} className="shrink-0">
             <StatusIcon data-icon="inline-start" />
             {OBJECTIVE_STATUS_LABEL[item.status]}
