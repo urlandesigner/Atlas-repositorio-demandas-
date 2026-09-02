@@ -76,7 +76,7 @@ export function MyNetworkCard({
 
       <div className="mt-3 flex items-center gap-2">
         <SegmentedProgress segments={checklist.map((item) => item.done)} />
-        <p className="shrink-0 text-[11px] text-muted-foreground">
+        <p className="shrink-0 text-2xs text-muted-foreground">
           {doneCount} de {checklist.length}
           {missing.length ? ` · falta ${missing.join(" e ")}` : ""}
         </p>

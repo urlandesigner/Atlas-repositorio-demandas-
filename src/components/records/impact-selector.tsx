@@ -72,7 +72,7 @@ export function ImpactSelector({
         </FilterPillGroup>
         <div className="flex items-center gap-2">
           <ImpactDots level={level} className="shrink-0" />
-          <p className="text-[11px] text-muted-foreground leading-snug">
+          <p className="text-2xs text-muted-foreground leading-snug">
             {levelConfig.description}
           </p>
         </div>
@@ -91,7 +91,7 @@ export function ImpactSelector({
                 active={selected}
                 onClick={() => onScopeChange(s.value)}
                 className={cn(
-                  "flex flex-col items-center gap-1 py-2 text-[11px] font-medium",
+                  "flex flex-col items-center gap-1 py-2 text-2xs font-medium",
                   selected ? "text-brand-muted-foreground" : "text-muted-foreground"
                 )}
               >

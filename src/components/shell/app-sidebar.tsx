@@ -284,6 +284,8 @@ export function AppSidebar() {
         <div className="flex h-full w-full items-center justify-between gap-3 px-4 group-data-[collapsible=icon]:justify-center">
           <div className="flex items-center gap-3 group-data-[collapsible=icon]:justify-center">
             <SidebarBrandMark />
+            {/* 17px é o tamanho do logotipo, não um degrau da escala: existe
+                uma vez só e não deve ser reaproveitado. */}
             <span className="text-[17px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
               Atlas
             </span>

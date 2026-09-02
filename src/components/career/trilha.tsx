@@ -97,7 +97,7 @@ function TrilhaNode({
         </span>
       ) : null}
       {showCurrentHint && state === "current" && variant !== "mini" ? (
-        <span className="text-[10px] font-medium text-accent-ink">
+        <span className="text-3xs font-medium text-accent-ink">
           você está aqui
         </span>
       ) : null}
@@ -183,7 +183,7 @@ export function Trilha({
       <div className={cn("flex flex-col gap-1.5", className)} title={label}>
         <span className="label-mono text-muted-foreground">Trilha</span>
         {track}
-        <span className="truncate text-[11px] text-muted-foreground">
+        <span className="truncate text-2xs text-muted-foreground">
           {label}
         </span>
       </div>

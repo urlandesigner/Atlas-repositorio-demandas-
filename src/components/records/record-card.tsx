@@ -45,7 +45,7 @@ export function RecordCard({ record, onClick }: RecordCardProps) {
           </StatusBadge>
         )}
         {area && (
-          <span className="text-[11px] text-muted-foreground">{area.label}</span>
+          <span className="text-2xs text-muted-foreground">{area.label}</span>
         )}
 
         <ImpactDots level={record.impactLevel} className="ml-auto" />

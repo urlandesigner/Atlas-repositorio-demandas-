@@ -237,11 +237,11 @@ function ObjectiveSheet({
                 <label className="text-xs font-medium text-muted-foreground">
                   Competências vinculadas
                 </label>
-                <span className="text-[11px] text-muted-foreground">
+                <span className="text-2xs text-muted-foreground">
                   {form.dimensions.length} selecionada(s)
                 </span>
               </div>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-2xs text-muted-foreground">
                 Selecione uma ou mais competências que este objetivo ajuda a desenvolver.
               </p>
               <div className="flex flex-wrap gap-2">
@@ -297,7 +297,7 @@ function ObjectiveSheet({
                 <label className="text-xs font-medium text-muted-foreground">
                   Registros vinculados
                 </label>
-                <span className="text-[11px] text-muted-foreground">
+                <span className="text-2xs text-muted-foreground">
                   {form.linkedRecordIds.length} selecionado(s)
                 </span>
               </div>
@@ -343,11 +343,11 @@ function ObjectiveSheet({
                 <label className="text-xs font-medium text-muted-foreground">
                   Apresentações vinculadas
                 </label>
-                <span className="text-[11px] text-muted-foreground">
+                <span className="text-2xs text-muted-foreground">
                   {form.linkedPresentationIds.length} selecionada(s)
                 </span>
               </div>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-2xs text-muted-foreground">
                 Vincule apresentações realizadas ou agendadas como evidência do objetivo.
               </p>
 

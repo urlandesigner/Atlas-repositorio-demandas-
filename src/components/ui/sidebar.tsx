@@ -400,7 +400,7 @@ function SidebarGroupLabel({
     props: mergeProps<"div">(
       {
         className: cn(
-          "flex h-7 shrink-0 items-center rounded-md px-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-sidebar-foreground/40 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
+          "flex h-7 shrink-0 items-center rounded-md px-2.5 text-2xs font-semibold uppercase tracking-[0.08em] text-sidebar-foreground/40 ring-sidebar-ring outline-hidden transition-[margin,opacity] duration-200 ease-linear group-data-[collapsible=icon]:-mt-8 group-data-[collapsible=icon]:opacity-0 focus-visible:ring-2 [&>svg]:size-4 [&>svg]:shrink-0",
           className
         ),
       },
@@ -475,7 +475,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
 }
 
 const sidebarMenuButtonVariants = cva(
-  "peer/menu-button group/menu-button flex w-full items-center gap-3 overflow-hidden rounded-[12px] px-3 text-left text-[14px] font-medium tracking-[0em] text-sidebar-foreground/76 ring-sidebar-ring outline-hidden transition-colors group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:justify-center! group-data-[collapsible=icon]:rounded-[10px] group-data-[collapsible=icon]:p-0! hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-open:hover:bg-sidebar-accent data-open:hover:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground [&_svg]:size-[18px] [&_svg]:shrink-0 [&>span:last-child]:truncate group-data-[collapsible=icon]:[&>span:last-child]:hidden",
+  "peer/menu-button group/menu-button flex w-full items-center gap-3 overflow-hidden rounded-[12px] px-3 text-left text-sm font-medium tracking-[0em] text-sidebar-foreground/76 ring-sidebar-ring outline-hidden transition-colors group-has-data-[sidebar=menu-action]/menu-item:pr-8 group-data-[collapsible=icon]:mx-auto group-data-[collapsible=icon]:size-11! group-data-[collapsible=icon]:justify-center! group-data-[collapsible=icon]:rounded-[10px] group-data-[collapsible=icon]:p-0! hover:bg-sidebar-accent hover:text-sidebar-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-open:hover:bg-sidebar-accent data-open:hover:text-sidebar-accent-foreground data-active:bg-sidebar-accent data-active:text-sidebar-accent-foreground [&_svg]:size-[18px] [&_svg]:shrink-0 [&>span:last-child]:truncate group-data-[collapsible=icon]:[&>span:last-child]:hidden",
   {
     variants: {
       variant: {
@@ -492,7 +492,7 @@ const sidebarMenuButtonVariants = cva(
         // ficavam fora da vista. O modo colapsado tem seu próprio `size-11!`.
         default: "h-11 md:h-9",
         sm: "h-10 text-sm",
-        lg: "h-11 text-[15px] group-data-[collapsible=icon]:p-0!",
+        lg: "h-11 text-md group-data-[collapsible=icon]:p-0!",
       },
     },
     defaultVariants: {

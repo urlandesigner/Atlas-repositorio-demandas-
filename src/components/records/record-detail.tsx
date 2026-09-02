@@ -192,7 +192,7 @@ function DetailBody({
             </StatusBadge>
           )}
           {area && (
-            <span className="text-[11px] text-muted-foreground">
+            <span className="text-2xs text-muted-foreground">
               {area.label}
             </span>
           )}
@@ -217,11 +217,11 @@ function DetailBody({
 
         {competencyMatches.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-[10px] text-muted-foreground/60 shrink-0">Contribui para:</span>
+            <span className="text-3xs text-muted-foreground/60 shrink-0">Contribui para:</span>
             {competencyMatches.map((c) => (
               <span
                 key={c.id}
-                className="rounded border bg-muted/40 px-1.5 py-0.5 text-[10px] text-muted-foreground"
+                className="rounded border bg-muted/40 px-1.5 py-0.5 text-3xs text-muted-foreground"
               >
                 {c.label}
               </span>
@@ -253,7 +253,7 @@ function DetailBody({
                 Data
               </Overline>
               <Input type="date" value={draftDate} onChange={(e) => setDraftDate(e.target.value)} className="w-fit" />
-              <p className="text-[11px] text-muted-foreground">Define onde o registro aparece na linha do tempo.</p>
+              <p className="text-2xs text-muted-foreground">Define onde o registro aparece na linha do tempo.</p>
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -292,7 +292,7 @@ function DetailBody({
                   <option key={suggestion} value={suggestion} />
                 ))}
               </datalist>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-2xs text-muted-foreground">
                 Tag exibida no card do histórico. Deixe em branco para gerar automaticamente a partir do texto.
               </p>
             </div>
@@ -322,7 +322,7 @@ function DetailBody({
                     onChange={(e) => setDraftTags(e.target.value)}
                     placeholder="Ex: IA, Cross-team, Produto"
                   />
-                  <p className="text-[11px] text-muted-foreground">Separe as tags por virgula.</p>
+                  <p className="text-2xs text-muted-foreground">Separe as tags por virgula.</p>
                 </div>
               </div>
 
@@ -358,7 +358,7 @@ function DetailBody({
           <button
             type="button"
             onClick={() => setShowRaw(!showRaw)}
-            className="flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1.5 text-2xs text-muted-foreground hover:text-foreground transition-colors"
           >
             <ChevronRightIcon
               className={cn(

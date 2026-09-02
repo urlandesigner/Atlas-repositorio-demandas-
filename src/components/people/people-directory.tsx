@@ -135,7 +135,7 @@ export function PeopleDirectory() {
                         {isCurrentUser ? <Badge variant="secondary">Você</Badge> : null}
                       </div>
                       <div className="min-w-0">
-                        <p className="truncate text-[15px] font-semibold tracking-tight text-foreground">
+                        <p className="truncate text-md font-semibold tracking-tight text-foreground">
                           {person.name}
                         </p>
                         <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
@@ -234,7 +234,7 @@ export function PeopleDirectory() {
                         <p className="mt-1 line-clamp-3 text-xs leading-relaxed text-foreground/85">
                           “{kudo.message}”
                         </p>
-                        <p className="mt-1 text-[11px] text-muted-foreground">
+                        <p className="mt-1 text-2xs text-muted-foreground">
                           {meta.label} · {formatKudoDate(kudo.createdAt)}
                         </p>
                       </div>

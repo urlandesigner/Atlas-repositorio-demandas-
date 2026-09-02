@@ -331,7 +331,7 @@ export function FrameworkEditor({ frameworkId }: { frameworkId: string }) {
                       onChange={(event) => updateRubricLine(theme.id, level, event.target.value)}
                       rows={1}
                       placeholder="Descreva este nível"
-                      className="min-h-9 min-w-0 resize-none border-0 bg-transparent px-0 py-1 text-[15px] leading-6 shadow-none focus-visible:border-transparent focus-visible:ring-0"
+                      className="min-h-9 min-w-0 resize-none border-0 bg-transparent px-0 py-1 text-md leading-6 shadow-none focus-visible:border-transparent focus-visible:ring-0"
                     />
                   </label>
                 ))}

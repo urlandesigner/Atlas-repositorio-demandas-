@@ -40,7 +40,7 @@ export function PdiThemeRow({
 
         <div className="flex shrink-0 items-center gap-2">
           {suggested ? (
-            <span className="rounded-full bg-brand-muted px-2 py-0.5 text-[11px] font-medium text-brand-muted-foreground">
+            <span className="rounded-full bg-brand-muted px-2 py-0.5 text-2xs font-medium text-brand-muted-foreground">
               sugerido
             </span>
           ) : null}
@@ -62,14 +62,14 @@ export function PdiThemeRow({
           {PDI_RUBRIC[theme][state.level]}
         </span>
         {met ? (
-          <span className="shrink-0 text-[11px] font-medium text-brand-muted-foreground">
+          <span className="shrink-0 text-2xs font-medium text-brand-muted-foreground">
             {above ? "acima do esperado" : "no nível esperado"}
           </span>
         ) : (
           <Button
             variant="link"
             onClick={onCreateObjective}
-            className="h-auto shrink-0 gap-0.5 border-none p-0 text-[11px] font-medium text-brand-muted-foreground underline-offset-2"
+            className="h-auto shrink-0 gap-0.5 border-none p-0 text-2xs font-medium text-brand-muted-foreground underline-offset-2"
           >
             <Plus className="size-3" />
             objetivo · faltam {deficit}

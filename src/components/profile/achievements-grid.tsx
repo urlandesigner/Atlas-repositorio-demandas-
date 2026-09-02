@@ -69,7 +69,7 @@ function AchievementCard({ achievement }: { achievement: Achievement }) {
             size="xs"
             tone="brand"
           />
-          <p className="mt-1 text-[11px] text-muted-foreground tabular-nums">
+          <p className="mt-1 text-2xs text-muted-foreground tabular-nums">
             {progress.current} / {progress.target}
           </p>
         </div>

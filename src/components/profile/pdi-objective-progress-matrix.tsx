@@ -79,7 +79,7 @@ export function PdiObjectiveProgressMatrix({
                 <span className="text-sm font-medium">{PDI_THEME_LABEL[theme]}</span>
                 <div className="flex shrink-0 items-center gap-2">
                   {hasAdvance ? (
-                    <span className="rounded-full bg-brand-muted px-2 py-0.5 text-[11px] font-medium text-brand-muted-foreground">
+                    <span className="rounded-full bg-brand-muted px-2 py-0.5 text-2xs font-medium text-brand-muted-foreground">
                       +{progress.delta.toFixed(1)}
                     </span>
                   ) : null}
@@ -118,7 +118,7 @@ export function PdiObjectiveProgressMatrix({
                   <Button
                     variant="link"
                     onClick={() => onCreateObjective(theme)}
-                    className="h-auto shrink-0 gap-0.5 border-none p-0 text-[11px] font-medium text-brand-muted-foreground underline-offset-2"
+                    className="h-auto shrink-0 gap-0.5 border-none p-0 text-2xs font-medium text-brand-muted-foreground underline-offset-2"
                   >
                     <Plus className="size-3" />
                     criar objetivo

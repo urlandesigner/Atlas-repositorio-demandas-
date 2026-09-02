@@ -165,7 +165,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
               <p className="text-lg font-semibold tracking-tight text-foreground">
                 {kudos.length}
               </p>
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-2xs text-muted-foreground">
                 {kudos.length === 1 ? "reconhecimento" : "reconhecimentos"}
               </p>
             </div>
@@ -248,7 +248,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
                             <Badge variant="secondary" className="font-normal">
                               {meta.label}
                             </Badge>
-                            <span className="text-[11px] text-muted-foreground">
+                            <span className="text-2xs text-muted-foreground">
                               {formatKudoDate(kudo.createdAt)}
                             </span>
                           </div>
@@ -329,7 +329,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
                       <p className="truncate text-sm font-medium text-foreground">
                         {teammate.name}
                       </p>
-                      <p className="truncate text-[11px] text-muted-foreground">
+                      <p className="truncate text-2xs text-muted-foreground">
                         {getOrgPublicPerson(org, teammate).title}
                       </p>
                     </div>

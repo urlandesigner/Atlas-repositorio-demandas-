@@ -116,7 +116,7 @@ function Section({
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-base font-semibold tracking-tight">{title}</h3>
-            <Badge variant="outline" className="font-mono text-[11px] font-normal">
+            <Badge variant="outline" className="font-mono text-2xs font-normal">
               {file}
             </Badge>
             {usage === 0 ? (
@@ -133,7 +133,7 @@ function Section({
               {api.map((item) => (
                 <code
                   key={item}
-                  className="rounded border border-border bg-muted/40 px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground"
+                  className="rounded border border-border bg-muted/40 px-1.5 py-0.5 font-mono text-2xs text-muted-foreground"
                 >
                   {item}
                 </code>
@@ -153,7 +153,7 @@ function Section({
 function Group({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex min-w-0 flex-col gap-2">
-      <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
+      <span className="text-3xs font-semibold uppercase tracking-[0.14em] text-muted-foreground/70">
         {label}
       </span>
       <div className="flex flex-wrap items-center gap-2">{children}</div>
@@ -487,7 +487,7 @@ const GAPS = [
   {
     title: "4 micro-labels inline fora do Overline (decisão consciente)",
     detail:
-      "Em quick-capture.tsx os labels \"Projeto\"/\"Objetivo\" e os badges \"Fixo\" são <span> dentro de <span> — um <p> ali seria HTML inválido, e o badge usa text-[9px], fora da escala do componente.",
+      "Em quick-capture.tsx os labels \"Projeto\"/\"Objetivo\" e os badges \"Fixo\" são <span> dentro de <span> — um <p> ali seria HTML inválido. O badge já usa text-3xs, dentro da escala; o que resta é a semântica.",
     fix: "Nenhuma — documentado como exceção legítima; se virarem bloco no futuro, migrar para o Overline.",
   },
   {
@@ -509,7 +509,7 @@ export default function DesignSystemPage() {
           <nav className="mt-4 flex flex-col gap-4">
             {NAV.map((section) => (
               <div key={section.group} className="flex flex-col gap-1">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
+                <span className="text-3xs font-semibold uppercase tracking-[0.14em] text-muted-foreground/60">
                   {section.group}
                 </span>
                 {section.items.map(([id, label]) => (
@@ -1566,7 +1566,7 @@ export default function DesignSystemPage() {
               <div className="flex flex-col gap-3">
                 {GAPS.map((gap, i) => (
                   <div key={gap.title} className="flex gap-3 rounded-[10px] border border-border bg-muted/20 p-4">
-                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-[11px] font-semibold text-accent-ink">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 font-mono text-2xs font-semibold text-accent-ink">
                       {i + 1}
                     </span>
                     <div className="min-w-0">

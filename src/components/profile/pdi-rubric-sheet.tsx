@@ -65,12 +65,12 @@ export function PdiRubricSheet({
                       <span className="block text-sm">{PDI_RUBRIC[theme][level]}</span>
                       <span className="mt-0.5 flex flex-wrap gap-1.5">
                         {isCurrent ? (
-                          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-brand-muted-foreground">
+                          <span className="inline-flex items-center gap-1 text-2xs font-medium text-brand-muted-foreground">
                             <Check className="size-3" /> nível atual
                           </span>
                         ) : null}
                         {isExpected ? (
-                          <span className="text-[11px] font-medium text-foreground/70">
+                          <span className="text-2xs font-medium text-foreground/70">
                             esperado
                           </span>
                         ) : null}

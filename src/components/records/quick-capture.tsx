@@ -613,7 +613,7 @@ function InputStep({
         <div className="mb-3 flex items-center justify-between gap-3">
           <div>
             <p className="text-xs font-medium text-foreground">Onde esse progresso aconteceu?</p>
-            <p className="mt-0.5 text-[11px] text-muted-foreground">
+            <p className="mt-0.5 text-2xs text-muted-foreground">
               {hasLockedContext
                 ? "O contexto atual já está definido. Adicione outro vínculo apenas se fizer sentido."
                 : "Vincule a um projeto, a um objetivo ou aos dois."}
@@ -628,13 +628,13 @@ function InputStep({
           <div className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
             <FolderOpenIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-accent-ink" />
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              <span className="block text-3xs font-medium uppercase tracking-wider text-muted-foreground">
                 Projeto
               </span>
               {lockedProjectName ? (
                 <span className="mt-0.5 flex items-center justify-between gap-2 text-xs font-medium">
                   <span className="truncate">{lockedProjectName}</span>
-                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-accent-ink">
+                  <span className="shrink-0 text-3xs font-semibold uppercase tracking-wider text-accent-ink">
                     Fixo
                   </span>
                 </span>
@@ -667,13 +667,13 @@ function InputStep({
           <div className="group flex items-center gap-2.5 rounded-lg border bg-background px-3 py-2.5 transition-colors focus-within:border-primary/40 focus-within:ring-2 focus-within:ring-primary/10">
             <TargetIcon className="size-4 shrink-0 text-muted-foreground group-focus-within:text-accent-ink" />
             <span className="min-w-0 flex-1">
-              <span className="block text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+              <span className="block text-3xs font-medium uppercase tracking-wider text-muted-foreground">
                 Objetivo
               </span>
               {lockedObjectiveTitle ? (
                 <span className="mt-0.5 flex items-center justify-between gap-2 text-xs font-medium">
                   <span className="truncate">{lockedObjectiveTitle}</span>
-                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-accent-ink">
+                  <span className="shrink-0 text-3xs font-semibold uppercase tracking-wider text-accent-ink">
                     Fixo
                   </span>
                 </span>
@@ -731,16 +731,16 @@ function InputStep({
           {detecting ? (
             <div className="flex items-center gap-1.5">
               <Loader2Icon className="size-3 animate-spin text-accent-ink/70" />
-              <span className="text-[11px] text-muted-foreground">Interpretando...</span>
+              <span className="text-2xs text-muted-foreground">Interpretando...</span>
             </div>
           ) : atuacaoInfo ? (
             <div className="flex items-center gap-2">
               <StatusBadge tone="neutral">{atuacaoInfo.label}</StatusBadge>
               {detection!.tags.length > 0 && (
                 <>
-                  <span className="text-muted-foreground/40 text-[11px]">·</span>
+                  <span className="text-muted-foreground/40 text-2xs">·</span>
                   {detection!.tags.map((tag) => (
-                    <span key={tag} className="text-[11px] text-muted-foreground/60">
+                    <span key={tag} className="text-2xs text-muted-foreground/60">
                       #{tag}
                     </span>
                   ))}
@@ -783,7 +783,7 @@ function InputStep({
       {/* Footer */}
       <div className="flex items-center justify-between border-t px-5 py-3">
         <p className="text-xs text-muted-foreground">
-          <kbd className="rounded border px-1 py-0.5 text-[10px] font-mono bg-muted">⌘↵</kbd>
+          <kbd className="rounded border px-1 py-0.5 text-3xs font-mono bg-muted">⌘↵</kbd>
           {" para estruturar"}
         </p>
         <Button onClick={onAnalyze} disabled={!canAnalyze} size="sm" className="gap-1.5">
@@ -942,7 +942,7 @@ function ReviewStep({
             <button
               type="button"
               onClick={() => setShowRaw(!showRaw)}
-              className="flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground transition-colors"
+              className="flex items-center gap-1.5 text-2xs text-muted-foreground hover:text-foreground transition-colors"
             >
               <ChevronRightIcon
                 className={cn(
@@ -983,7 +983,7 @@ function ReviewStep({
                       )}
                     >
                       <span className="text-sm leading-none">{sig.icon}</span>
-                      <span className="text-[11px] font-medium">{sig.label}</span>
+                      <span className="text-2xs font-medium">{sig.label}</span>
                     </div>
                   ))}
                 </div>
@@ -1010,14 +1010,14 @@ function ReviewStep({
                   {competencyMatches.map((c) => (
                     <span
                       key={c.id}
-                      className="rounded-md border bg-muted/40 px-2 py-1 text-[11px] text-muted-foreground"
+                      className="rounded-md border bg-muted/40 px-2 py-1 text-2xs text-muted-foreground"
                     >
                       {c.label}
                     </span>
                   ))}
                 </div>
               ) : (
-                <span className="text-[11px] text-muted-foreground/50">
+                <span className="text-2xs text-muted-foreground/50">
                   Nenhuma competência identificada
                 </span>
               )}
@@ -1040,7 +1040,7 @@ function ReviewStep({
                   onCheckedChange={(checked) => onKnowledgeShareChange(checked)}
                   className="mt-0.5 size-3.5"
                 />
-                <span className="text-[11px] leading-snug text-muted-foreground">
+                <span className="text-2xs leading-snug text-muted-foreground">
                   Isso também foi uma apresentação ou compartilhamento de conhecimento?
                 </span>
               </label>
@@ -1050,8 +1050,8 @@ function ReviewStep({
             <div className="flex flex-col gap-2">
               <SidebarLabel>Relevância Profissional</SidebarLabel>
               <div className={cn("rounded-lg border px-3 py-2.5", STATUS_TONE_CLASS[score.tone])}>
-                <p className="text-[11px] font-semibold leading-snug">{score.label}</p>
-                <p className="text-[10px] opacity-75 mt-0.5 leading-snug">{score.description}</p>
+                <p className="text-2xs font-semibold leading-snug">{score.label}</p>
+                <p className="text-3xs opacity-75 mt-0.5 leading-snug">{score.description}</p>
               </div>
             </div>
 

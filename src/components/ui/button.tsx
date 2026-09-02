@@ -21,10 +21,10 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "h-10 gap-1.5 px-[18px] text-[14px] leading-none tracking-[0em] has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
+          "h-10 gap-1.5 px-[18px] text-sm leading-none tracking-[0em] has-data-[icon=inline-end]:pr-4 has-data-[icon=inline-start]:pl-4",
         xs: "h-7 gap-1 rounded-[min(var(--radius-md),8px)] px-2 text-[12px] leading-none has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-9 gap-1.5 rounded-[min(var(--radius-md),8px)] px-3 text-[14px] leading-none has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-11 gap-1.5 px-5 text-[14px] leading-none has-data-[icon=inline-end]:pr-[18px] has-data-[icon=inline-start]:pl-[18px]",
+        sm: "h-9 gap-1.5 rounded-[min(var(--radius-md),8px)] px-3 text-sm leading-none has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-11 gap-1.5 px-5 text-sm leading-none has-data-[icon=inline-end]:pr-[18px] has-data-[icon=inline-start]:pl-[18px]",
         icon: "size-8",
         "icon-xs":
           "size-6 rounded-[min(var(--radius-md),8px)] [&_svg:not([class*='size-'])]:size-3",

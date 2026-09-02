@@ -46,7 +46,7 @@ export function CompetencyRow({
           </div>
           <p className="mt-1 text-xs text-muted-foreground">{view.description}</p>
           {themeLabels ? (
-            <p className="mt-1 text-[11px] text-muted-foreground/80">
+            <p className="mt-1 text-2xs text-muted-foreground/80">
               Contribui para a matriz PDI: {themeLabels}
             </p>
           ) : null}
@@ -58,7 +58,7 @@ export function CompetencyRow({
       </div>
 
       <div className="mt-3">
-        <div className="flex items-center justify-between text-[11px] text-muted-foreground">
+        <div className="flex items-center justify-between text-2xs text-muted-foreground">
           <span>
             Nível percebido {view.perceivedLevel} · esperado {view.expectedLevel}
           </span>

@@ -102,7 +102,7 @@ export function KudosReceivedCard({ className }: { className?: string }) {
                   icon={
                     <span
                       aria-hidden="true"
-                      className="flex size-6 items-center justify-center rounded-full bg-brand-muted text-[13px]"
+                      className="flex size-6 items-center justify-center rounded-full bg-brand-muted text-xs"
                     >
                       {meta.emoji}
                     </span>

@@ -563,7 +563,7 @@ function ProjectDetailSurface({
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-10">
             <div className="min-w-0 space-y-1.5 lg:shrink-0">
               <div className="flex flex-wrap items-center gap-2">
-                <StatusBadge tone={PROJECT_STATUS_TONE[editStatus]} className="rounded-full px-2.5 py-1 text-[11px] font-medium shadow-none">
+                <StatusBadge tone={PROJECT_STATUS_TONE[editStatus]} className="rounded-full px-2.5 py-1 text-2xs font-medium shadow-none">
                   {STATUS_LABEL[editStatus]}
                 </StatusBadge>
                 {showFreelancerFields && clientDisplayName && (
@@ -725,7 +725,7 @@ function ProjectDetailSurface({
                   >
                     <div className="flex items-start justify-between gap-3">
                       <p className="min-w-0 truncate text-sm font-medium text-foreground">{record.enriched.title || "Entrega sem título"}</p>
-                      <span className="shrink-0 text-[11px] text-muted-foreground">
+                      <span className="shrink-0 text-2xs text-muted-foreground">
                         {new Date(record.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
                       </span>
                     </div>
@@ -767,7 +767,7 @@ function ProjectDetailSurface({
                                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                     <div className="min-w-0">
                                       <div className="flex flex-wrap items-center gap-2">
-                                        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-[11px] font-medium">
+                                        <Badge variant="outline" className="rounded-full px-2.5 py-1 text-2xs font-medium">
                                           {TIMELINE_EVENT_LABEL[event.type]}
                                         </Badge>
                                         <span className="text-xs text-muted-foreground">{formatTimelineTime(event.created_at)}</span>

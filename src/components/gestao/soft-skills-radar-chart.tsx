@@ -142,6 +142,9 @@ export function SoftSkillsRadarChart({
               y={labelPoint.y}
               textAnchor="middle"
               dominantBaseline="middle"
+              // 9px aqui é unidade de viewBox, não pixel de tela: o SVG é
+              // 240x240 e escala junto com o container. Não pertence à escala
+              // tipográfica da página.
               className="fill-muted-foreground text-[9px]"
             >
               {labelLines(pillar.label).map((line, lineIndex, lines) => (

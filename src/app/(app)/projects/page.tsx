@@ -139,7 +139,7 @@ function ProjectTable({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[760px] border-collapse text-left text-sm">
           <thead>
-            <tr className="border-b border-border bg-muted/25 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            <tr className="border-b border-border bg-muted/25 text-3xs font-semibold uppercase tracking-[0.12em] text-muted-foreground">
               <th className="w-[38%] px-4 py-3 font-semibold">Projeto</th>
               <th className="w-[15%] px-4 py-3 font-semibold">Status</th>
               <th className="w-[20%] px-4 py-3 font-semibold">Período</th>

@@ -21,7 +21,7 @@ function Overline({
       {
         className: cn(
           "font-medium uppercase text-muted-foreground",
-          size === "sm" ? "text-[10px] tracking-[0.14em]" : "text-[11px] tracking-[0.12em]",
+          size === "sm" ? "text-3xs tracking-[0.14em]" : "text-2xs tracking-[0.12em]",
           className
         ),
       },

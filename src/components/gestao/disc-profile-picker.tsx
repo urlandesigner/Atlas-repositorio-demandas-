@@ -54,7 +54,7 @@ export function DiscProfilePicker({
               <div className="flex items-center justify-between gap-2">
                 <span className="text-sm font-medium">{profile.label}</span>
                 {selected ? (
-                  <Badge variant="outline" className="text-[10px]">
+                  <Badge variant="outline" className="text-3xs">
                     {isDominant ? "Dominante" : `#${rank + 1}`}
                   </Badge>
                 ) : null}
@@ -78,7 +78,7 @@ export function DiscProfilePicker({
                     <span className="text-xs text-muted-foreground">{index + 1}.</span>
                     <span className="text-sm font-medium">{profile.label}</span>
                     {index === 0 ? (
-                      <Badge className="h-5 text-[10px]">Dominante</Badge>
+                      <Badge className="h-5 text-3xs">Dominante</Badge>
                     ) : null}
                   </div>
                   <div className="flex gap-1">

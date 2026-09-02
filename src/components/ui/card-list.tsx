@@ -143,7 +143,7 @@ export function CardListItem({
           em tabular os dígitos ocupam a mesma largura — então a coluna fecha
           reta em vez de dançar conforme o número. */}
       {date ? (
-        <p className="mt-2.5 font-mono text-[11px] leading-none font-medium tracking-[0.08em] uppercase tabular-nums text-muted-foreground">
+        <p className="mt-2.5 font-mono text-2xs leading-none font-medium tracking-[0.08em] uppercase tabular-nums text-muted-foreground">
           {date}
         </p>
       ) : null}
@@ -162,7 +162,7 @@ export function CardListItem({
 export function CardListRowTitle({ className, ...props }: React.ComponentProps<"p">) {
   return (
     <p
-      className={cn("text-[15px] font-semibold leading-snug text-foreground", className)}
+      className={cn("text-md font-semibold leading-snug text-foreground", className)}
       {...props}
     />
   )

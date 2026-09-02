@@ -11,7 +11,7 @@ import { Overline } from "@/components/ui/overline"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 const inputClassName =
-  "h-11 border-border/70 px-4 text-[15px] transition-[border-color,box-shadow] focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/12"
+  "h-11 border-border/70 px-4 text-md transition-[border-color,box-shadow] focus-visible:border-ring focus-visible:ring-4 focus-visible:ring-ring/12"
 
 export function LoginForm() {
   const { login } = useAuth()

@@ -10,8 +10,19 @@
   --font-sans: var(--font-archivo), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, Menlo, monospace;
   --font-heading: var(--font-sans);
+  /* Escala de texto.
+     `xs` é 13px, não os 12px padrão do Tailwind — já era assim.
+     Os três degraus abaixo existiam de fato no app, só que escritos à mão em
+     cada chamada: 51 ocorrências de text-[11px], 15 de text-[10px] e 6 de
+     text-[15px], em 67 lugares fora dos primitivos. Nomear é o que faz dois
+     pontos distantes concordarem sem ninguém conferir.
+     Sem `--line-height` de propósito: as chamadas antigas só fixavam o
+     tamanho e herdavam a entrelinha. Declarar uma aqui mudaria layout. */
+  --text-3xs: 0.625rem;
+  --text-2xs: 0.6875rem;
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.125rem;
+  --text-md: 0.9375rem;
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-muted: var(--brand-muted);
