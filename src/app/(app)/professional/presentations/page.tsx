@@ -181,7 +181,7 @@ function PresentationCard({
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-medium text-sm leading-snug">{item.title}</h3>
-          <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="shrink-0 text-xs font-normal">
+          <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="shrink-0 text-xs">
             {STATUS_LABEL[item.status]}
           </StatusBadge>
         </div>
@@ -259,7 +259,7 @@ function PresentationDrawer({
             <SheetHeader className="px-5 pt-5 pb-4 border-b pr-12">
               <div className="flex items-center gap-2 flex-wrap">
                 <SheetTitle className="text-base">{item.title}</SheetTitle>
-                <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="font-normal">
+                <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]}>
                   {STATUS_LABEL[item.status]}
                 </StatusBadge>
               </div>
@@ -294,7 +294,7 @@ function PresentationDrawer({
 
                 <section>
                   <p className="text-xs font-medium text-muted-foreground mb-1.5">Status</p>
-                  <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]} className="font-normal">
+                  <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]}>
                     {STATUS_LABEL[item.status]}
                   </StatusBadge>
                 </section>

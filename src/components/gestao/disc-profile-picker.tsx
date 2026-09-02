@@ -124,7 +124,7 @@ export function DiscProfileBadges({ profiles }: { profiles: DiscProfileId[] }) {
         const profile = DISC_PROFILES.find((entry) => entry.id === id)
         if (!profile) return null
         return (
-          <Badge key={id} variant="outline" className="font-normal">
+          <Badge key={id} variant="outline">
             {profile.label}
             {index === 0 ? " · dominante" : ""}
           </Badge>

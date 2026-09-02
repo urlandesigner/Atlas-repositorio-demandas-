@@ -198,7 +198,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
               {profile?.skills.length ? (
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {profile.skills.map((skill) => (
-                    <Badge key={skill} variant="secondary" className="font-normal">
+                    <Badge key={skill} variant="secondary">
                       {skill}
                     </Badge>
                   ))}
@@ -245,7 +245,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
                                 Ex-colaborador
                               </span>
                             )}
-                            <Badge variant="secondary" className="font-normal">
+                            <Badge variant="secondary">
                               {meta.label}
                             </Badge>
                             <span className="text-2xs text-muted-foreground">

@@ -108,7 +108,7 @@ export function KudosReceivedCard({ className }: { className?: string }) {
                     </span>
                   }
                   badges={
-                    <Badge variant="outline" className="font-normal">
+                    <Badge variant="outline">
                       {meta.label}
                     </Badge>
                   }

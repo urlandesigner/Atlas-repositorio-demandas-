@@ -52,7 +52,7 @@ export function NextPdiHighlight({
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
             <p className="text-sm font-semibold tracking-tight">Próximo PDI</p>
-            <StatusBadge tone={BADGE_TONE[tone]} className="font-normal">
+            <StatusBadge tone={BADGE_TONE[tone]}>
               {getNextPdiStatusText(daysUntil)}
             </StatusBadge>
           </div>

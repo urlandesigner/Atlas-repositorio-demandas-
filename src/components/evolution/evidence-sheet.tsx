@@ -49,10 +49,10 @@ export function EvidenceSheet({
                         {getRecordImpactText(record)}
                       </p>
                       <div className="mt-2 flex flex-wrap gap-1">
-                        <Badge variant="outline" className="text-3xs font-normal">
+                        <Badge variant="outline" className="text-3xs">
                           Impacto {record.impactLevel}
                         </Badge>
-                        <Badge variant="outline" className="text-3xs font-normal">
+                        <Badge variant="outline" className="text-3xs">
                           {record.atuacao}
                         </Badge>
                       </div>

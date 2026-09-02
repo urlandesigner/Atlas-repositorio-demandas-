@@ -3,6 +3,23 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
+/**
+ * ## Que `size` usar
+ *
+ * Três contextos, três tamanhos — medidos no app, não inventados:
+ *
+ * | contexto | size | por quê |
+ * |---|---|---|
+ * | CTA de cabeçalho | `sm` | 36px é a malha do app: mesma altura da faixa do header dos cards e das linhas da navegação lateral. O contrato está em `PageHeaderActions`. |
+ * | ação em linha de lista | `sm` | compacta, para não competir com o conteúdo da linha. 18 de 20 já eram assim. |
+ * | rodapé de Sheet/Dialog | `default` | é a ação que confirma o trabalho do painel; 33 de 35 já eram assim. |
+ *
+ * `xs` é para densidade excepcional (CTA dentro de uma linha de aviso), `lg`
+ * não tem consumidor fora da vitrine.
+ *
+ * Isso está escrito porque a altura já divergiu uma vez: dos 11 CTAs de
+ * cabeçalho, 6 estavam em `default` e 5 em `sm` — decidido em cada chamada.
+ */
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-[min(var(--radius-md),8px)] border bg-clip-padding font-medium whitespace-nowrap transition-[background-color,border-color,color] duration-150 outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/20 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {

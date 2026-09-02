@@ -36,7 +36,7 @@ export function ProfessionalTimeline({
                     >
                       <span className="absolute -left-[5px] size-2 rounded-full bg-brand ring-2 ring-card" />
                       <span className="min-w-0 flex-1 truncate text-sm">{item.title}</span>
-                      <Badge variant="outline" className="shrink-0 font-normal">
+                      <Badge variant="outline" className="shrink-0">
                         {item.roleLabel}
                       </Badge>
                     </ListRowButton>

@@ -197,8 +197,12 @@ export function Trilha({
       // tamanho da janela: em 1024 o card tinha 459px e a linha continuava
       // horizontal, truncando os cinco rótulos para "SENIO…". Agora ela empilha
       // quando ela mesma está estreita, com o medidor abaixo do trilho.
+      //
+      // O limite é `@xl` (576px) e não `@2xl` (672px): em 672 a Trilha empilhava
+      // numa janela de 1330px, onde o container mede 668 — errava por 4 pixels.
+      // Os rótulos somam ~319px e o medidor 144, então 576 tem folga.
       <div className={cn("@container", className)}>
-        <div className="flex flex-col gap-5 @2xl:flex-row @2xl:items-end @2xl:justify-between">
+        <div className="flex flex-col gap-5 @xl:flex-row @xl:items-end @xl:justify-between">
           <div className="min-w-0 flex-1">
             <span className="label-mono text-muted-foreground">
               Trilha de carreira
@@ -215,7 +219,7 @@ export function Trilha({
             <div className="mt-4">{track}</div>
           </div>
           {typeof readiness === "number" ? (
-            <div className="flex shrink-0 flex-col items-start gap-2 @2xl:items-end">
+            <div className="flex shrink-0 flex-col items-start gap-2 @xl:items-end">
               <span className="label-mono text-muted-foreground">
                 Prontidão
               </span>

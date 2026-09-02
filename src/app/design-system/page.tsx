@@ -116,7 +116,7 @@ function Section({
         <div className="flex flex-col gap-2">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-base font-semibold tracking-tight">{title}</h3>
-            <Badge variant="outline" className="font-mono text-2xs font-normal">
+            <Badge variant="outline" className="font-mono text-2xs">
               {file}
             </Badge>
             {usage === 0 ? (

@@ -40,7 +40,7 @@ export function CompetencyRow({
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-2">
             <h3 className="text-sm font-medium">{view.label}</h3>
-            <Badge variant="outline" className={cn("font-normal", STATUS_STYLE[view.status])}>
+            <Badge variant="outline" className={STATUS_STYLE[view.status]}>
               {EVIDENCE_STATUS_LABEL[view.status]}
             </Badge>
           </div>

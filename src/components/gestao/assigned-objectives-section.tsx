@@ -76,16 +76,16 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between gap-3">
                 <h3 className="min-w-0 flex-1 line-clamp-2 text-sm font-medium leading-snug">{objective.title}</h3>
-                <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]} className="shrink-0 font-normal">
+                <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]} className="shrink-0">
                   {OBJECTIVE_STATUS_LABEL[objective.status]}
                 </StatusBadge>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                <Badge variant="secondary" className="font-normal">
+                <Badge variant="secondary">
                   Definido pelo gestor
                 </Badge>
                 {objective.dimensions.map((dimension) => (
-                  <Badge key={dimension} variant="outline" className="font-normal">
+                  <Badge key={dimension} variant="outline">
                     {PDI_DIMENSION_LABEL[dimension]}
                   </Badge>
                 ))}
@@ -113,7 +113,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
               <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
                 <div className="flex flex-wrap items-center gap-2">
                   <SheetTitle className="text-base">{selected.title}</SheetTitle>
-                  <StatusBadge tone={OBJECTIVE_STATUS_TONE[selected.status]} className="font-normal">
+                  <StatusBadge tone={OBJECTIVE_STATUS_TONE[selected.status]}>
                     {OBJECTIVE_STATUS_LABEL[selected.status]}
                   </StatusBadge>
                   <Badge variant="secondary">Definido pelo gestor</Badge>
@@ -143,7 +143,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
                   {selected.dimensions.length ? (
                     <div className="flex flex-wrap gap-1.5">
                       {selected.dimensions.map((dimension) => (
-                        <Badge key={dimension} variant="outline" className="font-normal">
+                        <Badge key={dimension} variant="outline">
                           {PDI_DIMENSION_LABEL[dimension]}
                         </Badge>
                       ))}

@@ -86,7 +86,7 @@ function ProjectCard({
         <CardHeader>
           <div className="flex items-center justify-between gap-2">
             <h3 className="truncate text-sm font-medium">{project.name}</h3>
-            <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0 font-normal">
+            <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0">
               {STATUS_LABEL[project.status]}
             </StatusBadge>
           </div>
@@ -175,7 +175,7 @@ function ProjectTable({
                     </Link>
                   </td>
                   <td className="px-4 py-3.5">
-                    <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0 font-normal">
+                    <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0">
                       {STATUS_LABEL[project.status]}
                     </StatusBadge>
                   </td>

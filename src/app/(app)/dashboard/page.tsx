@@ -107,7 +107,7 @@ function ActivityRow({ item }: { item: ActivityItem }) {
           </div>
         }
         badges={
-          <Badge variant="outline" className="font-normal">
+          <Badge variant="outline">
             {item.label}
           </Badge>
         }
@@ -161,11 +161,11 @@ function ObjectiveRow({ objective }: { objective: ObjectiveEntry }) {
       <CardListItem
         badges={
           <>
-            <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]} className="font-normal">
+            <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]}>
               {OBJECTIVE_STATUS_LABEL[objective.status]}
             </StatusBadge>
             {dimension ? (
-              <Badge variant="outline" className="font-normal">
+              <Badge variant="outline">
                 {PDI_DIMENSION_LABEL[dimension]}
               </Badge>
             ) : null}
@@ -194,7 +194,7 @@ function ProjectRow({ project }: { project: ProjectEntry & { workspace: Workspac
           <CardListRowTitle className="truncate">{project.name}</CardListRowTitle>
           <CardListRowMeta>{TAB_LABEL[project.workspace]}</CardListRowMeta>
         </div>
-        <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0 font-normal">
+        <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0">
           {STATUS_LABEL[project.status]}
         </StatusBadge>
       </CardListRow>

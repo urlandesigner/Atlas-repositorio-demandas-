@@ -149,12 +149,12 @@ export function PeopleDirectory() {
                       {profile?.skills.length ? (
                         <div className="flex flex-wrap gap-1.5">
                           {profile.skills.slice(0, 3).map((skill) => (
-                            <Badge key={skill} variant="secondary" className="font-normal">
+                            <Badge key={skill} variant="secondary">
                               {skill}
                             </Badge>
                           ))}
                           {profile.skills.length > 3 ? (
-                            <Badge variant="secondary" className="font-normal">
+                            <Badge variant="secondary">
                               +{profile.skills.length - 3}
                             </Badge>
                           ) : null}

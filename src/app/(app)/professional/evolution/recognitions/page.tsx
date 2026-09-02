@@ -111,7 +111,7 @@ export default function EvolutionRecognitionsPage() {
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
                           <h3 className="text-sm font-medium">{item.title}</h3>
-                          <Badge variant="outline" className="font-normal">
+                          <Badge variant="outline">
                             {RECOGNITION_TYPE_LABEL[item.type]}
                           </Badge>
                         </div>
@@ -155,7 +155,7 @@ export default function EvolutionRecognitionsPage() {
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       <h2 className="text-sm font-medium">Elogios da rede</h2>
-                      <Badge variant="secondary" className="font-normal">
+                      <Badge variant="secondary">
                         {pendingKudos.length}
                       </Badge>
                     </div>
@@ -191,7 +191,7 @@ export default function EvolutionRecognitionsPage() {
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
                             <h3 className="text-sm font-medium">{meta.label}</h3>
-                            <Badge variant="secondary" className="font-normal">
+                            <Badge variant="secondary">
                               da rede
                             </Badge>
                           </div>

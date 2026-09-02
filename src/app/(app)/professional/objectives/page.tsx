@@ -433,19 +433,19 @@ function ObjectiveCard({
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <h3 className="min-w-0 flex-1 line-clamp-2 text-sm font-medium leading-snug">{item.title}</h3>
-          <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]} className="shrink-0 font-normal">
+          <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]} className="shrink-0">
             <StatusIcon data-icon="inline-start" />
             {OBJECTIVE_STATUS_LABEL[item.status]}
           </StatusBadge>
         </div>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {item.dimensions.slice(0, 3).map((dimension) => (
-            <Badge key={dimension} variant="outline" className="font-normal">
+            <Badge key={dimension} variant="outline">
               {PDI_DIMENSION_LABEL[dimension]}
             </Badge>
           ))}
           {item.dimensions.length > 3 ? (
-            <Badge variant="outline" className="font-normal">
+            <Badge variant="outline">
               +{item.dimensions.length - 3}
             </Badge>
           ) : null}
@@ -543,7 +543,7 @@ function ObjectiveDrawer({
             <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
               <div className="flex flex-wrap items-center gap-2">
                 <SheetTitle className="text-base">{item.title}</SheetTitle>
-                <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]} className="font-normal">
+                <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]}>
                   {OBJECTIVE_STATUS_LABEL[item.status]}
                 </StatusBadge>
               </div>
@@ -569,7 +569,7 @@ function ObjectiveDrawer({
                   <div className="flex flex-wrap gap-1.5">
                     {item.dimensions.length ? (
                       item.dimensions.map((dimension) => (
-                        <Badge key={dimension} variant="outline" className="font-normal">
+                        <Badge key={dimension} variant="outline">
                           {PDI_DIMENSION_LABEL[dimension]}
                         </Badge>
                       ))

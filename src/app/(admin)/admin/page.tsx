@@ -15,7 +15,11 @@ import {
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
 import { buttonVariants } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  CardList,
+  CardListBody,
+  CardListHeader,
+} from "@/components/ui/card-list"
 import { MetricCard } from "@/components/ui/metric-card"
 import { PageHeader } from "@/components/ui/page-header"
 import { PersonAvatar } from "@/components/ui/person-avatar"
@@ -181,11 +185,9 @@ export default function AdminHomePage() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-        <Card className="border-border/60">
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Indicadores da área</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+        <CardList className="border-border/60">
+          <CardListHeader title="Indicadores da área" />
+          <CardListBody className="space-y-4 p-4">
             <HealthRow
               label="Cobertura de PDI"
               value={`${coverage}%`}
@@ -210,15 +212,15 @@ export default function AdminHomePage() {
               description="Trilhas globais e da área disponíveis"
               progress={Math.min(100, frameworksCount * 20)}
             />
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
 
-        <Card className="border-border/60">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium">Acesso rápido</CardTitle>
-            <ShieldCheck className="size-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent className="flex flex-wrap gap-2">
+        <CardList className="border-border/60">
+          <CardListHeader
+            title="Acesso rápido"
+            action={<ShieldCheck className="size-4 text-muted-foreground" />}
+          />
+          <CardListBody className="flex flex-wrap gap-2 p-4">
             {adminShortcuts.map((item) => (
               <Link
                 key={item.href}
@@ -228,24 +230,22 @@ export default function AdminHomePage() {
                 {item.label}
               </Link>
             ))}
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <Card className="border-border/60 xl:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between gap-4">
-            <div>
-              <CardTitle className="text-sm font-medium">Fila de decisão</CardTitle>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Solicitações que dependem de resposta do admin de área.
-              </p>
-            </div>
-            <Link href="/admin/pdis" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-              Abrir PDIs
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-2">
+        <CardList className="border-border/60 xl:col-span-2">
+          <CardListHeader
+            title="Fila de decisão"
+            description="Solicitações que dependem de resposta do admin de área."
+            action={
+              <Link href="/admin/pdis" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                Abrir PDIs
+              </Link>
+            }
+          />
+          <CardListBody className="space-y-2 p-4">
             {pendingRequests.length ? (
               pendingRequests.slice(0, 5).map((request) => {
                 const assignment = pdiData.assignments.find((entry) => entry.id === request.assignmentId)
@@ -284,17 +284,15 @@ export default function AdminHomePage() {
             ) : (
               <EmptyMiniState text="Nenhuma aprovação pendente no momento." />
             )}
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
 
-        <Card className="border-border/60">
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Cobertura imediata</CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Colaboradores que ainda não estão cobertos por um PDI ativo.
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-2">
+        <CardList className="border-border/60">
+          <CardListHeader
+            title="Cobertura imediata"
+            description="Colaboradores que ainda não estão cobertos por um PDI ativo."
+          />
+          <CardListBody className="space-y-2 p-4">
             {collaboratorsWithoutPdi.length ? (
               collaboratorsWithoutPdi.map((item) => (
                 <div
@@ -311,19 +309,21 @@ export default function AdminHomePage() {
             ) : (
               <EmptyMiniState text="Toda a base já está com PDI ativo." />
             )}
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_0.9fr]">
-        <Card className="border-border/60">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-medium">Gestores da área</CardTitle>
-            <Link href="/admin/gestores" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-              Ver gestão
-            </Link>
-          </CardHeader>
-          <CardContent className="space-y-2">
+        <CardList className="border-border/60">
+          <CardListHeader
+            title="Gestores da área"
+            action={
+              <Link href="/admin/gestores" className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                Ver gestão
+              </Link>
+            }
+          />
+          <CardListBody className="space-y-2 p-4">
             {managersWithReports.length ? (
               managersWithReports.map((manager) => (
                 <div
@@ -343,17 +343,15 @@ export default function AdminHomePage() {
             ) : (
               <EmptyMiniState text="Nenhum gestor cadastrado para esta área." />
             )}
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
 
-        <Card className="border-border/60">
-          <CardHeader>
-            <CardTitle className="text-sm font-medium">Visibilidade da área</CardTitle>
-            <p className="mt-1 text-xs text-muted-foreground">
-              O que os colaboradores podem enxergar hoje no próprio perfil.
-            </p>
-          </CardHeader>
-          <CardContent className="space-y-2">
+        <CardList className="border-border/60">
+          <CardListHeader
+            title="Visibilidade da área"
+            description="O que os colaboradores podem enxergar hoje no próprio perfil."
+          />
+          <CardListBody className="space-y-2 p-4">
             <PermissionRow
               label="Perfil comportamental"
               enabled={permissions?.collaboratorCanViewDisc ?? false}
@@ -371,8 +369,8 @@ export default function AdminHomePage() {
                 Ajustar permissões
               </Link>
             </div>
-          </CardContent>
-        </Card>
+          </CardListBody>
+        </CardList>
       </div>
     </div>
   )

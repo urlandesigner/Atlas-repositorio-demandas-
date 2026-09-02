@@ -976,7 +976,7 @@ function ProjectDetailSurface({
                       <li key={payment.id} className="flex items-start justify-between gap-3 rounded-xl border border-border/70 px-3 py-2">
                         <div className="min-w-0">
                           <span className="text-xs text-muted-foreground">
-                            {new Date(payment.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
+                            {formatPaymentDate(payment.date)}
                           </span>
                           {payment.notes && <p className="mt-1 text-xs text-muted-foreground">{payment.notes}</p>}
                         </div>
@@ -1004,6 +1004,19 @@ function ProjectDetailSurface({
       </div>
     </div>
   )
+}
+
+/**
+ * `payment.date` é data-only (YYYY-MM-DD). `new Date("2026-06-28")` parseia como
+ * meia-noite UTC e, em BRT, volta um dia — o pagamento aparecia na véspera. O
+ * `T00:00:00` força hora local, que é a convenção das outras telas de data-only.
+ */
+function formatPaymentDate(iso: string) {
+  return new Date(`${iso}T00:00:00`).toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  })
 }
 
 export default function ProjectDetailPage() {

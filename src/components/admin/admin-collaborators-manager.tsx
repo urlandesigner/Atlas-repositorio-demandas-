@@ -2,10 +2,16 @@
 
 import { useMemo, useState, useSyncExternalStore } from "react"
 import Link from "next/link"
-import { ArrowUpRight, Pencil, Plus, Trash2 } from "lucide-react"
+import { ArrowUpRight, MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { PageHeader } from "@/components/ui/page-header"
@@ -171,15 +177,19 @@ export function AdminCollaboratorsManager() {
                     <Pencil className="size-3.5" data-icon="inline-start" />
                     Editar
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-destructive hover:text-destructive"
-                    onClick={() => setDeleting(user)}
-                  >
-                    <Trash2 className="size-3.5" data-icon="inline-start" />
-                    Excluir
-                  </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={<Button variant="ghost" size="icon-sm" aria-label="Mais ações" />}
+                    >
+                      <MoreHorizontal className="size-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-44">
+                      <DropdownMenuItem variant="destructive" onClick={() => setDeleting(user)}>
+                        <Trash2 className="size-4" />
+                        Excluir
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </CardListRow>
             ))}
