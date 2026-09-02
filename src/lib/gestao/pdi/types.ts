@@ -153,6 +153,24 @@ export function createFrameworkDraft(input: {
   }
 }
 
+/**
+ * Os PDIs de uma pessoa: ativo primeiro, encerrados do mais recente ao mais
+ * antigo. Função pura para o store (getAssignmentsForUser) e o componente React
+ * ordenarem igual — o componente precisa partir do snapshot do
+ * useSyncExternalStore, não pode chamar o leitor do store.
+ */
+export function selectAssignmentsForUser(
+  assignments: PdiAssignment[],
+  userId: string
+): PdiAssignment[] {
+  return assignments
+    .filter((assignment) => assignment.userId === userId)
+    .sort((left, right) => {
+      if (left.status !== right.status) return left.status === "active" ? -1 : 1
+      return right.updatedAt.localeCompare(left.updatedAt)
+    })
+}
+
 export function getLadderLevelIndex(framework: PdiFramework, levelId: string): number {
   return framework.ladder.findIndex((level) => level.id === levelId)
 }

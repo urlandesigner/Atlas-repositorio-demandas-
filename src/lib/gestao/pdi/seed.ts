@@ -52,6 +52,31 @@ PRODUCT_FRAMEWORK.expectations = {
 export const GESTAO_PDI_SEED: GestaoPdiData = {
   frameworks: [ENGINEERING_FRAMEWORK, PRODUCT_FRAMEWORK],
   assignments: [
+    // Ciclo anterior, encerrado. Existe para o histórico de PDI ter o que
+    // mostrar na demonstração: sem ele a tela nasce com uma linha só e o ganho
+    // de ver a evolução entre ciclos fica invisível. Níveis abaixo dos do ciclo
+    // atual de propósito, para o delta por tema aparecer.
+    {
+      id: "assignment-colab-demo-2025h2",
+      userId: "user-colab",
+      frameworkId: PRODUCT_FRAMEWORK_ID,
+      managerId: "user-gestor",
+      currentLevelId: "pleno-2",
+      targetLevelId: "senior-1",
+      current: {
+        tecnologia: { level: 3, updatedAt: "2025-12-15T12:00:00.000Z" },
+        dominio: { level: 3, updatedAt: "2025-12-15T12:00:00.000Z" },
+        pessoas: { level: 2, updatedAt: "2025-12-15T12:00:00.000Z" },
+        processos: { level: 3, updatedAt: "2025-12-15T12:00:00.000Z" },
+        influencia: { level: 2, updatedAt: "2025-12-15T12:00:00.000Z" },
+        estudo: { level: 3, updatedAt: "2025-12-15T12:00:00.000Z" },
+      },
+      cycleLabel: "2025 · H2",
+      status: "closed",
+      notes: "Ciclo encerrado com subida para Senior I.",
+      createdAt: "2025-07-01T12:00:00.000Z",
+      updatedAt: "2025-12-20T12:00:00.000Z",
+    },
     {
       id: "assignment-colab-demo",
       userId: "user-colab",

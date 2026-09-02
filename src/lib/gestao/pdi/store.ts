@@ -9,6 +9,7 @@ import {
   createFrameworkDraft,
   getFrameworkExpectations,
   isHigherLadderLevel,
+  selectAssignmentsForUser,
   type GestaoPdiData,
   type PdiAssignment,
   type PdiFramework,
@@ -91,6 +92,22 @@ export function getActiveAssignmentForUser(userId: string): PdiAssignment | unde
   return getGestaoPdiSnapshot().assignments.find(
     (assignment) => assignment.userId === userId && assignment.status === "active"
   )
+}
+
+/**
+ * Todos os PDIs de uma pessoa, ativo primeiro e os encerrados do mais recente
+ * para o mais antigo.
+ *
+ * `getActiveAssignmentForUser` acima devolve UM, com `.find`, e era o único
+ * leitor por usuário que existia. Por isso o colaborador não tinha onde ver o
+ * histórico: fechar um ciclo só troca o status para "closed", o registro fica
+ * no store — e nada o lia. Dois efeitos, os dois invisíveis: todo ciclo
+ * passado desaparecia da vista do colaborador, e quem tivesse dois PDIs ativos
+ * ao mesmo tempo (dois frameworks, técnico e liderança, por exemplo) via só o
+ * primeiro, calado.
+ */
+export function getAssignmentsForUser(userId: string): PdiAssignment[] {
+  return selectAssignmentsForUser(getGestaoPdiSnapshot().assignments, userId)
 }
 
 export function getAssignmentsForManager(managerId: string): PdiAssignment[] {

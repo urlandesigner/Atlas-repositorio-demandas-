@@ -2,14 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  Award,
-  FileText,
-  LayoutDashboard,
-  Presentation,
-  Radar,
-  Sparkles,
-} from "lucide-react"
+import { Award, FileText, LayoutDashboard, Presentation, Radar, Sparkles, Target } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -26,6 +19,12 @@ const NAV_ITEMS = [
     label: "Competências",
     description: "Evidências para o próximo nível",
     icon: Radar,
+  },
+  {
+    href: "/professional/evolution/pdi",
+    label: "PDIs",
+    description: "Seus ciclos e a evolução entre eles",
+    icon: Target,
   },
   {
     href: "/professional/evolution/recognitions",
