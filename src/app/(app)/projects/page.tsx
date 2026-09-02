@@ -85,7 +85,7 @@ function ProjectCard({
       >
         <CardHeader>
           <div className="flex items-center justify-between gap-2">
-            <h3 className="truncate text-sm font-medium">{project.name}</h3>
+            <h3 className="truncate text-md font-semibold leading-snug">{project.name}</h3>
             <StatusBadge tone={PROJECT_STATUS_TONE[project.status]} className="shrink-0">
               {STATUS_LABEL[project.status]}
             </StatusBadge>
@@ -165,7 +165,7 @@ function ProjectTable({
                         <FolderOpen className="size-4" />
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate font-medium text-foreground transition-colors group-hover:text-accent-ink">
+                        <span className="block truncate text-md font-semibold leading-snug text-foreground transition-colors group-hover:text-accent-ink">
                           {project.name}
                         </span>
                         <span className="mt-0.5 block max-w-md truncate text-xs text-muted-foreground">
