@@ -36,7 +36,7 @@ export function PdiCompactCard({
     <Card>
       <CardHeader className="grid-cols-[1fr_auto]">
         <div>
-          <CardTitle className="text-sm font-medium">Último PDI</CardTitle>
+          <CardTitle className="text-base">Último PDI</CardTitle>
           <p className="text-xs text-muted-foreground">
             Referência de {baselineDate} · detalhe e avanço em Evolução
           </p>

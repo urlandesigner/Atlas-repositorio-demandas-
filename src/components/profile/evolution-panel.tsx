@@ -37,7 +37,7 @@ export function EvolutionPanel({
     <div className="flex flex-col gap-4">
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium">Trilha de evolução</CardTitle>
+          <CardTitle className="text-base">Trilha de evolução</CardTitle>
           <p className="text-xs text-muted-foreground">
             {currentLevelName ? `Hoje em ${currentLevelName}` : "Sua progressão de carreira"}
             {nextLevel ? ` · próximo passo: ${nextLevel.name}` : ""}

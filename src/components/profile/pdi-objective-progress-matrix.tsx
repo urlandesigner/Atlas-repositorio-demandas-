@@ -45,7 +45,7 @@ export function PdiObjectiveProgressMatrix({
     <Card>
       <CardHeader className="grid-cols-[1fr_auto]">
         <div>
-          <CardTitle className="flex items-center gap-1.5 text-sm font-medium">
+          <CardTitle className="flex items-center gap-1.5 text-base">
             <Target className="size-4 text-accent-ink" />
             Avanço via objetivos
           </CardTitle>

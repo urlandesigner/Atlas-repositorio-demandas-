@@ -14,7 +14,7 @@ export function ProfessionalTimeline({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-sm font-medium">Trajetória profissional</CardTitle>
+        <CardTitle className="text-base">Trajetória profissional</CardTitle>
         <p className="text-xs text-muted-foreground">
           Seus registros mais recentes, consolidados por mês
         </p>

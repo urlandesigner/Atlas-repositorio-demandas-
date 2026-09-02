@@ -37,7 +37,7 @@ export function PdiBaselineMatrix({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-sm font-medium">Último PDI</CardTitle>
+        <CardTitle className="text-base">Último PDI</CardTitle>
         <p className="mt-1 text-xs text-muted-foreground">
           Referência formal · {formatBaselineDate(assessment.baselineAt)} · {readiness}% no nível
           esperado

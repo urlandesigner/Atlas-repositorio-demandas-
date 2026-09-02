@@ -135,7 +135,7 @@ export default function EvolutionOneOnOnePage() {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-sm font-medium">Último 1:1</CardTitle>
+              <CardTitle className="text-base">Último 1:1</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-base font-medium">
