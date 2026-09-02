@@ -37,6 +37,107 @@ function normalize(raw: unknown): GestaoPdiData {
   }
 }
 
+/**
+ * Ids de seed já oferecidos a este navegador.
+ *
+ * Sem essa lista a união abaixo não teria como distinguir "nunca chegou aqui"
+ * de "chegou e a pessoa apagou" — e ressuscitaria o que foi apagado em cada
+ * leitura.
+ */
+const GESTAO_PDI_SEEDED_KEY = "atlas_gestao_pdi_seeded"
+
+/**
+ * Ids que já saíram do seed e precisam sair também de quem os recebeu.
+ *
+ * Remover do seed não basta: a união abaixo já pode ter gravado o item no
+ * snapshot de alguém, e ali ele fica. Esta lista existe para que retirar um
+ * dado de demonstração alcance quem já o tinha.
+ *
+ * Só ids EXATOS de seed entram aqui — nunca um id criado pela pessoa. É uma
+ * remoção, então errar aqui apaga dado real.
+ */
+const GESTAO_PDI_IDS_RETIRADOS = new Set<string>([
+  // Ciclo de demonstração inventado para o histórico ter o que mostrar. Não
+  // correspondia a nenhum PDI real e virou ruído na lista de quem tem os seus.
+  "assignment-colab-demo-2025h2",
+])
+
+function lerIdsSemeados(): Set<string> {
+  try {
+    const raw = localStorage.getItem(GESTAO_PDI_SEEDED_KEY)
+    const lista = raw ? JSON.parse(raw) : []
+    return new Set(Array.isArray(lista) ? (lista as string[]) : [])
+  } catch {
+    return new Set()
+  }
+}
+
+/**
+ * Une ao snapshot salvo os itens de seed que ainda não passaram por aqui.
+ *
+ * Existe porque `normalize` substitui arrays inteiros: quem já tinha snapshot
+ * salvo — ou seja, qualquer pessoa que já abriu o app — nunca recebia item novo
+ * de seed. O seed só alcançava navegador virgem. Na prática, um ciclo de PDI
+ * acrescentado ao seed era invisível para exatamente as pessoas que usam o
+ * produto.
+ *
+ * Regras, nesta ordem de prioridade:
+ * 1. O que está salvo NUNCA é sobrescrito — são dados reais da pessoa.
+ * 2. Item de seed só entra se o id não estiver salvo e não constar da lista de
+ *    já-oferecidos, então apagar um item de seed o mantém apagado.
+ * 3. Nada é removido.
+ */
+function unirSeedPendente(salvo: GestaoPdiData): GestaoPdiData {
+  const jaOferecidos = lerIdsSemeados()
+
+  // Retirados primeiro: o que saiu do seed não deve contar como "já salvo" nem
+  // sobreviver na lista.
+  const semRetirados: GestaoPdiData = {
+    frameworks: salvo.frameworks.filter((item) => !GESTAO_PDI_IDS_RETIRADOS.has(item.id)),
+    assignments: salvo.assignments.filter((item) => !GESTAO_PDI_IDS_RETIRADOS.has(item.id)),
+    promotionRequests: salvo.promotionRequests.filter(
+      (item) => !GESTAO_PDI_IDS_RETIRADOS.has(item.assignmentId)
+    ),
+  }
+  const retirouAlgo =
+    semRetirados.frameworks.length !== salvo.frameworks.length ||
+    semRetirados.assignments.length !== salvo.assignments.length ||
+    semRetirados.promotionRequests.length !== salvo.promotionRequests.length
+
+  const idsSalvos = new Set<string>([
+    ...semRetirados.frameworks.map((item) => item.id),
+    ...semRetirados.assignments.map((item) => item.id),
+  ])
+
+  const pendente = (id: string) => !idsSalvos.has(id) && !jaOferecidos.has(id)
+
+  const frameworksNovos = GESTAO_PDI_SEED.frameworks.filter((item) => pendente(item.id))
+  const assignmentsNovos = GESTAO_PDI_SEED.assignments.filter((item) => pendente(item.id))
+
+  if (!frameworksNovos.length && !assignmentsNovos.length && !retirouAlgo) return salvo
+
+  const unido: GestaoPdiData = {
+    frameworks: [...semRetirados.frameworks, ...frameworksNovos],
+    assignments: [...semRetirados.assignments, ...assignmentsNovos],
+    promotionRequests: semRetirados.promotionRequests,
+  }
+
+  try {
+    const oferecidos = [
+      ...jaOferecidos,
+      ...frameworksNovos.map((item) => item.id),
+      ...assignmentsNovos.map((item) => item.id),
+    ]
+    localStorage.setItem(GESTAO_PDI_SEEDED_KEY, JSON.stringify(oferecidos))
+    localStorage.setItem(GESTAO_PDI_STORAGE_KEY, JSON.stringify(unido))
+  } catch {
+    // Sem espaço ou storage bloqueado: a união vale para esta sessão e é
+    // recalculada na próxima leitura. Não vale derrubar a tela por isso.
+  }
+
+  return unido
+}
+
 export function getGestaoPdiSnapshot(): GestaoPdiData {
   if (!isClient()) return GESTAO_PDI_SEED
   if (cached) return cached
@@ -44,12 +145,19 @@ export function getGestaoPdiSnapshot(): GestaoPdiData {
   const raw = localStorage.getItem(GESTAO_PDI_STORAGE_KEY)
   if (!raw) {
     localStorage.setItem(GESTAO_PDI_STORAGE_KEY, JSON.stringify(GESTAO_PDI_SEED))
+    localStorage.setItem(
+      GESTAO_PDI_SEEDED_KEY,
+      JSON.stringify([
+        ...GESTAO_PDI_SEED.frameworks.map((item) => item.id),
+        ...GESTAO_PDI_SEED.assignments.map((item) => item.id),
+      ])
+    )
     cached = GESTAO_PDI_SEED
     return GESTAO_PDI_SEED
   }
 
   try {
-    cached = normalize(JSON.parse(raw))
+    cached = unirSeedPendente(normalize(JSON.parse(raw)))
     return cached
   } catch {
     cached = GESTAO_PDI_SEED
