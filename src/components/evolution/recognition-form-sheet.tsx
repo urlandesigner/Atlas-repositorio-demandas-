@@ -9,11 +9,12 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetDescription,
   SheetFooter,
+  SheetHeader,
+  SheetTitle,
 } from "@/components/ui/sheet"
 import {
   RECOGNITION_TYPE_LABEL,
@@ -107,7 +108,7 @@ export function RecognitionFormSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <SheetBody>
           <Field label="Título" size="sm">
             <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Ex.: Destaque na entrega do projeto X" />
           </Field>
@@ -148,7 +149,7 @@ export function RecognitionFormSheet({
           <Field label="Link de evidência" size="sm">
             <Input value={evidenceUrl} onChange={(e) => setEvidenceUrl(e.target.value)} placeholder="Opcional — Slack, email, doc" />
           </Field>
-        </div>
+        </SheetBody>
 
         <SheetFooter className="border-t border-border/60">
           <Button onClick={handleSubmit} disabled={!title.trim() || !recognizedBy.trim()}>

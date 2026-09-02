@@ -1,6 +1,6 @@
 "use client"
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
+import { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Badge } from "@/components/ui/badge"
 import { ListRowButton } from "@/components/ui/list-row-button"
 import type { RecordEntry } from "@/lib/records/types"
@@ -35,7 +35,7 @@ export function EvidenceSheet({
                 {view.evidenceCount} evidências identificadas nos seus registros.
               </SheetDescription>
             </SheetHeader>
-            <div className="flex flex-col gap-2 p-4 pt-0">
+            <SheetBody className="gap-2">
               {linked.length ? (
                 linked.map((record) => (
                   <ListRowButton
@@ -64,7 +64,7 @@ export function EvidenceSheet({
                   Nenhuma evidência vinculada ainda. Registre entregas que demonstrem esta competência.
                 </p>
               )}
-            </div>
+            </SheetBody>
           </>
         ) : null}
       </SheetContent>

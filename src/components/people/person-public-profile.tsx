@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -462,7 +463,7 @@ function ProfileEditSheet({
             Essas informações ficam visíveis para toda a rede interna.
           </SheetDescription>
         </SheetHeader>
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <SheetBody>
           <label className="flex flex-col gap-1.5">
             <span className="text-sm font-medium">Headline</span>
             <Input
@@ -492,7 +493,7 @@ function ProfileEditSheet({
               Separe por vírgula. Até 8 aparecem no seu perfil.
             </span>
           </label>
-        </div>
+        </SheetBody>
         <SheetFooter className="border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancelar

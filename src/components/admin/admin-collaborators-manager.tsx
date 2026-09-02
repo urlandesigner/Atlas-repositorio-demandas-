@@ -46,6 +46,7 @@ import {
 } from "@/components/ui/select"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -315,7 +316,7 @@ function CollaboratorFormSheet({
             O colaborador fica vinculado a um gestor da área.
           </SheetDescription>
         </SheetHeader>
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <SheetBody>
           <Field label="Nome">
             <Input value={name} onChange={(event) => setName(event.target.value)} />
           </Field>
@@ -346,7 +347,7 @@ function CollaboratorFormSheet({
             </Select>
           </Field>
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        </div>
+        </SheetBody>
         <SheetFooter className="border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancelar

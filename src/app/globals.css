@@ -81,6 +81,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-card-hover: var(--card-hover);
   /* Escala de raio — passos explícitos, não deslocamentos de um valor só.
      O esquema anterior era calc(var(--radius) ± Npx): aditivo, e por isso
      incapaz de esticar de 8px a 22px sem achatar as pontas — subir o cartão
@@ -119,6 +120,7 @@
   /* Superfícies — elevação no escuro é superfície mais clara, não sombra. */
   --background: #0A0A0A;
   --card: #191A1E;
+  --card-hover: #202226;
   --card-foreground: #E7E9ED;
   --popover: #202329;
   --popover-foreground: #E7E9ED;
@@ -226,6 +228,7 @@
 .light {
   --background: #F5F5F5;
   --card: #FFFFFF;
+  --card-hover: #F8F9FA;
   --card-foreground: #14171C;
   --popover: #FFFFFF;
   --popover-foreground: #14171C;

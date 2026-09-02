@@ -101,7 +101,38 @@ function SheetHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-header"
-      className={cn("flex flex-col gap-0.5 p-4", className)}
+      className={cn(
+        // pr-14 e não p-6 à direita: o botão de fechar é do PRÓPRIO componente
+        // (absolute top-3 right-3, size-8), então reservar espaço para ele é
+        // responsabilidade daqui. Antes era `pr-12` escrito à mão em 6 call
+        // sites, junto com o padding — e foi por isso que o padding derivou:
+        // quem precisava do pr-12 reescrevia o resto também.
+        "flex flex-col gap-0.5 p-6 pr-14",
+        className
+      )}
+      {...props}
+    />
+  )
+}
+
+/**
+ * Corpo do Sheet — a área entre o cabeçalho e o rodapé.
+ *
+ * Existe porque esse padding morava no call site, e por isso derivou: numa
+ * varredura eram `p-4 pt-0` em 11 pontos e `px-5 py-5` em 6 — 16px e 20px para
+ * o mesmo papel — enquanto cabeçalho e rodapé tinham 16px aqui no componente.
+ * Ao subir o cartão para 24px os três divergiram de vez, e não havia um lugar
+ * só para corrigir. Agora há.
+ *
+ * Sem padding de topo de propósito: o SheetHeader já entrega o recuo superior.
+ * Quando o corpo fica dentro de um ScrollArea ele rola por conta própria e
+ * precisa do topo — nesses casos passe `className="pt-6"`.
+ */
+function SheetBody({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="sheet-body"
+      className={cn("flex flex-col gap-4 px-6 pb-6", className)}
       {...props}
     />
   )
@@ -111,7 +142,7 @@ function SheetFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="sheet-footer"
-      className={cn("mt-auto flex flex-col gap-2 p-4", className)}
+      className={cn("mt-auto flex flex-col gap-2 p-6", className)}
       {...props}
     />
   )
@@ -149,6 +180,7 @@ export {
   SheetClose,
   SheetContent,
   SheetHeader,
+  SheetBody,
   SheetFooter,
   SheetTitle,
   SheetDescription,

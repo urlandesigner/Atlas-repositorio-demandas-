@@ -5,9 +5,30 @@ import { cn } from "@/lib/utils"
 
 /**
  * Card de métrica: micro-label uppercase + número grande + texto de apoio.
- * variant="tile": bloco leve (padrão dos hubs admin/gestão).
- * variant="card": com ícone no topo-direita, para grids de destaque.
  * Com href o card inteiro vira link.
+ *
+ * ## As três variantes existem por causa do FUNDO, não do tamanho
+ *
+ * Sem borda, uma superfície só se separa pelo passo de claridade contra o que
+ * está atrás — e o que está atrás depende de onde o card é usado. Um único
+ * preenchimento não serve aos dois níveis, e isso foi medido, não suposto:
+ * o `tile` antigo (bg-card/65 + borda) dava ΔL* 3,6 solto na página do perfil
+ * e ΔL* -0,1 aninhado no painel de promoção. Aninhado ele era invisível: só
+ * existia por causa da borda de 1px.
+ *
+ * variant="card"  nível de página, com ícone. É o MESMO tratamento de
+ *                 components/ui/card.tsx — bg-card, 22px, 24px de padding, sem
+ *                 borda — porque ele fica lado a lado com Cards de verdade e
+ *                 qualquer diferença mistura duas linguagens na mesma fileira.
+ * variant="tile"  nível de página, compacto (hubs de gestão e admin, resumos).
+ *                 bg-card cheio: ΔL* 6,6 no escuro e 3,5 no claro contra o chão.
+ * variant="inset" aninhado DENTRO de um cartão. bg-muted: ΔL* 6,2 no escuro e
+ *                 3,8 no claro contra o cartão. Use esta quando o card estiver
+ *                 dentro de um Card, CardListBody ou qualquer painel bg-card.
+ *
+ * `tile` e `inset` ficam em 20px de padding, não 24. É passo deliberado: são
+ * caixas de métrica compactas, às vezes cinco na mesma fileira, e é o mesmo
+ * padding que o clone usa nos painéis internos.
  */
 export function MetricCard({
   label,
@@ -26,7 +47,7 @@ export function MetricCard({
   suffix?: string
   icon?: LucideIcon
   href?: string
-  variant?: "tile" | "card"
+  variant?: "tile" | "card" | "inset"
 } & React.ComponentProps<"div">) {
   const body = (
     <>
@@ -44,23 +65,21 @@ export function MetricCard({
     </>
   )
 
+  const SUPERFICIE = {
+    card: "rounded-xl bg-card p-6",
+    tile: "rounded-lg bg-card p-5",
+    inset: "rounded-lg bg-muted p-5",
+  } as const
+
+  const HOVER = {
+    card: "hover:bg-card-hover",
+    tile: "hover:bg-card-hover",
+    inset: "hover:bg-muted-hover",
+  } as const
+
   const rootClassName = cn(
-    variant === "card"
-      // Nível de página, ao lado de Cards de verdade: tem de ser o MESMO
-      // tratamento, senão a fileira mistura duas linguagens — era o caso dos
-      // dois KPIs da Início ao lado da Trilha. Sem borda, bg-card cheio, raio
-      // de cartão e 24px, exatamente como components/ui/card.tsx.
-      ? "rounded-xl bg-card p-6"
-      // O `tile` continua com borda, e isso é uma pendência declarada, não
-      // esquecimento: ele é usado nos dois níveis — solto na página (hubs de
-      // gestão e admin) e aninhado dentro de cartões brancos
-      // (career-context-bar, impact-summary). Nenhum preenchimento serve aos
-      // dois: --muted (#F3F4F6) é quase o fundo da página (#F5F5F5) e
-      // desapareceria solto; bg-card desapareceria aninhado. Só o raio foi
-      // corrigido — estava em rounded-xl, o raio de CARTÃO, enquanto o variant
-      // "card" estava em rounded-lg: os dois estavam trocados de papel.
-      : "rounded-lg border border-border/70 bg-card/65 px-4 py-3",
-    href && "block transition-colors hover:border-foreground/15 hover:bg-card",
+    SUPERFICIE[variant],
+    href && cn("block transition-colors", HOVER[variant]),
     className
   )
 

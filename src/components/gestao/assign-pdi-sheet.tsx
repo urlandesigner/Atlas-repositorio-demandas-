@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/select"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -98,7 +99,7 @@ export function AssignPdiSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <SheetBody>
           <Field label="Trilha" size="sm">
             <Select
               value={frameworkId}
@@ -172,7 +173,7 @@ export function AssignPdiSheet({
           </Field>
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        </div>
+        </SheetBody>
 
         <SheetFooter className="border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>

@@ -26,6 +26,7 @@ import { PROJECT_STATUS_TONE } from "@/lib/status-tone"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetFooter,
   SheetHeader,
@@ -242,13 +243,13 @@ function NewProjectSheet({
   return (
     <Sheet open={open} onOpenChange={(value) => !value && handleClose()}>
       <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[45vw] sm:data-[side=right]:max-w-[45vw]" side="right" size="custom">
-        <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
+        <SheetHeader className="border-b">
           <SheetTitle className="text-base">Novo projeto</SheetTitle>
           <p className="text-xs text-muted-foreground">Profissional</p>
         </SheetHeader>
 
         <ScrollArea className="flex-1 min-h-0">
-          <div className="flex flex-col gap-4 px-5 py-5">
+          <SheetBody className="pt-6">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Nome *</label>
               <Input placeholder="Nome do projeto" value={form.name} onChange={(e) => set("name", e.target.value)} />
@@ -297,10 +298,10 @@ function NewProjectSheet({
               <label className="text-xs font-medium text-muted-foreground">Data de início</label>
               <Input type="date" value={form.started_at} onChange={(e) => set("started_at", e.target.value)} />
             </div>
-          </div>
+          </SheetBody>
         </ScrollArea>
 
-        <SheetFooter className="flex flex-row gap-2 border-t px-5 py-4">
+        <SheetFooter className="flex flex-row gap-2 border-t">
           <Button variant="ghost" className="flex-1" onClick={handleClose}>
             Cancelar
           </Button>

@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -321,7 +322,7 @@ function HrNoticeFormSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <SheetBody>
           <Field label="Título">
             <Input value={title} onChange={(event) => setTitle(event.target.value)} />
           </Field>
@@ -429,7 +430,7 @@ function HrNoticeFormSheet({
           </Card>
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        </div>
+        </SheetBody>
 
         <SheetFooter className="border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>

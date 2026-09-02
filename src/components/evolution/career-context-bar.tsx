@@ -44,10 +44,10 @@ export function CareerContextBar({
           </p>
         </div>
         <div className="flex shrink-0 gap-3">
-          <MetricCard variant="tile" label="Prontidão no PDI" value={readiness} suffix="%" />
+          <MetricCard variant="inset" label="Prontidão no PDI" value={readiness} suffix="%" />
           {strongCompetencies !== undefined && totalCompetencies !== undefined ? (
             <MetricCard
-              variant="tile"
+              variant="inset"
               label="Competências evidenciadas"
               value={`${strongCompetencies}/${totalCompetencies}`}
             />

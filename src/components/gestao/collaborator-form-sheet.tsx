@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { OptionCard } from "@/components/ui/option-card"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -82,7 +83,7 @@ export function CollaboratorFormSheet({
           </SheetDescription>
         </SheetHeader>
 
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <SheetBody>
           {isLeader ? (
             <p className="rounded-lg border border-dashed bg-muted/30 px-3 py-2 text-xs text-muted-foreground">
               {editing?.name} é {editing?.role === "gestor" ? "gestor" : "administrador"} e também
@@ -135,7 +136,7 @@ export function CollaboratorFormSheet({
           ) : null}
 
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        </div>
+        </SheetBody>
 
         <SheetFooter className="border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/select"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -174,7 +175,7 @@ export function LideradoObjectivesPanel({
             </SheetDescription>
           </SheetHeader>
 
-          <div className="flex flex-col gap-4 p-4 pt-0">
+          <SheetBody>
             <Field label="Título">
               <Input
                 value={form.title}
@@ -249,7 +250,7 @@ export function LideradoObjectivesPanel({
                 ))}
               </FilterPillGroup>
             </div>
-          </div>
+          </SheetBody>
 
           <SheetFooter className="border-t">
             <Button variant="outline" onClick={() => setSheetOpen(false)}>

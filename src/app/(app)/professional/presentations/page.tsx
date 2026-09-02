@@ -18,6 +18,7 @@ import { StatusBadge } from "@/components/ui/status-badge"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetFooter,
   SheetHeader,
@@ -92,7 +93,7 @@ function PresentationSheet({
   return (
     <Sheet open={open} onOpenChange={(value) => !value && handleClose()}>
       <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[34rem] sm:data-[side=right]:max-w-[34rem]" side="right" size="custom">
-        <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
+        <SheetHeader className="border-b">
           <SheetTitle className="text-base">{mode === "create" ? "Nova apresentação" : "Editar apresentação"}</SheetTitle>
           <p className="text-xs text-muted-foreground">
             Registre materiais compartilhados com descrição, público, data e link de acesso.
@@ -100,7 +101,7 @@ function PresentationSheet({
         </SheetHeader>
 
         <ScrollArea className="flex-1 min-h-0">
-          <div className="flex flex-col gap-4 px-5 py-5">
+          <SheetBody className="pt-6">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Título *</label>
               <Input placeholder="Ex: AI First Design" value={form.title} onChange={(e) => set("title", e.target.value)} />
@@ -147,10 +148,10 @@ function PresentationSheet({
               <label className="text-xs font-medium text-muted-foreground">Link</label>
               <Input placeholder="https://..." value={form.link} onChange={(e) => set("link", e.target.value)} />
             </div>
-          </div>
+          </SheetBody>
         </ScrollArea>
 
-        <SheetFooter className="flex flex-row gap-2 border-t px-5 py-4">
+        <SheetFooter className="flex flex-row gap-2 border-t">
           <Button variant="ghost" className="flex-1" onClick={handleClose}>
             Cancelar
           </Button>
@@ -257,7 +258,7 @@ function PresentationDrawer({
       <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[34rem] sm:data-[side=right]:max-w-[34rem]" side="right" size="custom">
         {item && (
           <>
-            <SheetHeader className="px-5 pt-5 pb-4 border-b pr-12">
+            <SheetHeader className="border-b">
               <div className="flex items-center gap-2 flex-wrap">
                 <SheetTitle className="text-base">{item.title}</SheetTitle>
                 <StatusBadge tone={PRESENTATION_STATUS_TONE[item.status]}>
@@ -267,7 +268,7 @@ function PresentationDrawer({
             </SheetHeader>
 
             <ScrollArea className="flex-1 min-h-0">
-              <div className="flex flex-col gap-5 px-5 py-5">
+              <SheetBody className="gap-5 pt-6">
                 <section>
                   <p className="text-xs font-medium text-muted-foreground mb-1.5">Descrição</p>
                   <p className="text-sm text-muted-foreground">{item.description ?? "—"}</p>
@@ -318,7 +319,7 @@ function PresentationDrawer({
                     <p className="text-sm text-muted-foreground">—</p>
                   )}
                 </section>
-              </div>
+              </SheetBody>
             </ScrollArea>
 
             <div className="flex gap-2 border-t px-5 py-4">

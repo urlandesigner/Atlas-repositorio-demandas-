@@ -43,6 +43,7 @@ import {
 import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetFooter,
   SheetHeader,
@@ -183,7 +184,7 @@ function ObjectiveSheet({
   return (
     <Sheet open={open} onOpenChange={(value) => !value && handleClose()}>
       <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right" size="custom">
-        <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
+        <SheetHeader className="border-b">
           <SheetTitle className="text-base">
             {mode === "create" ? "Novo objetivo" : "Editar objetivo"}
           </SheetTitle>
@@ -193,7 +194,7 @@ function ObjectiveSheet({
         </SheetHeader>
 
         <ScrollArea className="flex-1 min-h-0">
-          <div className="flex flex-col gap-5 px-5 py-5">
+          <SheetBody className="gap-5 pt-6">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-medium text-muted-foreground">Objetivo *</label>
               <Input
@@ -397,10 +398,10 @@ function ObjectiveSheet({
                 </div>
               )}
             </div>
-          </div>
+          </SheetBody>
         </ScrollArea>
 
-        <SheetFooter className="flex flex-row gap-2 border-t px-5 py-4">
+        <SheetFooter className="flex flex-row gap-2 border-t">
           <Button variant="ghost" className="flex-1" onClick={handleClose}>
             Cancelar
           </Button>
@@ -541,7 +542,7 @@ function ObjectiveDrawer({
       <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right" size="custom">
         {item && (
           <>
-            <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
+            <SheetHeader className="border-b">
               <div className="flex flex-wrap items-center gap-2">
                 <SheetTitle className="text-base">{item.title}</SheetTitle>
                 <StatusBadge tone={OBJECTIVE_STATUS_TONE[item.status]}>
@@ -554,7 +555,7 @@ function ObjectiveDrawer({
             </SheetHeader>
 
             <ScrollArea className="flex-1 min-h-0">
-              <div className="flex flex-col gap-5 px-5 py-5">
+              <SheetBody className="gap-5 pt-6">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="rounded-lg border bg-muted/20 p-3">
                     <p className="text-xs text-muted-foreground">Progresso</p>
@@ -655,7 +656,7 @@ function ObjectiveDrawer({
                     <p>Sem apresentações vinculadas ainda.</p>
                   )}
                 </SectionBlock>
-              </div>
+              </SheetBody>
             </ScrollArea>
 
             <div className="grid grid-cols-2 gap-2 border-t px-5 py-4">

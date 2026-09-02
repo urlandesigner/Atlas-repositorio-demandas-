@@ -37,6 +37,7 @@ import {
 import { Input } from "@/components/ui/input"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetDescription,
   SheetFooter,
@@ -273,7 +274,7 @@ function ManagerFormSheet({
             Gestores cadastrados podem acessar o painel de gestão e liderar colaboradores.
           </SheetDescription>
         </SheetHeader>
-        <div className="flex flex-col gap-4 p-4 pt-0">
+        <SheetBody>
           <Field label="Nome">
             <Input value={name} onChange={(event) => setName(event.target.value)} />
           </Field>
@@ -292,7 +293,7 @@ function ManagerFormSheet({
             />
           </Field>
           {error ? <p className="text-sm text-destructive">{error}</p> : null}
-        </div>
+        </SheetBody>
         <SheetFooter className="border-t">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancelar

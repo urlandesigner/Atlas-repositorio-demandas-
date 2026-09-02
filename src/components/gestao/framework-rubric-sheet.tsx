@@ -3,7 +3,7 @@
 import { Check } from "lucide-react"
 
 import { OptionCard } from "@/components/ui/option-card"
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
+import { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { formatPdiLevel, PDI_MAX_LEVEL } from "@/lib/profile/pdi"
 import type { FrameworkTheme } from "@/lib/gestao/pdi/types"
 import { cn } from "@/lib/utils"
@@ -39,7 +39,7 @@ export function FrameworkRubricSheet({
               </SheetDescription>
             </SheetHeader>
 
-            <div className="flex flex-col gap-1.5 p-4 pt-0">
+            <SheetBody className="gap-1.5">
               {LEVELS.map((level) => {
                 const isCurrent = level === current
                 const isExpected = level === expected
@@ -95,7 +95,7 @@ export function FrameworkRubricSheet({
                   </OptionCard>
                 )
               })}
-            </div>
+            </SheetBody>
           </>
         ) : null}
       </SheetContent>

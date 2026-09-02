@@ -641,11 +641,13 @@ export default function DashboardPage() {
             <CardListBody className="flex flex-col gap-4 px-4 py-4">
               <div className="grid grid-cols-2 gap-3">
                 <MetricCard
+                  variant="inset"
                   label="Realizadas"
                   value={completedPresentations.length}
                   icon={CheckCircle2}
                 />
                 <MetricCard
+                  variant="inset"
                   label="Agendadas"
                   value={scheduledPresentations.length}
                   icon={Clock3}

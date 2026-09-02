@@ -11,6 +11,7 @@ import { ListRowButton } from "@/components/ui/list-row-button"
 import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
+  SheetBody,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -111,7 +112,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
         <SheetContent className="flex flex-col gap-0 p-0 data-[side=right]:w-full sm:data-[side=right]:w-[38rem] sm:data-[side=right]:max-w-[38rem]" side="right" size="custom">
           {selected && (
             <>
-              <SheetHeader className="border-b px-5 pb-4 pt-5 pr-12">
+              <SheetHeader className="border-b">
                 <div className="flex flex-wrap items-center gap-2">
                   <SheetTitle className="text-base">{selected.title}</SheetTitle>
                   <StatusBadge tone={OBJECTIVE_STATUS_TONE[selected.status]}>
@@ -125,7 +126,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
               </SheetHeader>
 
               <div className="flex-1 overflow-y-auto">
-                <div className="flex flex-col gap-5 px-5 py-5">
+                <SheetBody className="gap-5 pt-6">
                   <div className="grid grid-cols-2 gap-3">
                     <div className="rounded-lg border bg-muted/20 p-3">
                       <p className="text-xs text-muted-foreground">Evidências</p>
@@ -205,7 +206,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
                       <p className="text-sm text-muted-foreground">Sem registros vinculados ainda.</p>
                     )}
                   </div>
-                </div>
+                </SheetBody>
               </div>
 
               <div className="border-t px-5 py-4">

@@ -3,7 +3,7 @@
 import { Check } from "lucide-react"
 
 import { OptionCard } from "@/components/ui/option-card"
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet"
+import { Sheet, SheetBody, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import {
   formatPdiLevel,
   PDI_MAX_LEVEL,
@@ -40,7 +40,7 @@ export function PdiRubricSheet({
               </SheetDescription>
             </SheetHeader>
 
-            <div className="flex flex-col gap-1.5 p-4 pt-0">
+            <SheetBody className="gap-1.5">
               {LEVELS.map((level) => {
                 const isCurrent = level === current
                 const isExpected = level === expected
@@ -79,7 +79,7 @@ export function PdiRubricSheet({
                   </OptionCard>
                 )
               })}
-            </div>
+            </SheetBody>
           </>
         ) : null}
       </SheetContent>
