@@ -454,12 +454,12 @@ const TOKENS = [
     "bg-accent-ink",
     "Token de TEXTO de acento — o par legível de --primary. Vale o índigo claro (#7B8CFF) no escuro e o azul Ybera (#3A4ADF) no claro. Use em links e destaques textuais no lugar de --primary/--brand.",
   ],
-  ["--brand-muted", "bg-brand-muted", "Ouro claro/esmaecido. Estado ativo de navegação."],
+  ["--brand-muted", "bg-brand-muted", "Índigo esmaecido (#1B1F3A/#EDEFFB). Estado ativo de navegação e bolha de ícone."],
   ["--secondary", "bg-secondary", "Quase preto. Ações de alto contraste."],
   ["--secondary-hover", "bg-secondary-hover", "Hover do botão secondary."],
   ["--destructive", "bg-destructive", "Vermelho. Ações destrutivas e erros."],
   ["--success", "bg-success", "Verde. Estados concluídos/positivos."],
-  ["--warning", "bg-warning", "Laranja (#FB923C/#C2410C). Estados de atenção/pausa — escolhido para não colidir com o ouro do acento."],
+  ["--warning", "bg-warning", "Laranja (#FB923C/#C2410C). Estados de atenção/pausa — escolhido para não colidir com o índigo do acento."],
   ["--info", "bg-info", "Azul-céu. Estados planejados/informativos."],
   ["--impact", "bg-impact", "Violeta. Escala de impacto dos registros."],
   ["--muted", "bg-muted", "Cinza de fundo. Superfícies secundárias."],
@@ -550,8 +550,11 @@ export default function DesignSystemPage() {
               <div>
                 <h3 className="text-base font-semibold tracking-tight">Design tokens</h3>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Definidos em <code className="font-mono text-xs">globals.css</code> em OKLCH, com variantes para tema
-                  claro e escuro. Prefira sempre o token à classe Tailwind crua.
+                  Definidos em <code className="font-mono text-xs">globals.css</code> em hexadecimal, com variantes
+                  para tema claro e escuro. O formato não é indiferente:{" "}
+                  <code className="font-mono text-xs">scripts/check-contrast.mjs</code> e{" "}
+                  <code className="font-mono text-xs">scripts/build-tokens.mjs</code> parseiam esses valores, e falham
+                  se um token deixar de ser hex. Prefira sempre o token à classe Tailwind crua.
                 </p>
               </div>
               <Separator />
@@ -765,7 +768,7 @@ export default function DesignSystemPage() {
               <PageBanner
                 variant="warning"
                 title="Atenção"
-                description="variant=warning — usa o token dedicado --warning (laranja, escolhido para não colidir com o ouro do acento)."
+                description="variant=warning — usa o token dedicado --warning (laranja, escolhido para não colidir com o índigo do acento)."
               />
               <PageBanner
                 variant="destructive"

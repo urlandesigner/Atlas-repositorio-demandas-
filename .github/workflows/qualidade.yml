@@ -1,0 +1,40 @@
+# Os portões do design system rodavam só à mão. Este arquivo existe para que
+# deixem de depender de alguém lembrar.
+#
+# `check:contrast` verifica os pares de contraste nos dois temas e falha se um
+# token deixar de ser hex. `tokens:build` falha se um token existir num tema e
+# não no outro. Os dois leem o globals.css, então paridade de tema e
+# legibilidade passam a ser condição de merge, não item de checklist.
+name: Qualidade
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Tipos
+        run: npx tsc --noEmit
+
+      - name: Contraste
+        run: npm run check:contrast
+
+      - name: Paridade de tokens entre temas
+        run: npm run tokens:build
+
+      # `tokens.json` é gerado. Se o commit não trouxe o arquivo atualizado, o
+      # espelho e a fonte de verdade divergiram — e isso é falha, não aviso.
+      - name: tokens.json em dia com o globals.css
+        run: git diff --exit-code docs/design-system/tokens.json
