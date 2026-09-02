@@ -29,7 +29,7 @@ export function ProfileHeader({
       {/* Avatar na linha do nome: a caixa tem a altura da linha do h2 e o
           círculo é centralizado nela, transbordando para fora. Assim subtítulo
           e chips não puxam o avatar para o meio do bloco. */}
-      <div className="relative h-14 w-14 shrink-0 sm:h-7">
+      <div className="relative h-12 w-12 shrink-0 sm:h-7">
         <PersonAvatar
           name={identity.name}
           imageUrl={avatarUrl}

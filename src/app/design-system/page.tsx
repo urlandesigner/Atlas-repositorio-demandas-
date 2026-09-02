@@ -1496,6 +1496,7 @@ export default function DesignSystemPage() {
               <PersonAvatar name="Urlan Dipré" size="lg" />
               <PersonAvatar name="Urlan Dipré" size="xl" />
               <PersonAvatar name="Urlan Dipré" size="2xl" />
+              <PersonAvatar name="Urlan Dipré" size="3xl" />
             </Group>
             <Group label="outros nomes">
               <PersonAvatar name="Maria Silva" />

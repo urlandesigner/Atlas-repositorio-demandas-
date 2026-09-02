@@ -35,7 +35,7 @@ import {
   getKudosReceived,
   getOrgSocialServerSnapshot,
   getOrgSocialSnapshot,
-  getPersonCoverStyle,
+  getPersonCoverClassName,
   getSocialProfile,
   KUDO_TYPE_META,
   KUDO_TYPES,
@@ -50,6 +50,7 @@ import {
   subscribeOrgStore,
 } from "@/lib/org/store"
 import type { OrgUser } from "@/lib/org/types"
+import { cn } from "@/lib/utils"
 
 function formatSince(iso: string) {
   const formatted = new Intl.DateTimeFormat("pt-BR", {
@@ -133,7 +134,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
 
       {/* Hero social */}
       <Card className="overflow-hidden py-0">
-        <div className="h-28 sm:h-36" style={getPersonCoverStyle(person.name)} />
+        <div className={cn("h-28 sm:h-36", getPersonCoverClassName(person.name))} />
         <CardContent className="px-6 pb-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
@@ -146,7 +147,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
                 <PersonAvatar
                   name={person.name}
                   imageUrl={person.avatarUrl}
-                  size="2xl"
+                  size="3xl"
                   className="absolute top-1/2 left-0 -translate-y-1/2 ring-4 ring-card"
                 />
               </div>

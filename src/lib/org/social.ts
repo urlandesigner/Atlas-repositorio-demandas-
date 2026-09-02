@@ -256,24 +256,35 @@ export function removeKudo(id: string) {
 
 // ---------- Identidade visual determinística ----------
 
-// Capas duotone curadas: sempre a mesma para a mesma pessoa, todas na família
-// cromática do produto para a rede parecer "uma coisa só".
-const PERSON_COVERS: Array<[string, string]> = [
-  ["oklch(0.58 0.21 264)", "oklch(0.70 0.13 194)"],
-  ["oklch(0.62 0.15 194)", "oklch(0.74 0.13 150)"],
-  ["oklch(0.56 0.18 300)", "oklch(0.62 0.20 264)"],
-  ["oklch(0.70 0.13 150)", "oklch(0.76 0.12 110)"],
-  ["oklch(0.64 0.16 40)", "oklch(0.70 0.15 70)"],
-  ["oklch(0.58 0.17 330)", "oklch(0.60 0.19 290)"],
-]
+// Capas em cor sólida pastel: sempre a mesma para a mesma pessoa, todas na
+// mesma família para a rede parecer "uma coisa só".
+//
+// Antes era duotone com um brilho radial por cima. Virou cor sólida, e com isso
+// deixou de ser `style` inline e passou a ser CLASSE: estilo inline não tem como
+// responder a `dark:`, então a capa antiga usava os mesmos oklch nos dois temas
+// e no escuro ficava saturada demais para o resto da tela. Como classe, cada
+// pastel tem seu par escuro.
+//
+// Os quatro primeiros são os pastéis do experimento da Início, que já tinham
+// par claro/escuro medido (8,9 a 10,2:1 no texto sobre eles). Os dois últimos
+// completam a roda para seis pessoas seguidas não repetirem cor.
+const PERSON_COVERS = [
+  "bg-[#D9F2E3] dark:bg-[#132A20]", // menta
+  "bg-[#D6EBFB] dark:bg-[#13232F]", // céu
+  "bg-[#FBE3CB] dark:bg-[#2E2117]", // pêssego
+  "bg-[#DFDCFA] dark:bg-[#1E1C31]", // lavanda
+  "bg-[#FBDCE6] dark:bg-[#2C1922]", // rosa
+  "bg-[#F4EFD4] dark:bg-[#282618]", // areia
+] as const
 
-export function getPersonCoverStyle(name: string): React.CSSProperties {
+/**
+ * Classe de fundo da capa de uma pessoa — estável para o mesmo nome.
+ * Devolve classe, não estilo, porque o par escuro depende de `dark:`.
+ */
+export function getPersonCoverClassName(name: string): string {
   let hash = 0
   for (let index = 0; index < name.length; index += 1) {
     hash = (hash * 31 + name.charCodeAt(index)) % 997
   }
-  const [from, to] = PERSON_COVERS[hash % PERSON_COVERS.length]
-  return {
-    backgroundImage: `radial-gradient(120% 90% at 85% -10%, rgba(255,255,255,0.38), transparent 55%), linear-gradient(135deg, ${from}, ${to})`,
-  }
+  return PERSON_COVERS[hash % PERSON_COVERS.length]
 }

@@ -17,7 +17,7 @@ import {
   countKudosReceived,
   getOrgSocialServerSnapshot,
   getOrgSocialSnapshot,
-  getPersonCoverStyle,
+  getPersonCoverClassName,
   getSocialProfile,
   KUDO_TYPE_META,
   subscribeOrgSocialStore,
@@ -27,6 +27,7 @@ import {
   getOrgSnapshot,
   subscribeOrgStore,
 } from "@/lib/org/store"
+import { cn } from "@/lib/utils"
 
 function formatKudoDate(iso: string) {
   return new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" }).format(
@@ -123,7 +124,7 @@ export function PeopleDirectory() {
                     href={`/people/${user.id}`}
                     className="group overflow-hidden rounded-2xl border border-border/70 bg-card transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg"
                   >
-                    <div className="h-16" style={getPersonCoverStyle(person.name)} />
+                    <div className={cn("h-16", getPersonCoverClassName(person.name))} />
                     <div className="flex flex-col gap-2 px-5 pb-5">
                       <div className="flex items-end justify-between">
                         <PersonAvatar

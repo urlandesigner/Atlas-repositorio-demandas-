@@ -134,7 +134,7 @@ function LideradoDetailContent({ userId }: { userId: string }) {
               <PersonAvatar
                 name={user.name}
                 imageUrl={user.avatarUrl}
-                size="xl"
+                size="2xl"
                 className="absolute top-1/2 left-0 -translate-y-1/2"
               />
             </div>
