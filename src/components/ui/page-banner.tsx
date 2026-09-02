@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
 
-const pageBannerVariants = cva("flex items-start gap-3 rounded-lg border px-4 py-3", {
+const pageBannerVariants = cva("flex items-start gap-3 rounded-lg border px-6 py-4", {
   variants: {
     variant: {
       info: "border-primary/20 bg-primary/10 text-accent-ink",

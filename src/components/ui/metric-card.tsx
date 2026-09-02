@@ -46,8 +46,20 @@ export function MetricCard({
 
   const rootClassName = cn(
     variant === "card"
-      ? "rounded-lg border border-border bg-card px-4 py-4"
-      : "rounded-xl border border-border/70 bg-card/65 px-4 py-3",
+      // Nível de página, ao lado de Cards de verdade: tem de ser o MESMO
+      // tratamento, senão a fileira mistura duas linguagens — era o caso dos
+      // dois KPIs da Início ao lado da Trilha. Sem borda, bg-card cheio, raio
+      // de cartão e 24px, exatamente como components/ui/card.tsx.
+      ? "rounded-xl bg-card p-6"
+      // O `tile` continua com borda, e isso é uma pendência declarada, não
+      // esquecimento: ele é usado nos dois níveis — solto na página (hubs de
+      // gestão e admin) e aninhado dentro de cartões brancos
+      // (career-context-bar, impact-summary). Nenhum preenchimento serve aos
+      // dois: --muted (#F3F4F6) é quase o fundo da página (#F5F5F5) e
+      // desapareceria solto; bg-card desapareceria aninhado. Só o raio foi
+      // corrigido — estava em rounded-xl, o raio de CARTÃO, enquanto o variant
+      // "card" estava em rounded-lg: os dois estavam trocados de papel.
+      : "rounded-lg border border-border/70 bg-card/65 px-4 py-3",
     href && "block transition-colors hover:border-foreground/15 hover:bg-card",
     className
   )
