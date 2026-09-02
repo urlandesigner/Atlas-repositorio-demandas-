@@ -1,5 +1,6 @@
 import { createFrameworkDraft, type GestaoPdiData, type PdiFramework } from "./types"
 import { DEFAULT_LADDER } from "@/lib/profile/store"
+import { PDI_DESIGN_2026_H1 } from "./seed-pdi-design-2026"
 
 const now = "2026-06-01T00:00:00.000Z"
 
@@ -52,6 +53,7 @@ PRODUCT_FRAMEWORK.expectations = {
 export const GESTAO_PDI_SEED: GestaoPdiData = {
   frameworks: [ENGINEERING_FRAMEWORK, PRODUCT_FRAMEWORK],
   assignments: [
+    PDI_DESIGN_2026_H1,
     // Ciclo anterior, encerrado. Existe para o histórico de PDI ter o que
     // mostrar na demonstração: sem ele a tela nasce com uma linha só e o ganho
     // de ver a evolução entre ciclos fica invisível. Níveis abaixo dos do ciclo
@@ -93,8 +95,8 @@ export const GESTAO_PDI_SEED: GestaoPdiData = {
         estudo: { level: 3, updatedAt: now },
       },
       cycleLabel: "2026 · H1",
-      status: "active",
-      notes: "PDI aplicado pelo gestor no ciclo atual.",
+      status: "closed",
+      notes: "Ciclo genérico anterior ao PDI Design consolidado.",
       createdAt: now,
       updatedAt: now,
     },

@@ -27,6 +27,38 @@ export interface AssignedPdiLevel {
   updatedAt: string
 }
 
+/** Uma dimensão comportamental avaliada por formulário, na escala 0–5. */
+export interface PdiBehavioralDimension {
+  id: string
+  label: string
+  score: number
+}
+
+/**
+ * O resultado fechado de um ciclo de PDI: o que foi acordado, contra o que
+ * havia antes, com a justificativa de cada nota.
+ *
+ * Fica opcional em PdiAssignment porque um ciclo recém-aplicado ainda não tem
+ * resultado — ele nasce só com os níveis e ganha a avaliação quando o ciclo é
+ * avaliado. O modelo anterior guardava apenas os níveis, então tudo o que
+ * sustenta a nota (por que subiu, por que não subiu, o comportamental) não
+ * tinha onde morar e ficava fora do produto.
+ */
+export interface PdiEvaluation {
+  /** Quem avaliou, como aparece no cabeçalho do resultado. */
+  evaluatedBy: string
+  evaluatedAt: string
+  /** Nota final técnica na escala do framework (0–6). */
+  technicalScore: number
+  /** Nota final comportamental (0–5), média das dimensões. */
+  behavioralScore: number
+  /** themeId → nível ANTES deste ciclo, para o delta não depender de haver um ciclo anterior no store. */
+  previous: Record<string, number>
+  /** themeId → por que a nota é essa. É o texto que o gestor escreve. */
+  rationale: Record<string, string>
+  behavioral: PdiBehavioralDimension[]
+}
+
 export interface PdiAssignment {
   id: string
   userId: string
@@ -38,6 +70,8 @@ export interface PdiAssignment {
   cycleLabel: string
   status: "active" | "closed"
   notes: string | null
+  /** Resultado do ciclo, quando já avaliado. */
+  evaluation?: PdiEvaluation
   createdAt: string
   updatedAt: string
 }
