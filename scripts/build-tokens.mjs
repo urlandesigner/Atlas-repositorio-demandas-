@@ -299,14 +299,16 @@ const tokens = {
   $description:
     "Design tokens do Atlas. GERADO por scripts/build-tokens.mjs a partir de src/app/globals.css — não edite à mão. Formato W3C DTCG. Escuro é o tema padrão (:root); claro é override (.light).",
   $extensions: {
+    // Sem data de geração: ela tornava o arquivo não determinístico e o gate de
+    // frescor do CI (git diff --exit-code) falhava em qualquer dia diferente do
+    // commit. Quando o token mudou é o que o git já sabe responder.
     "com.atlas.fonte": "src/app/globals.css",
     "com.atlas.geradoPor": "scripts/build-tokens.mjs",
     // Data local (sv-SE dá YYYY-MM-DD) — o slice do toISOString cai em UTC e
     // troca de dia à noite, desalinhando do commit.
-    "com.atlas.geradoEm": new Date().toLocaleDateString("sv-SE"),
     "com.atlas.temaPadrao": "escuro",
     "com.atlas.camada":
-      "Layer 2 (semântico). O Atlas não tem Layer 1 (paleta global numerada) nem Layer 3 (component tokens) — ver docs/design-system/foundation-spec.md, seção Lacunas.",
+      "Layer 2 (semântico). O Atlas não tem Layer 1 (paleta global numerada) — variação fraca é feita com opacidade — nem Layer 3 (component tokens): as decisões por componente vivem em cva() dentro de cada .tsx.",
   },
   cor: {
     $description:
@@ -356,7 +358,7 @@ const tokens = {
     estilo: {
       $type: "typography",
       $description:
-        "Os três estilos que existem como utility nomeada em globals.css (@layer utilities). O resto da escala é aplicado com classes Tailwind soltas — ver Lacunas no foundation-spec.",
+        "Os três estilos que existem como utility nomeada em globals.css (@layer utilities). O resto da escala é aplicado com classes Tailwind soltas: 88 ocorrências de text-[Npx], 67 fora dos primitivos.",
       figure: {
         $value: {
           fontFamily: ["JetBrains Mono", "ui-monospace", "Menlo", "monospace"],
