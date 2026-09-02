@@ -1,5 +1,6 @@
 "use client"
 
+import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { PageHeader } from "@/components/ui/page-header"
 
 import { EvolutionNav, EvolutionNavMobile } from "./evolution-nav"
@@ -7,10 +8,20 @@ import { EvolutionNav, EvolutionNavMobile } from "./evolution-nav"
 export function EvolutionShell({
   title,
   description,
+  actions,
   children,
 }: {
   title?: string
   description?: string
+  /**
+   * CTA primário da página, no cluster do cabeçalho — a posição padrão do app.
+   *
+   * Existe porque não existia: sem slot, quem tinha CTA o colocava num
+   * `flex justify-end` dentro do conteúdo, e ele descia para a altura da coluna
+   * de navegação, longe do título e desalinhado de todas as outras telas.
+   * Acontecia em Reconhecimentos e Apresentações.
+   */
+  actions?: React.ReactNode
   children: React.ReactNode
 }) {
   return (
@@ -21,7 +32,9 @@ export function EvolutionShell({
             title={title}
             description={description}
             descriptionClassName="max-w-2xl"
-          />
+          >
+            {actions ? <PageHeaderActions>{actions}</PageHeaderActions> : null}
+          </PageHeader>
         </header>
       ) : null}
 

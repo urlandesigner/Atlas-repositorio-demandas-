@@ -384,14 +384,14 @@ export default function PresentationsPage() {
       <EvolutionShell
         title="Conhecimento compartilhado"
         description="Apresentações e materiais que você compartilhou com o time."
+        actions={
+          <Button size="sm" onClick={() => setIsAdding(true)}>
+            <Plus data-icon="inline-start" />
+            Nova apresentação
+          </Button>
+        }
       >
         <div className="flex flex-col gap-4">
-          <div className="flex justify-end">
-            <Button size="sm" className="gap-1.5 shrink-0" onClick={() => setIsAdding(true)}>
-              <Plus className="size-4" />
-              Nova apresentação
-            </Button>
-          </div>
 
           {presentations.length === 0 ? (
             <EmptyState onOpen={() => setIsAdding(true)} />

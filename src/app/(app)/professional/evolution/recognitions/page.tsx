@@ -90,15 +90,14 @@ export default function EvolutionRecognitionsPage() {
     <EvolutionShell
       title="Reconhecimentos"
       description="Feedbacks e validações recebidos como evidência de carreira."
+      actions={
+        <Button size="sm" onClick={openBlankForm}>
+          <Plus data-icon="inline-start" />
+          Registrar reconhecimento
+        </Button>
+      }
     >
       <div className="flex max-w-3xl flex-col gap-6">
-        <div className="flex justify-end">
-          <Button size="sm" onClick={openBlankForm}>
-            <Plus data-icon="inline-start" />
-            Registrar reconhecimento
-          </Button>
-        </div>
-
         {hasAnyRecognition ? (
           <div className="flex flex-col gap-6">
             {recognitions.length ? (
@@ -110,12 +109,19 @@ export default function EvolutionRecognitionsPage() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <CardListRowTitle as="h3">{item.title}</CardListRowTitle>
+                        {/* Badge acima do título, não ao lado: é a ordem
+                            canônica da linha de lista do app (badges, título,
+                            texto, data), a mesma de CardListItem. Ao lado, o
+                            badge disputava a linha com o título e empurrava
+                            títulos longos para duas linhas. */}
+                        <div className="flex min-h-6 flex-wrap items-center gap-2">
                           <Badge variant="outline">
                             {RECOGNITION_TYPE_LABEL[item.type]}
                           </Badge>
                         </div>
+                        <CardListRowTitle as="h3" className="mt-2">
+                          {item.title}
+                        </CardListRowTitle>
                         <p className="mt-1 text-xs text-muted-foreground">
                           {item.recognizedBy}
                           {item.recognizerArea ? ` · ${item.recognizerArea}` : ""} ·{" "}
@@ -182,14 +188,23 @@ export default function EvolutionRecognitionsPage() {
                       key={kudo.id}
                       className="rounded-lg border border-border/60 bg-card/[0.98] p-4"
                     >
-                      <div className="flex items-start gap-3">
+                      {/* O CTA sobe para o topo direito no desktop: ele ocupava
+                          uma faixa própria abaixo da mensagem, e como a mensagem
+                          é curta, sobrava largura à direita e a altura crescia
+                          sem necessidade.
+
+                          Um nó só, sem duplicar o botão: `flex-wrap` mais
+                          `w-full sm:w-auto` obriga o CTA a cair para a própria
+                          linha no mobile, onde título, badge e botão não cabem
+                          juntos em 375px. */}
+                      <div className="flex flex-wrap items-start gap-3">
                         <span
                           aria-hidden
                           className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-muted text-sm"
                         >
                           {meta.emoji}
                         </span>
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex-1">
                           <div className="flex flex-wrap items-center gap-2">
                             <h3 className="text-sm font-medium">{meta.label}</h3>
                             <Badge variant="secondary">
@@ -203,22 +218,22 @@ export default function EvolutionRecognitionsPage() {
                             “{kudo.message}”
                           </p>
                         </div>
-                      </div>
-                      <div className="mt-3 flex justify-end">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => {
-                            setEditing(null)
-                            setDraft(
-                              buildRecognitionDraftFromKudo({ kudo, from, areas: org.areas })
-                            )
-                            setOpen(true)
-                          }}
-                        >
-                          <FilePlus2 data-icon="inline-start" />
-                          Usar como evidência
-                        </Button>
+                        <div className="order-last flex w-full shrink-0 justify-end sm:order-none sm:w-auto">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setEditing(null)
+                              setDraft(
+                                buildRecognitionDraftFromKudo({ kudo, from, areas: org.areas })
+                              )
+                              setOpen(true)
+                            }}
+                          >
+                            <FilePlus2 data-icon="inline-start" />
+                            Usar como evidência
+                          </Button>
+                        </div>
                       </div>
                     </article>
                   )
