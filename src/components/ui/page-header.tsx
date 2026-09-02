@@ -38,7 +38,7 @@ function PageHeader({
       <div className="flex min-w-0 items-start gap-4">
         {leading}
         <div className="min-w-0">
-          <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+          <h1 className="text-2xl leading-tight font-semibold tracking-tight">{title}</h1>
           {description ? (
             <p className={cn("mt-1 text-sm text-muted-foreground", descriptionClassName)}>
               {description}

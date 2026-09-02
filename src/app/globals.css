@@ -23,6 +23,7 @@
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.125rem;
   --text-md: 0.9375rem;
+  --text-2xl: 2rem;
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-brand-muted: var(--brand-muted);
@@ -116,7 +117,7 @@
 
 :root {
   /* Superfícies — elevação no escuro é superfície mais clara, não sombra. */
-  --background: #0B0C0E;
+  --background: #0A0A0A;
   --card: #191A1E;
   --card-foreground: #E7E9ED;
   --popover: #202329;
@@ -186,7 +187,7 @@
   --chart-5: #F87171;
 
   /* Sidebar */
-  --sidebar: #0F1113;
+  --sidebar: #191A1E;
   --sidebar-foreground: #E7E9ED;
   --sidebar-primary: #7B8CFF;
   --sidebar-primary-foreground: #0B0C0E;
@@ -223,7 +224,7 @@
 }
 
 .light {
-  --background: #EDEEF0;
+  --background: #F5F5F5;
   --card: #FFFFFF;
   --card-foreground: #14171C;
   --popover: #FFFFFF;
@@ -282,7 +283,7 @@
   --chart-4: #6D28D9;
   --chart-5: #B91C1C;
 
-  --sidebar: #F6F7F8;
+  --sidebar: #FFFFFF;
   --sidebar-foreground: #14171C;
   --sidebar-primary: #3A4ADF;
   --sidebar-primary-foreground: #FFFFFF;
