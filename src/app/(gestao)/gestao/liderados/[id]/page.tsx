@@ -128,20 +128,27 @@ function LideradoDetailContent({ userId }: { userId: string }) {
           para telas sem CTA primário. */}
       <Card>
         <CardContent className="flex flex-col gap-4 px-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex min-w-0 items-start gap-4">
-            {/* Avatar na linha do nome, não no centro do bloco. */}
-            <div className="relative h-14 w-14 shrink-0 sm:h-8">
-              <PersonAvatar
-                name={user.name}
-                imageUrl={user.avatarUrl}
-                size="2xl"
-                className="absolute top-1/2 left-0 -translate-y-1/2"
-              />
-            </div>
-            <div className="min-w-0">
-              <h1 className="text-2xl font-semibold tracking-tight">{user.name}</h1>
-              <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
-              <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+          <div className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4">
+            {/* Grade de duas colunas: o avatar ocupa as duas primeiras linhas — nome
+                e a linha de apoio — e se centra NELAS, não só na do nome. Os chips
+                ficam na terceira linha e herdam o recuo pela coluna.
+
+                Antes a caixa do avatar tinha a altura da linha do nome e o círculo
+                transbordava dela. Funcionava aos 32px que o avatar realmente
+                recebia; quando o tamanho pedido passou a valer, 48px centrado numa
+                linha só desequilibrou o bloco.
+
+                Sem número mágico aqui: `row-span-2 self-center` resolve sozinho, e
+                muda de altura junto com a tipografia. */}
+            <PersonAvatar
+              name={user.name}
+              imageUrl={user.avatarUrl}
+              size="2xl"
+              className="row-span-2 self-center"
+            />
+            <h1 className="col-start-2 text-2xl font-semibold tracking-tight">{user.name}</h1>
+            <p className="col-start-2 mt-1 text-sm text-muted-foreground">{user.email}</p>
+            <div className="col-start-2 mt-2.5 flex flex-wrap items-center gap-1.5">
                 <Badge variant="outline">{user.kind ?? "colaborador"}</Badge>
                 {user.managementTitle ? (
                   <Badge variant="outline">{user.managementTitle}</Badge>
@@ -152,7 +159,6 @@ function LideradoDetailContent({ userId }: { userId: string }) {
                     <Badge variant="outline">{person.teamLabel}</Badge>
                   </>
                 ) : null}
-              </div>
             </div>
           </div>
           {saved ? (

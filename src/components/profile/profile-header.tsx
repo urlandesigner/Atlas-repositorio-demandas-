@@ -25,31 +25,35 @@ export function ProfileHeader({
   const tenure = formatTenure(identity.startDate)
 
   return (
-    <div className="flex flex-col gap-4 rounded-lg border border-border/60 bg-card p-5 shadow-card sm:flex-row sm:items-start">
-      {/* Avatar na linha do nome: a caixa tem a altura da linha do h2 e o
-          círculo é centralizado nela, transbordando para fora. Assim subtítulo
-          e chips não puxam o avatar para o meio do bloco. */}
-      <div className="relative h-12 w-12 shrink-0 sm:h-7">
-        <PersonAvatar
-          name={identity.name}
-          imageUrl={avatarUrl}
-          size="xl"
-          className="absolute top-1/2 left-0 -translate-y-1/2"
-        />
-      </div>
+    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-4 rounded-lg border border-border/60 bg-card p-5 shadow-card">
+      {/* Grade de duas colunas: o avatar ocupa as duas primeiras linhas — nome
+          e a linha de apoio — e se centra NELAS, não só na do nome. Os chips
+          ficam na terceira linha e herdam o recuo pela coluna.
 
-      <div className="min-w-0 flex-1">
-        <h2 className="text-xl font-semibold tracking-tight">{identity.name}</h2>
-        <p className="mt-0.5 text-sm text-muted-foreground">
-          {identity.role}
-          {levelName ? <span className="text-muted-foreground/70"> · {levelName}</span> : null}
-        </p>
+          Antes a caixa do avatar tinha a altura da linha do nome e o círculo
+          transbordava dela. Funcionava aos 32px que o avatar realmente
+          recebia; quando o tamanho pedido passou a valer, 48px centrado numa
+          linha só desequilibrou o bloco.
 
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          <Chip icon={Building2}>{identity.area}</Chip>
-          <Chip icon={Users}>Squad {identity.squad}</Chip>
-          {tenure ? <Chip icon={Clock3}>{tenure}</Chip> : null}
-        </div>
+          Sem número mágico aqui: `row-span-2 self-center` resolve sozinho, e
+          muda de altura junto com a tipografia. */}
+      <PersonAvatar
+        name={identity.name}
+        imageUrl={avatarUrl}
+        size="xl"
+        className="row-span-2 self-center"
+      />
+
+      <h2 className="col-start-2 text-xl font-semibold tracking-tight">{identity.name}</h2>
+      <p className="col-start-2 mt-0.5 text-sm text-muted-foreground">
+        {identity.role}
+        {levelName ? <span className="text-muted-foreground/70"> · {levelName}</span> : null}
+      </p>
+
+      <div className="col-start-2 mt-3 flex flex-wrap gap-1.5">
+        <Chip icon={Building2}>{identity.area}</Chip>
+        <Chip icon={Users}>Squad {identity.squad}</Chip>
+        {tenure ? <Chip icon={Clock3}>{tenure}</Chip> : null}
       </div>
     </div>
   )
