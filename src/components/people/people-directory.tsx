@@ -145,24 +145,30 @@ export function PeopleDirectory() {
                           {profile?.headline || person.title}
                         </p>
                       </div>
+                      {/* Uma fileira só, e todas as badges no mesmo peso.
+                          Antes eram duas: cargo e área em contorno, depois as
+                          skills em preenchimento preto. Duas fileiras e dois
+                          pesos para o mesmo tipo de metadado — e o preto puxava
+                          o olho para a skill, que é o detalhe, em vez do nome.
+
+                          O cargo saiu porque já está na linha acima: o headline
+                          é `profile.headline || person.title`, então quem não
+                          preencheu headline via a mesma palavra duas vezes
+                          seguidas ("Colaborador" sob "Colaborador").
+
+                          Sobra o essencial de um diretório: onde a pessoa atua
+                          e o que ela sabe fazer. */}
                       <div className="flex flex-wrap gap-1.5">
-                        <Badge variant="outline">{person.title}</Badge>
                         <Badge variant="outline">{person.areaName}</Badge>
+                        {profile?.skills.slice(0, 3).map((skill) => (
+                          <Badge key={skill} variant="outline">
+                            {skill}
+                          </Badge>
+                        ))}
+                        {profile && profile.skills.length > 3 ? (
+                          <Badge variant="outline">+{profile.skills.length - 3}</Badge>
+                        ) : null}
                       </div>
-                      {profile?.skills.length ? (
-                        <div className="flex flex-wrap gap-1.5">
-                          {profile.skills.slice(0, 3).map((skill) => (
-                            <Badge key={skill} variant="secondary">
-                              {skill}
-                            </Badge>
-                          ))}
-                          {profile.skills.length > 3 ? (
-                            <Badge variant="secondary">
-                              +{profile.skills.length - 3}
-                            </Badge>
-                          ) : null}
-                        </div>
-                      ) : null}
                       <div className="mt-1 flex items-center justify-between border-t border-border/60 pt-3">
                         <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                           <Sparkles className="size-3.5 text-accent-ink" />
