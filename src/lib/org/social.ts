@@ -120,6 +120,42 @@ const SOCIAL_SEED: OrgSocialData = {
       message: "Puxou a retro mais honesta do trimestre. O time saiu mais leve e com plano.",
       createdAt: seedDate("15"),
     },
+    {
+      id: "kudo-seed-6",
+      fromUserId: "user-colab-2",
+      toUserId: "user-gestor",
+      type: "impacto",
+      message:
+        "Destravou a negociação de escopo com a diretoria em um dia. O ciclo inteiro andou por causa disso.",
+      createdAt: seedDate("12"),
+    },
+    {
+      id: "kudo-seed-7",
+      fromUserId: "user-colab",
+      toUserId: "user-admin",
+      type: "colaboracao",
+      message:
+        "Reescreveu a política de acesso junto com quem usa, não sozinho. Ficou simples de seguir.",
+      createdAt: seedDate("10"),
+    },
+    {
+      id: "kudo-seed-8",
+      fromUserId: "user-admin",
+      toUserId: "user-colab-2",
+      type: "mentoria",
+      message:
+        "Acompanhou o onboarding de duas pessoas em paralelo sem deixar a própria entrega cair.",
+      createdAt: seedDate("08"),
+    },
+    {
+      id: "kudo-seed-9",
+      fromUserId: "user-gestor",
+      toUserId: "user-admin",
+      type: "inovacao",
+      message:
+        "Trouxe o formato de avaliação 360 que a gente usa hoje. Mudou a conversa de carreira na área.",
+      createdAt: seedDate("05"),
+    },
   ],
 }
 
@@ -127,6 +163,57 @@ let cached: OrgSocialData | null = null
 
 function isClient() {
   return typeof window !== "undefined"
+}
+
+/**
+ * Versão do conteúdo de seed. Suba um ao corrigir ou acrescentar dado de seed
+ * que precise alcançar quem já tem snapshot salvo.
+ *
+ * Sem isto, `normalize` devolve o array salvo inteiro e o seed só chega a
+ * navegador virgem — kudos novos ficariam invisíveis exatamente para quem já
+ * usa o produto. Foi o que aconteceu com os cinco kudos que já existiam: o
+ * mural aparecia vazio para quem tinha snapshot antigo.
+ *
+ * Só entradas de seed são reescritas: kudo com id `kudo-seed-*` e perfil de
+ * usuário do seed. Kudo dado por alguém pelo app tem id próprio e nunca é
+ * tocado; perfil editado pela pessoa volta ao do seed, e isso é o preço
+ * declarado de subir a versão.
+ */
+const SOCIAL_SEED_VERSAO = "1"
+const SOCIAL_VERSAO_KEY = "atlas_org_social_versao"
+
+function ressincronizarComSeed(salvo: OrgSocialData): OrgSocialData {
+  let versaoSalva: string | null = null
+  try {
+    versaoSalva = localStorage.getItem(SOCIAL_VERSAO_KEY)
+  } catch {
+    return salvo
+  }
+  if (versaoSalva === SOCIAL_SEED_VERSAO) return salvo
+
+  const kudosDoSeed = new Map(SOCIAL_SEED.kudos.map((kudo) => [kudo.id, kudo]))
+  const perfisDoSeed = new Map(SOCIAL_SEED.profiles.map((perfil) => [perfil.userId, perfil]))
+  const idsSalvos = new Set(salvo.kudos.map((kudo) => kudo.id))
+  const perfisSalvos = new Set(salvo.profiles.map((perfil) => perfil.userId))
+
+  const unido: OrgSocialData = {
+    profiles: [
+      ...salvo.profiles.map((perfil) => perfisDoSeed.get(perfil.userId) ?? perfil),
+      ...SOCIAL_SEED.profiles.filter((perfil) => !perfisSalvos.has(perfil.userId)),
+    ],
+    kudos: [
+      ...salvo.kudos.map((kudo) => kudosDoSeed.get(kudo.id) ?? kudo),
+      ...SOCIAL_SEED.kudos.filter((kudo) => !idsSalvos.has(kudo.id)),
+    ].sort((esq, dir) => dir.createdAt.localeCompare(esq.createdAt)),
+  }
+
+  try {
+    localStorage.setItem(SOCIAL_VERSAO_KEY, SOCIAL_SEED_VERSAO)
+    localStorage.setItem(ORG_SOCIAL_STORAGE_KEY, JSON.stringify(unido))
+  } catch {
+    // Vale para esta sessão; recalcula na próxima leitura.
+  }
+  return unido
 }
 
 function normalize(raw: unknown): OrgSocialData {
@@ -145,12 +232,13 @@ export function getOrgSocialSnapshot(): OrgSocialData {
   const raw = localStorage.getItem(ORG_SOCIAL_STORAGE_KEY)
   if (!raw) {
     localStorage.setItem(ORG_SOCIAL_STORAGE_KEY, JSON.stringify(SOCIAL_SEED))
+    localStorage.setItem(SOCIAL_VERSAO_KEY, SOCIAL_SEED_VERSAO)
     cached = SOCIAL_SEED
     return SOCIAL_SEED
   }
 
   try {
-    cached = normalize(JSON.parse(raw))
+    cached = ressincronizarComSeed(normalize(JSON.parse(raw)))
     return cached
   } catch {
     cached = SOCIAL_SEED

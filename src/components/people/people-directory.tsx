@@ -255,6 +255,15 @@ export function PeopleDirectory() {
                   Nenhum reconhecimento ainda. Visite o perfil de um colega e deixe o primeiro. ✨
                 </p>
               )}
+              {/* Diz o corte em vez de esconder. O badge conta o total, a lista
+                  mostra as 8 mais recentes, e sem essa linha os dois números
+                  discordariam na cara do leitor — o mesmo defeito que o badge
+                  tinha quando contava kudos que a lista filtrava. */}
+              {muralCompleto.length > mural.length ? (
+                <p className="px-2 pt-2 text-2xs text-muted-foreground">
+                  Mostrando {mural.length} de {muralCompleto.length} — os mais recentes.
+                </p>
+              ) : null}
             </CardContent>
           </Card>
         </div>
