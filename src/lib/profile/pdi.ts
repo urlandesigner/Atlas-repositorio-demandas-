@@ -38,8 +38,24 @@ export const PDI_THEME_LABEL: Record<PdiTheme, string> = {
 
 export const PDI_MAX_LEVEL = 6
 
+/**
+ * Como o nível aparece na tela. É a identidade, clampada em 0–6.
+ *
+ * Somava 1 antes de exibir, então onze telas mostravam a escala como 1 a 7. A
+ * rubrica da empresa é "Nível 0" a "Nível 6", e o efeito era o app inteiro
+ * mostrar o nível um ponto acima do que a rubrica diz: quem estava em
+ * Tecnologia 4, "Auxilia a Squad e Stack", aparecia como 5 — e a matriz do
+ * perfil exibia "6 / 7", num teto que não existe.
+ *
+ * Os arrays de LEVELS que alimentam as réguas já eram `[0..6]`; só a exibição
+ * estava deslocada. Por isso corrigir aqui alinha as onze de uma vez.
+ *
+ * A função continua existindo, em vez de os call sites imprimirem o número
+ * direto, porque é onde o clamp vive — dado de nível vem de store e de
+ * formulário, e nenhuma tela deve exibir 7 nem -1.
+ */
 export function formatPdiLevel(level: number): number {
-  return Math.max(1, Math.min(PDI_MAX_LEVEL + 1, Math.round(level) + 1))
+  return Math.max(0, Math.min(PDI_MAX_LEVEL, Math.round(level)))
 }
 
 // Rubrica: descritor de cada nível (índice 0–6) por tema. Dado de referência

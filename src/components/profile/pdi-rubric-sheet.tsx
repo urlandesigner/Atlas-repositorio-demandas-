@@ -36,7 +36,7 @@ export function PdiRubricSheet({
             <SheetHeader>
               <SheetTitle>{PDI_THEME_LABEL[theme]}</SheetTitle>
               <SheetDescription>
-                Escala 1–7. Toque num nível para definir o esperado deste tema.
+                Escala 0–6. Toque num nível para definir o esperado deste tema.
               </SheetDescription>
             </SheetHeader>
 
