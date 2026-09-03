@@ -34,6 +34,8 @@ const PAIRS = [
   ["--sidebar-foreground", "--sidebar", 4.5, "texto da sidebar"],
   ["--sidebar-primary-foreground", "--sidebar-primary", 4.5, "texto do item ativo da sidebar"],
   ["--input", "--card", 1.5, "borda de campo de formulário sobre card"],
+  ["--foreground", "--muted", 4.5, "texto digitado dentro do campo"],
+  ["--muted-foreground", "--muted", 4.5, "placeholder dentro do campo"],
   ["--hairline-strong", "--card", 2, "borda de botão outline sobre card"],
   ["--ring", "--background", 3, "anel de foco"],
   ["--gauge-on", "--card", 3, "medidor aceso (TrilhaGauge) sobre card"],
@@ -80,9 +82,18 @@ const PAIRS = [
 // este arquivo verifica em 3:1. Quem navega por teclado mantém boundary forte;
 // quem varre a tela com o olho perde.
 //
-// A mitigação que faltaria é dar preenchimento ao campo, identificando o
-// controle por área em vez de por linha — coerente com a linguagem de cartão sem
-// borda adotada no resto do app. Está proposto e não decidido.
+// A mitigação foi aplicada: o campo ganhou preenchimento em `--muted`, então o
+// controle passou a ser identificado por ÁREA e não por linha — coerente com a
+// linguagem de cartão sem borda do resto do app. O passo de claridade contra o
+// cartão é ΔL* 3,8 no claro e 6,2 no escuro.
+//
+// Isso não recupera o critério formal de 1.4.11, que fala de contraste de
+// contorno, mas recupera o que o critério protege: saber onde o campo começa e
+// termina sem depender de enxergar uma linha de 1,6:1.
+//
+// Como o campo virou superfície própria, os dois pares abaixo passaram a ser
+// verificados contra `--muted` em vez de `--card`: texto digitado e placeholder
+// ficavam medidos contra o fundo errado.
 
 function extractBlock(css, selector) {
   // Localiza `selector {` no início de uma linha e captura até a chave que fecha.
