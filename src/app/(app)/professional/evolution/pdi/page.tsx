@@ -89,7 +89,7 @@ export default function PdiHistoryPage() {
           : "Todos os ciclos do seu plano de desenvolvimento, do atual ao mais antigo."
       }
     >
-      <div className="flex max-w-3xl flex-col gap-4">
+      <div className="flex flex-col gap-4">
         {ciclos.length ? (
           ciclos.map(({ assignment, framework, anterior }) => (
             <CicloCard

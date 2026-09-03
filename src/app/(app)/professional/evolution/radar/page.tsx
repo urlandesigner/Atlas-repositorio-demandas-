@@ -39,7 +39,11 @@ export default function EvolutionRadarPage() {
       title="Evolução Profissional"
       description="Competências e evidências para o próximo nível."
     >
-      <div className="flex max-w-3xl flex-col gap-6">
+      {/* Sem teto de largura: a coluna de conteúdo já é limitada pelo shell
+          (888px em 1440), e travar em max-w-3xl deixava 120px vazios só nesta
+          página. Resumo e Conhecimento nunca travaram, então as sete telas do
+          Perfil discordavam da própria largura. */}
+      <div className="flex flex-col gap-6">
         <CareerContextBar
           goal={profile.goal}
           ladder={profile.ladder}

@@ -133,7 +133,7 @@ export default function EvolutionPromotionPage() {
       title="Dossiê de evolução"
       description="Narrativa executiva com evidências para conversas de progressão."
     >
-      <div className="flex max-w-3xl flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <CareerContextBar
           goal={profile.goal}
           ladder={profile.ladder}

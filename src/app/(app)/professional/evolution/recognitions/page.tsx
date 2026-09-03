@@ -97,7 +97,7 @@ export default function EvolutionRecognitionsPage() {
         </Button>
       }
     >
-      <div className="flex max-w-3xl flex-col gap-6">
+      <div className="flex flex-col gap-6">
         {hasAnyRecognition ? (
           <div className="flex flex-col gap-6">
             {recognitions.length ? (

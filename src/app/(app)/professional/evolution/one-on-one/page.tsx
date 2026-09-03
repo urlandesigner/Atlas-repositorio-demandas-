@@ -124,7 +124,7 @@ export default function EvolutionOneOnOnePage() {
       title="Relatório de 1:1"
       description="Registre cada 1:1 com data e o que ficou combinado."
     >
-      <div className="flex max-w-3xl flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <MetricCard
             variant="card"
