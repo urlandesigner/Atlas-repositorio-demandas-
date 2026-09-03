@@ -255,7 +255,7 @@ function CicloCard({
         {framework ? (
           <div>
             <Overline size="sm">Níveis por tema</Overline>
-            <div className="mt-2 flex flex-col divide-y divide-border/60">
+            <div className="mt-2 flex flex-col [&>*+*]:relative [&>*+*]:before:absolute [&>*+*]:before:inset-x-0 [&>*+*]:before:top-0 [&>*+*]:before:h-px [&>*+*]:before:bg-border/60 [&>*+*]:before:content-['']">
               {framework.themes.map((tema) => {
                 const nivel = niveisAtuais[tema.id] ?? 0
                 const antes = nivelAnterior(tema.id)
@@ -385,7 +385,7 @@ function Justificativas({
         </p>
       </summary>
 
-      <div className="mt-3 flex flex-col divide-y divide-border/60">
+      <div className="mt-3 flex flex-col [&>*+*]:relative [&>*+*]:before:absolute [&>*+*]:before:inset-x-0 [&>*+*]:before:top-0 [&>*+*]:before:h-px [&>*+*]:before:bg-border/60 [&>*+*]:before:content-['']">
         {temasComTexto.map((tema) => {
           const antes = avaliacao.previous[tema.id]
           const agora = niveisAtuais[tema.id]

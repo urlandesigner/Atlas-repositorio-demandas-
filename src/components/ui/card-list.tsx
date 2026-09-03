@@ -67,8 +67,29 @@ export function CardListBody({
   return <CardContent className={cn("p-0", className)} {...props} />
 }
 
+/**
+ * A pilha de linhas de um CardList, com o divisor recuado até a largura do
+ * conteúdo.
+ *
+ * Era `divide-y`, que desenha a borda na linha inteira e portanto sangra de
+ * ponta a ponta do cartão, enquanto o texto começa 24px adentro. O traço
+ * atravessando mais que o conteúdo faz o cartão parecer uma tabela em vez de
+ * uma lista.
+ *
+ * Aqui o divisor é um pseudo-elemento com `inset-x-6`, o mesmo recuo do
+ * `px-6` das linhas: ele começa e termina onde o conteúdo começa e termina. E
+ * fica só entre linhas (`*+*`), nunca antes da primeira nem depois da última.
+ */
 export function CardListRows({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("divide-y divide-border/60", className)} {...props} />
+  return (
+    <div
+      className={cn(
+        "[&>*+*]:relative [&>*+*]:before:absolute [&>*+*]:before:inset-x-6 [&>*+*]:before:top-0 [&>*+*]:before:h-px [&>*+*]:before:bg-border/60 [&>*+*]:before:content-['']",
+        className
+      )}
+      {...props}
+    />
+  )
 }
 
 export function CardListRow({ className, ...props }: React.ComponentProps<"div">) {
