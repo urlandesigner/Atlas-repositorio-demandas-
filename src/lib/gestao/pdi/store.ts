@@ -62,6 +62,65 @@ const GESTAO_PDI_IDS_RETIRADOS = new Set<string>([
   "assignment-colab-demo-2025h2",
 ])
 
+/**
+ * Limpeza pontual: o colaborador tem exatamente dois PDIs, e o store de alguns
+ * navegadores acumulou ciclos que não existem — restos de teste e de versões
+ * anteriores do seed.
+ *
+ * É de propósito uma limpeza ÚNICA, marcada por versão, e não uma regra
+ * permanente de "só estes dois podem existir". A regra permanente seria uma
+ * armadilha: apagaria em silêncio qualquer PDI novo aplicado depois daqui.
+ *
+ * Roda uma vez por navegador e nunca mais. Só remove assignment do usuário
+ * listado — os PDIs de outras pessoas não são tocados.
+ */
+const LIMPEZA_KEY = "atlas_gestao_pdi_limpeza"
+const LIMPEZA_VERSAO = "1"
+const LIMPEZA_USUARIO = "user-colab"
+const LIMPEZA_MANTER = new Set<string>([
+  "assignment-colab-pdi-design-2026h1", // PDI Design · 2026
+  "assignment-colab-demo", // 2026 · H1
+])
+
+function aplicarLimpezaUnica(dados: GestaoPdiData): GestaoPdiData {
+  try {
+    if (localStorage.getItem(LIMPEZA_KEY) === LIMPEZA_VERSAO) return dados
+  } catch {
+    return dados
+  }
+
+  const sobrando = dados.assignments.filter(
+    (item) => item.userId === LIMPEZA_USUARIO && !LIMPEZA_MANTER.has(item.id)
+  )
+
+  try {
+    localStorage.setItem(LIMPEZA_KEY, LIMPEZA_VERSAO)
+  } catch {
+    // Sem poder marcar, é melhor não remover: senão a limpeza rodaria em toda
+    // leitura e viraria a regra permanente que este desenho evita.
+    return dados
+  }
+
+  if (!sobrando.length) return dados
+
+  const idsRemovidos = new Set(sobrando.map((item) => item.id))
+  const limpo: GestaoPdiData = {
+    frameworks: dados.frameworks,
+    assignments: dados.assignments.filter((item) => !idsRemovidos.has(item.id)),
+    promotionRequests: dados.promotionRequests.filter(
+      (item) => !idsRemovidos.has(item.assignmentId)
+    ),
+  }
+
+  try {
+    localStorage.setItem(GESTAO_PDI_STORAGE_KEY, JSON.stringify(limpo))
+  } catch {
+    // Fica valendo só nesta sessão; a marca já impede repetição.
+  }
+
+  return limpo
+}
+
 function lerIdsSemeados(): Set<string> {
   try {
     const raw = localStorage.getItem(GESTAO_PDI_SEEDED_KEY)
@@ -157,7 +216,9 @@ export function getGestaoPdiSnapshot(): GestaoPdiData {
   }
 
   try {
-    cached = unirSeedPendente(normalize(JSON.parse(raw)))
+    // A limpeza vem DEPOIS da união: a união pode reintroduzir um id de seed, e
+    // a limpeza é quem decide o conjunto final.
+    cached = aplicarLimpezaUnica(unirSeedPendente(normalize(JSON.parse(raw))))
     return cached
   } catch {
     cached = GESTAO_PDI_SEED
