@@ -47,6 +47,25 @@ function normalize(raw: unknown): GestaoPdiData {
 const GESTAO_PDI_SEEDED_KEY = "atlas_gestao_pdi_seeded"
 
 /**
+ * Versão do conteúdo de seed. Suba um quando corrigir dado de seed que precisa
+ * alcançar quem já tem snapshot salvo.
+ *
+ * Sem isto, correção em item de seed nunca chegava em ninguém que já tivesse
+ * aberto o app: `normalize` devolve o array salvo inteiro e a união só
+ * ACRESCENTA id ausente. O efeito era invisível e durou meses — o framework
+ * `framework-product` foi renomeado de "Product Ladder" para "Trilha de Produto
+ * & Design" e continuava aparecendo com o nome antigo, com as expectativas
+ * antigas, e o ciclo 2026 · H1 continuava com os níveis antigos, para toda
+ * pessoa com o app já usado.
+ *
+ * O preço é declarado: ao subir a versão, edições feitas pelo app em registros
+ * DO SEED voltam ao valor do seed. Registros criados pela pessoa nunca são
+ * tocados — a sincronia age só sobre ids que o seed conhece.
+ */
+const GESTAO_PDI_SEED_VERSAO = "2"
+const GESTAO_PDI_VERSAO_KEY = "atlas_gestao_pdi_versao"
+
+/**
  * Ids que já saíram do seed e precisam sair também de quem os recebeu.
  *
  * Remover do seed não basta: a união abaixo já pode ter gravado o item no
@@ -62,65 +81,6 @@ const GESTAO_PDI_IDS_RETIRADOS = new Set<string>([
   "assignment-colab-demo-2025h2",
 ])
 
-/**
- * Limpeza pontual: o colaborador tem exatamente dois PDIs, e o store de alguns
- * navegadores acumulou ciclos que não existem — restos de teste e de versões
- * anteriores do seed.
- *
- * É de propósito uma limpeza ÚNICA, marcada por versão, e não uma regra
- * permanente de "só estes dois podem existir". A regra permanente seria uma
- * armadilha: apagaria em silêncio qualquer PDI novo aplicado depois daqui.
- *
- * Roda uma vez por navegador e nunca mais. Só remove assignment do usuário
- * listado — os PDIs de outras pessoas não são tocados.
- */
-const LIMPEZA_KEY = "atlas_gestao_pdi_limpeza"
-const LIMPEZA_VERSAO = "1"
-const LIMPEZA_USUARIO = "user-colab"
-const LIMPEZA_MANTER = new Set<string>([
-  "assignment-colab-pdi-design-2026h1", // PDI Design · 2026
-  "assignment-colab-demo", // 2026 · H1
-])
-
-function aplicarLimpezaUnica(dados: GestaoPdiData): GestaoPdiData {
-  try {
-    if (localStorage.getItem(LIMPEZA_KEY) === LIMPEZA_VERSAO) return dados
-  } catch {
-    return dados
-  }
-
-  const sobrando = dados.assignments.filter(
-    (item) => item.userId === LIMPEZA_USUARIO && !LIMPEZA_MANTER.has(item.id)
-  )
-
-  try {
-    localStorage.setItem(LIMPEZA_KEY, LIMPEZA_VERSAO)
-  } catch {
-    // Sem poder marcar, é melhor não remover: senão a limpeza rodaria em toda
-    // leitura e viraria a regra permanente que este desenho evita.
-    return dados
-  }
-
-  if (!sobrando.length) return dados
-
-  const idsRemovidos = new Set(sobrando.map((item) => item.id))
-  const limpo: GestaoPdiData = {
-    frameworks: dados.frameworks,
-    assignments: dados.assignments.filter((item) => !idsRemovidos.has(item.id)),
-    promotionRequests: dados.promotionRequests.filter(
-      (item) => !idsRemovidos.has(item.assignmentId)
-    ),
-  }
-
-  try {
-    localStorage.setItem(GESTAO_PDI_STORAGE_KEY, JSON.stringify(limpo))
-  } catch {
-    // Fica valendo só nesta sessão; a marca já impede repetição.
-  }
-
-  return limpo
-}
-
 function lerIdsSemeados(): Set<string> {
   try {
     const raw = localStorage.getItem(GESTAO_PDI_SEEDED_KEY)
@@ -132,25 +92,46 @@ function lerIdsSemeados(): Set<string> {
 }
 
 /**
- * Une ao snapshot salvo os itens de seed que ainda não passaram por aqui.
+ * Une ao snapshot salvo os itens de seed que ainda não passaram por aqui, e
+ * remove os que saíram do seed.
  *
  * Existe porque `normalize` substitui arrays inteiros: quem já tinha snapshot
  * salvo — ou seja, qualquer pessoa que já abriu o app — nunca recebia item novo
- * de seed. O seed só alcançava navegador virgem. Na prática, um ciclo de PDI
- * acrescentado ao seed era invisível para exatamente as pessoas que usam o
- * produto.
+ * de seed. O seed só alcançava navegador virgem.
  *
  * Regras, nesta ordem de prioridade:
  * 1. O que está salvo NUNCA é sobrescrito — são dados reais da pessoa.
  * 2. Item de seed só entra se o id não estiver salvo e não constar da lista de
  *    já-oferecidos, então apagar um item de seed o mantém apagado.
- * 3. Nada é removido.
+ * 3. Só sai o que está em GESTAO_PDI_IDS_RETIRADOS, que contém apenas ids de
+ *    seed conhecidos. Nada criado pela pessoa é removido daqui.
  */
 function unirSeedPendente(salvo: GestaoPdiData): GestaoPdiData {
   const jaOferecidos = lerIdsSemeados()
 
-  // Retirados primeiro: o que saiu do seed não deve contar como "já salvo" nem
-  // sobreviver na lista.
+  let versaoSalva: string | null = null
+  try {
+    versaoSalva = localStorage.getItem(GESTAO_PDI_VERSAO_KEY)
+  } catch {
+    versaoSalva = GESTAO_PDI_SEED_VERSAO
+  }
+  const precisaRessincronizar = versaoSalva !== GESTAO_PDI_SEED_VERSAO
+
+  if (precisaRessincronizar) {
+    const frameworksDoSeed = new Map(GESTAO_PDI_SEED.frameworks.map((f) => [f.id, f]))
+    const assignmentsDoSeed = new Map(GESTAO_PDI_SEED.assignments.map((a) => [a.id, a]))
+    salvo = {
+      frameworks: salvo.frameworks.map((f) => frameworksDoSeed.get(f.id) ?? f),
+      assignments: salvo.assignments.map((a) => assignmentsDoSeed.get(a.id) ?? a),
+      promotionRequests: salvo.promotionRequests,
+    }
+    try {
+      localStorage.setItem(GESTAO_PDI_VERSAO_KEY, GESTAO_PDI_SEED_VERSAO)
+    } catch {
+      // Sem marca, ressincroniza de novo na próxima leitura. É idempotente.
+    }
+  }
+
   const semRetirados: GestaoPdiData = {
     frameworks: salvo.frameworks.filter((item) => !GESTAO_PDI_IDS_RETIRADOS.has(item.id)),
     assignments: salvo.assignments.filter((item) => !GESTAO_PDI_IDS_RETIRADOS.has(item.id)),
@@ -168,12 +149,22 @@ function unirSeedPendente(salvo: GestaoPdiData): GestaoPdiData {
     ...semRetirados.assignments.map((item) => item.id),
   ])
 
-  const pendente = (id: string) => !idsSalvos.has(id) && !jaOferecidos.has(id)
+  const pendente = (id: string) =>
+    !idsSalvos.has(id) && !jaOferecidos.has(id) && !GESTAO_PDI_IDS_RETIRADOS.has(id)
 
   const frameworksNovos = GESTAO_PDI_SEED.frameworks.filter((item) => pendente(item.id))
   const assignmentsNovos = GESTAO_PDI_SEED.assignments.filter((item) => pendente(item.id))
 
-  if (!frameworksNovos.length && !assignmentsNovos.length && !retirouAlgo) return salvo
+  if (!frameworksNovos.length && !assignmentsNovos.length && !retirouAlgo) {
+    if (precisaRessincronizar) {
+      try {
+        localStorage.setItem(GESTAO_PDI_STORAGE_KEY, JSON.stringify(salvo))
+      } catch {
+        // Vale para esta sessão.
+      }
+    }
+    return salvo
+  }
 
   const unido: GestaoPdiData = {
     frameworks: [...semRetirados.frameworks, ...frameworksNovos],
@@ -190,8 +181,8 @@ function unirSeedPendente(salvo: GestaoPdiData): GestaoPdiData {
     localStorage.setItem(GESTAO_PDI_SEEDED_KEY, JSON.stringify(oferecidos))
     localStorage.setItem(GESTAO_PDI_STORAGE_KEY, JSON.stringify(unido))
   } catch {
-    // Sem espaço ou storage bloqueado: a união vale para esta sessão e é
-    // recalculada na próxima leitura. Não vale derrubar a tela por isso.
+    // Sem espaço ou storage bloqueado: vale para esta sessão e é recalculado na
+    // próxima leitura. Não vale derrubar a tela por isso.
   }
 
   return unido
@@ -211,14 +202,17 @@ export function getGestaoPdiSnapshot(): GestaoPdiData {
         ...GESTAO_PDI_SEED.assignments.map((item) => item.id),
       ])
     )
+    try {
+      localStorage.setItem(GESTAO_PDI_VERSAO_KEY, GESTAO_PDI_SEED_VERSAO)
+    } catch {
+      // Sem marca, a próxima leitura ressincroniza sem efeito prático.
+    }
     cached = GESTAO_PDI_SEED
     return GESTAO_PDI_SEED
   }
 
   try {
-    // A limpeza vem DEPOIS da união: a união pode reintroduzir um id de seed, e
-    // a limpeza é quem decide o conjunto final.
-    cached = aplicarLimpezaUnica(unirSeedPendente(normalize(JSON.parse(raw))))
+    cached = unirSeedPendente(normalize(JSON.parse(raw)))
     return cached
   } catch {
     cached = GESTAO_PDI_SEED

@@ -45,16 +45,15 @@ PRODUCT_FRAMEWORK.expectations = {
   "pleno-1": { tecnologia: 2, dominio: 3, pessoas: 2, processos: 2, influencia: 1, estudo: 2 },
   "pleno-2": { tecnologia: 3, dominio: 4, pessoas: 3, processos: 3, influencia: 2, estudo: 3 },
   "senior-1": { tecnologia: 4, dominio: 4, pessoas: 4, processos: 4, influencia: 3, estudo: 3 },
-  // Linha do Senior II vinda do relatório de PDI de janeiro/2026, onde cada
-  // tema aparece como par `(+Nx, -Ny)`: o segundo número é o nível esperado.
+  // Nível esperado do Senior II em cada tema, informado pelo avaliado.
   //
-  //   TECNOLOGIA (+N5, -N6) -> 6      PROCESSOS  (+N4, -N5) -> 5
-  //   DOMÍNIO    (+N3, -N4) -> 4      INFLUÊNCIA (+N3, -N4) -> 4
-  //   PESSOAS    (+N4, -N5) -> 5      ESTUDA     (+N5, -N6) -> 6
-  //
-  // Preferi o relatório à leitura das bordas da tabela de rubrica: o PDF é
-  // texto, a borda é pixel, e eu já errei uma vez interpretando esses pares.
-  "senior-2": { tecnologia: 6, dominio: 4, pessoas: 5, processos: 5, influencia: 4, estudo: 6 },
+  // Não derivar isto de novo por leitura indireta. Foram duas tentativas e a
+  // segunda piorou: os badges SÊNIOR II da tabela de rubrica davam
+  // {6,5,5,5,5,6}, que estava certo, e eu troquei por {6,4,5,5,4,6} lendo o
+  // segundo número dos pares `(+Nx, -Ny)` do relatório de janeiro. Havia um
+  // sinal de que a interpretação estava errada e eu não o segui: o primeiro
+  // número do par já não correspondia ao nível atual em Tecnologia e Estudo.
+  "senior-2": { tecnologia: 6, dominio: 5, pessoas: 5, processos: 5, influencia: 5, estudo: 6 },
   staff: { tecnologia: 5, dominio: 6, pessoas: 5, processos: 5, influencia: 5, estudo: 5 },
   lead: { tecnologia: 6, dominio: 6, pessoas: 6, processos: 5, influencia: 6, estudo: 5 },
 }
