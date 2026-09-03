@@ -75,10 +75,12 @@ export function PeopleDirectory() {
   const currentProfile = currentUser ? getSocialProfile(social, currentUser.id) : null
 
   const userById = new Map(org.users.map((user) => [user.id, user]))
-  const mural = social.kudos
+  // Só kudos cujas duas pontas existem no store de org: o cartão renderiza o
+  // nome de quem deu e de quem recebeu, e um id sem usuário quebraria a linha.
+  const muralCompleto = social.kudos
     .filter((kudo) => userById.has(kudo.fromUserId) && userById.has(kudo.toUserId))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .slice(0, 8)
+  const mural = muralCompleto.slice(0, 8)
 
   return (
     <div className="flex flex-col gap-6">
@@ -200,8 +202,14 @@ export function PeopleDirectory() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <CardTitle className="text-base">Mural de reconhecimentos</CardTitle>
-                {social.kudos.length ? (
-                  <Badge variant="secondary">{social.kudos.length}</Badge>
+                {/* Conta o que é RENDERIZÁVEL, não `social.kudos.length`.
+                    Contando o total bruto, o badge dizia 6 enquanto a lista
+                    mostrava o estado vazio: os kudos existiam mas apontavam
+                    para usuários ausentes do store de org, e o filtro do mural
+                    os descartava. Um número que a lista abaixo desmente é pior
+                    que nenhum número. */}
+                {muralCompleto.length ? (
+                  <Badge variant="secondary">{muralCompleto.length}</Badge>
                 ) : null}
               </div>
               <CardDescription>O que a rede anda celebrando publicamente.</CardDescription>
