@@ -92,7 +92,7 @@ export interface PdiPromotionRequest {
   areaId: string
   fromLevelId: string
   toLevelId: string
-  /** Prontidão no momento da solicitação (0–100) */
+  /** Avanço no momento da solicitação (0–100). Nome do campo mantido por ser dado persistido. */
   readiness: number
   managerNotes: string | null
   adminNotes: string | null
@@ -128,14 +128,35 @@ export function getFrameworkExpectations(
   )
 }
 
+/**
+ * Avanço no ciclo, de 0 a 100: quanto do exigido já foi alcançado, somando
+ * todos os temas.
+ *
+ *   soma de min(atual, esperado)  /  soma de esperado
+ *
+ * Era a contagem de temas que ATINGIRAM o esperado, de forma binária, e isso
+ * apagava a informação mais útil do PDI. Num caso real do produto — seis temas,
+ * todos a exatamente um nível da barra — a régua binária devolvia 0% em dois
+ * ciclos seguidos, sem mostrar que quatro temas tinham subido de um ciclo para
+ * o outro. "Falta um nível em quase tudo" e "falta quatro níveis em tudo"
+ * recebiam o mesmo zero. Proporcionalmente, os mesmos dados dão 66% e 78%.
+ *
+ * O `min` existe para que passar do esperado não gere crédito acima de 100:
+ * quem está acima da barra num tema não compensa quem está abaixo em outro.
+ */
 export function computeFrameworkReadiness(
   current: Record<string, number>,
   expected: Record<string, number>,
   themeIds: string[]
 ): number {
   if (!themeIds.length) return 0
-  const met = themeIds.filter((id) => (current[id] ?? 0) >= (expected[id] ?? 0)).length
-  return Math.round((met / themeIds.length) * 100)
+  const total = themeIds.reduce((soma, id) => soma + (expected[id] ?? 0), 0)
+  if (total <= 0) return 0
+  const alcancado = themeIds.reduce(
+    (soma, id) => soma + Math.min(current[id] ?? 0, expected[id] ?? 0),
+    0
+  )
+  return Math.round((alcancado / total) * 100)
 }
 
 export function buildDefaultExpectations(

@@ -52,7 +52,7 @@ export function PdiObjectiveProgressMatrix({
           <p className="mt-1 text-xs text-muted-foreground">
             Estimativa dinâmica sobre o último PDI
             {readinessGain > 0
-              ? ` · +${readinessGain} pp de prontidão`
+              ? ` · +${readinessGain} pp de avanço`
               : advancingThemes
                 ? ` · ${advancingThemes} tema(s) em movimento`
                 : " · conecte objetivos aos temas"}

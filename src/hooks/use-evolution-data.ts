@@ -104,7 +104,7 @@ export function useEvolutionData() {
     [pdi]
   )
 
-  // Prontidão no PDI: quando há um PDI atribuído pelo gestor, usa o framework
+  // Avanço no PDI: quando há um PDI atribuído pelo gestor, usa o framework
   // dele (mesma fonte da aba Resumo) para que Radar/Destaques/Dossiê mostrem o
   // mesmo número do perfil. Sem PDI atribuído, cai no autoassessment (pdi-store).
   const assigned = useMemo(() => {

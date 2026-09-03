@@ -33,7 +33,7 @@ export function CareerGoalCard({
             <div className="text-xl font-semibold text-brand-muted-foreground tabular-nums">
               {progress}%
             </div>
-            <p className="text-2xs text-muted-foreground/70">prontidão no PDI</p>
+            <p className="text-2xs text-muted-foreground/70">avanço no PDI</p>
           </div>
         </div>
 

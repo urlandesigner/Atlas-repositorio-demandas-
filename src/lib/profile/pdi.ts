@@ -204,7 +204,7 @@ export function suggestPdiLevels(
   return result
 }
 
-// ─── Prontidão e gaps ────────────────────────────────────────────────────────
+// ─── Avanço e gaps ────────────────────────────────────────────────────────
 
 export interface PdiGap {
   theme: PdiTheme
@@ -228,13 +228,23 @@ export function computePdiGaps(
   })).filter((gap) => gap.deficit > 0)
 }
 
-// 0–100: proporção de temas no nível esperado ou acima.
+/**
+ * Avanço no PDI, de 0 a 100 — mesma régua de computeFrameworkReadiness em
+ * lib/gestao/pdi/types.ts, e mantida igual de propósito: são o mesmo conceito
+ * exibido com o mesmo rótulo, em telas diferentes. Duas fórmulas para o mesmo
+ * número seria pior que a régua antiga.
+ */
 export function computePdiReadiness(
   current: Record<PdiTheme, number>,
   expected: Record<PdiTheme, number>
 ): number {
-  const met = PDI_THEMES.filter((theme) => (current[theme] ?? 0) >= (expected[theme] ?? 0)).length
-  return Math.round((met / PDI_THEMES.length) * 100)
+  const total = PDI_THEMES.reduce((soma, theme) => soma + (expected[theme] ?? 0), 0)
+  if (total <= 0) return 0
+  const alcancado = PDI_THEMES.reduce(
+    (soma, theme) => soma + Math.min(current[theme] ?? 0, expected[theme] ?? 0),
+    0
+  )
+  return Math.round((alcancado / total) * 100)
 }
 
 // ─── Insights derivados da matriz ────────────────────────────────────────────

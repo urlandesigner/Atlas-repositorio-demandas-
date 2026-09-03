@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils"
 
 /**
- * Medidor de prontidão em barras discretas — leitura de instrumento, não barra
- * de progresso lisa. Cada barra acesa representa uma fatia da prontidão, de
+ * Medidor de avanço em barras discretas — leitura de instrumento, não barra
+ * de progresso lisa. Cada barra acesa representa uma fatia do avanço, de
  * modo que registrar evidência acende um segmento visível.
  */
 export function TrilhaGauge({
@@ -33,7 +33,7 @@ export function TrilhaGauge({
             "aria-valuemin": 0,
             "aria-valuemax": 100,
             "aria-valuenow": Math.round(clamped),
-            "aria-label": "Prontidão para o próximo nível",
+            "aria-label": "Avanço para o próximo nível",
           })}
       className={cn("flex items-end gap-[3px]", className)}
     >

@@ -17,7 +17,7 @@ const LIST_DATE_MONTHS = [
  * saíam `05 de jul.`, `05 de jul. de 2026` e `05/07/2026` na mesma tela.
  *
  * Caixa alta e curta porque é o idioma que a Início já usa nos rótulos de KPI
- * (`REGISTROS ESTE MÊS`, `PRONTIDÃO`); e porque monoespaçado favorece maiúsculas
+ * (`REGISTROS ESTE MÊS`, `AVANÇO NO CICLO`); e porque monoespaçado favorece maiúsculas
  * e dígitos — `05 de jul.` em mono lê como código, `05 JUL` lê como medida.
  *
  * Normaliza data-only para meia-noite local: `new Date("2026-07-05")` é UTC e

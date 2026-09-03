@@ -129,7 +129,7 @@ function CicloCard({
     ? getFrameworkExpectations(framework, assignment.currentLevelId)
     : {}
 
-  const prontidao = framework
+  const avanco = framework
     ? computeFrameworkReadiness(
         niveisAtuais,
         esperados,
@@ -169,7 +169,7 @@ function CicloCard({
     <Card>
       {/* Cada ciclo recolhe. O ativo abre; os encerrados ficam como linha, e a
           linha carrega número suficiente para comparar ciclos sem abrir nenhum
-          — prontidão e as duas notas. Assim o histórico inteiro cabe na
+          — avanço e as duas notas. Assim o histórico inteiro cabe na
           primeira tela, que era o problema: o cartão ativo tinha 1266px e o
           segundo ciclo só aparecia em 1394. */}
       <details open={ativo} className="group/ciclo flex flex-col">
@@ -194,7 +194,7 @@ function CicloCard({
               {/* Só enquanto fechado: aberto, as mesmas medidas aparecem
                   logo abaixo como MetricCard, e repetir seria ruído. */}
               <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tabular-nums group-open/ciclo:hidden">
-                <span>{prontidao}% prontidão</span>
+                <span>{avanco}% de avanço</span>
                 {avaliacao ? (
                   <>
                     <span>{avaliacao.technicalScore}/6 técnica</span>
@@ -219,8 +219,8 @@ function CicloCard({
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <MetricCard
               variant="inset"
-              label="Prontidão no ciclo"
-              value={prontidao}
+              label="Avanço no ciclo"
+              value={avanco}
               suffix="%"
               helper={
                 framework ? `${framework.themes.length} temas` : "sem framework"

@@ -1031,7 +1031,7 @@ export default function DesignSystemPage() {
             <div className="grid w-full gap-3 sm:grid-cols-3">
               <MetricCard label="Registros" value={128} helper="variant=tile (padrão dos hubs)" />
               <MetricCard variant="card" label="Projetos ativos" value={6} icon={Target} helper="variant=card com icon" />
-              <MetricCard label="Prontidão" value={72} suffix="%" helper="value com suffix" />
+              <MetricCard label="Avanço" value={72} suffix="%" helper="value com suffix" />
             </div>
           </Section>
 
@@ -1347,7 +1347,7 @@ export default function DesignSystemPage() {
                 <PopoverTrigger render={<Button size="sm" variant="outline">Abrir popover</Button>} />
                 <PopoverContent showArrow>
                   <PopoverHeader>
-                    <PopoverTitle>Prontidão no PDI</PopoverTitle>
+                    <PopoverTitle>Avanço no PDI</PopoverTitle>
                     <PopoverDescription>Calculada a partir das evidências registradas.</PopoverDescription>
                   </PopoverHeader>
                 </PopoverContent>

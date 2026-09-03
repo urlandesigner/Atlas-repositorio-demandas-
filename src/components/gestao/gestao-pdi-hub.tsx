@@ -169,7 +169,7 @@ export function GestaoPdiHub() {
       <div className="grid gap-3 md:grid-cols-3">
         <MetricCard label="Trilhas disponíveis" value={pdiData.frameworks.length} helper="Bases prontas para aplicar no time" />
         <MetricCard label="PDIs ativos" value={activeAssignments.length} helper="Pessoas com acompanhamento em andamento" />
-        <MetricCard label="Prontidão média" value={averageReadiness} helper="Média atual do time em %" suffix="%" />
+        <MetricCard label="Avanço médio" value={averageReadiness} helper="Média atual do time em %" suffix="%" />
       </div>
 
       <section className="flex flex-col gap-3">
@@ -241,7 +241,7 @@ export function GestaoPdiHub() {
         <CardList>
           <CardListHeader
             title="PDIs ativos do time"
-            description="Trilha, nível atual e prontidão de cada pessoa."
+            description="Trilha, nível atual e avanço de cada pessoa."
             action={<Badge variant="outline">{activeAssignments.length}</Badge>}
           />
           <CardListBody className="divide-y divide-border/60">

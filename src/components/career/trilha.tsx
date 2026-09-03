@@ -221,7 +221,7 @@ export function Trilha({
           {typeof readiness === "number" ? (
             <div className="flex shrink-0 flex-col items-start gap-2 @xl:items-end">
               <span className="label-mono text-muted-foreground">
-                Prontidão
+                Avanço
               </span>
               <p className="figure text-foreground">
                 {Math.round(readiness)}

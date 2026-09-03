@@ -61,7 +61,7 @@ export function buildManagerOneOnOneBaseline(params: {
       params.framework.ladder.find((level) => level.id === params.assignment!.currentLevelId)
         ?.name ?? "—"
 
-    pdiSummary = `${params.framework.name} · nível ${levelName} · prontidão ${readiness}% · ciclo ${params.assignment.cycleLabel}.`
+    pdiSummary = `${params.framework.name} · nível ${levelName} · avanço ${readiness}% · ciclo ${params.assignment.cycleLabel}.`
     pdiGaps = params.framework.themes
       .filter((theme) => (currentLevels[theme.id] ?? 0) < (expected[theme.id] ?? 0))
       .slice(0, 4)

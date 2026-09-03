@@ -123,7 +123,7 @@ export function PromotionRequestPanel({
                 "—"}
             </p>
             <p className="mt-1 text-muted-foreground">
-              Prontidão na solicitação: {pendingRequest.readiness}%
+              Avanço na solicitação: {pendingRequest.readiness}%
             </p>
             {pendingRequest.managerNotes ? (
               <p className="mt-2 text-muted-foreground">{pendingRequest.managerNotes}</p>
@@ -136,7 +136,7 @@ export function PromotionRequestPanel({
         ) : (
           <>
             <div className="flex flex-wrap items-center gap-2 text-sm">
-              <span className="text-muted-foreground">Prontidão atual:</span>
+              <span className="text-muted-foreground">Avanço atual:</span>
               <Badge variant={readiness >= 80 ? "primary-soft" : "outline"}>{readiness}%</Badge>
             </div>
 
