@@ -64,7 +64,10 @@ export const GESTAO_PDI_SEED: GestaoPdiData = {
       userId: "user-colab",
       frameworkId: PRODUCT_FRAMEWORK_ID,
       managerId: "user-gestor",
-      currentLevelId: "senior-1",
+      // Senior II nos dois ciclos, informado pelo avaliado. Estava em senior-1,
+      // e isso mudava o denominador de cada tema: as expectativas saíam da
+      // linha errada da tabela.
+      currentLevelId: "senior-2",
       targetLevelId: "senior-2",
       // Níveis do PDI de janeiro/2026, informados pelo próprio avaliado.
       //
