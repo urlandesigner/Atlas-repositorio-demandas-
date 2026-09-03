@@ -99,9 +99,13 @@ export function PdiHighlight({
                 <p className="text-sm font-semibold tracking-tight">
                   {cicloRecente.cycleLabel}
                 </p>
-                <Badge variant={cicloRecente.status === "active" ? "outline" : "secondary"}>
-                  {cicloRecente.status === "active" ? "Ativo" : "Encerrado"}
-                </Badge>
+                {/* Badge só quando o ciclo está encerrado. "Ativo" não informava
+                    nada: o cartão já é sobre o PDI atual, então ativo é o caso
+                    esperado. "Encerrado" informa — significa que não há PDI
+                    vigente agora, e isso o cartão não diria de outra forma. */}
+                {cicloRecente.status === "closed" ? (
+                  <Badge variant="secondary">Encerrado</Badge>
+                ) : null}
               </div>
               <p className="mt-1 text-base font-medium">
                 {avanco === null ? "—" : `${avanco}% de avanço`}
