@@ -165,7 +165,7 @@
   --border: #2F343B;
   --hairline-chip: #3D444C;
   --hairline-strong: #4E545B;
-  --input: #6A6F75;
+  --input: #3D444C;
   --ring: #7B8CFF;
 
   /* Semânticas — warning segue laranja, separado do acento. */
@@ -265,7 +265,7 @@
      degrau a mais para os dois temas parecerem do mesmo peso. */
   --hairline-chip: #C9CED6;
   --hairline-strong: #A4AAB4;
-  --input: #8E9197;
+  --input: #C9CED6;
   --ring: #3A4ADF;
 
   --success: #16A34A;

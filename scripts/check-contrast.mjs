@@ -33,7 +33,7 @@ const PAIRS = [
   ["--impact-foreground", "--card", 4.5, "texto de impacto"],
   ["--sidebar-foreground", "--sidebar", 4.5, "texto da sidebar"],
   ["--sidebar-primary-foreground", "--sidebar-primary", 4.5, "texto do item ativo da sidebar"],
-  ["--input", "--card", 3, "borda de campo de formulário sobre card"],
+  ["--input", "--card", 1.5, "borda de campo de formulário sobre card"],
   ["--hairline-strong", "--card", 2, "borda de botão outline sobre card"],
   ["--ring", "--background", 3, "anel de foco"],
   ["--gauge-on", "--card", 3, "medidor aceso (TrilhaGauge) sobre card"],
@@ -62,9 +62,27 @@ const PAIRS = [
 // decisão é que o botão nunca depende só da borda — tem rótulo em texto acima de
 // 4,5:1, quase sempre um ícone, e um anel de foco em `--ring` que este arquivo
 // verifica em 3:1, então quem navega por teclado continua com boundary forte.
-// Em compensação, `--input` passou a ser verificado explicitamente em 3:1: campo
-// de formulário é onde a borda de fato carrega a identificação do controle, e
-// esse limite não deve cair junto.
+// Nota: `--input` ficou em 1,58:1 no claro e 1,76:1 no escuro, e o limite deste
+// par caiu de 3 para 1,5. Isto INVERTE o que este arquivo dizia antes — que
+// campo de formulário é onde a borda carrega a identificação do controle e que
+// esse limite não deveria cair. A decisão é do dono do produto, que pediu a cor
+// da borda do badge nos campos por achar a anterior escura demais, e está
+// registrada aqui em vez de silenciada.
+//
+// O custo é real e não tem meio-caminho: sobre branco não existe cinza mais
+// claro que #8E9197 que passe 3:1, então qualquer clareamento sai do critério.
+// WCAG 1.4.11 pede 3:1 para contorno de componente, e o contorno é hoje o único
+// sinal de área do campo — Input e Textarea usam `bg-card`, ou seja branco sobre
+// cartão branco.
+//
+// O que sobra de mitigação: rótulo em texto acima de 4,5:1, `placeholder` em
+// --muted-foreground, e no foco `border-ring` mais um anel de 3px em --ring, que
+// este arquivo verifica em 3:1. Quem navega por teclado mantém boundary forte;
+// quem varre a tela com o olho perde.
+//
+// A mitigação que faltaria é dar preenchimento ao campo, identificando o
+// controle por área em vez de por linha — coerente com a linguagem de cartão sem
+// borda adotada no resto do app. Está proposto e não decidido.
 
 function extractBlock(css, selector) {
   // Localiza `selector {` no início de uma linha e captura até a chave que fecha.

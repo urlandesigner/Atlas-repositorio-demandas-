@@ -467,7 +467,7 @@ const TOKENS = [
   ["--card", "bg-card", "Fundo de card (branco no tema claro)."],
   ["--border", "bg-border", "Bordas e divisores."],
   ["--hairline-chip", "bg-hairline-chip", "Contorno de chip (badge outline, status neutro) — entre --border e --hairline-strong."],
-  ["--hairline-strong", "bg-hairline-strong", "Contorno de botão outline e filter pill (2,4:1). Campos de formulário usam --input, que segue em 3:1."],
+  ["--hairline-strong", "bg-hairline-strong", "Contorno de botão outline e filter pill (2,4:1). Campos de formulário usam --input, que agora usa a mesma cor da borda do badge (1,6:1) — ver a nota em scripts/check-contrast.mjs."],
   ["--shadow-brand", "bg-brand shadow-brand", "Sombra índigo do acento de marca. Aplicada pela classe shadow-brand."],
 ] as const
 
