@@ -18,7 +18,9 @@ export const PDI_DESIGN_2026_H1: PdiAssignment = {
   frameworkId: "framework-product",
   managerId: "user-gestor",
   currentLevelId: "senior-2",
-  targetLevelId: "staff",
+  // Senior III, o degrau seguinte ao atual. Antes apontava para Staff porque
+  // Senior III não existia na escada, e a meta pulava um nível.
+  targetLevelId: "senior-3",
   current: {
     tecnologia: { level: 5, updatedAt: "2026-08-24T12:00:00.000Z" },
     dominio: { level: 4, updatedAt: "2026-08-24T12:00:00.000Z" },

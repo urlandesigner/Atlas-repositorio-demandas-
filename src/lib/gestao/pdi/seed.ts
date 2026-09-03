@@ -30,6 +30,7 @@ export const PRODUCT_FRAMEWORK: PdiFramework = {
       { id: "pleno-2", name: "Pleno II" },
       { id: "senior-1", name: "Senior I" },
       { id: "senior-2", name: "Senior II" },
+      { id: "senior-3", name: "Senior III" },
       { id: "staff", name: "Staff" },
       { id: "lead", name: "Lead" },
     ],
@@ -40,7 +41,13 @@ export const PRODUCT_FRAMEWORK: PdiFramework = {
   updatedAt: now,
 }
 
-// Sobrescreve expectativas do Product com curva mais forte em domínio/influência
+// Sobrescreve expectativas do Product com curva mais forte em domínio/influência.
+//
+// Nota sobre o teto: a escala da rubrica é 0–6, e o Senior III já exige 6 em
+// quatro dos seis temas. Sobra pouco espaço para Staff e Lead se distinguirem
+// por estes temas — hoje Lead difere de Senior III só em Pessoas. Não é defeito
+// desta tabela e sim consequência de a escala terminar antes da escada; resolver
+// pediria temas próprios para os níveis de cima, o que é decisão de produto.
 PRODUCT_FRAMEWORK.expectations = {
   "pleno-1": { tecnologia: 2, dominio: 3, pessoas: 2, processos: 2, influencia: 1, estudo: 2 },
   "pleno-2": { tecnologia: 3, dominio: 4, pessoas: 3, processos: 3, influencia: 2, estudo: 3 },
@@ -54,8 +61,13 @@ PRODUCT_FRAMEWORK.expectations = {
   // sinal de que a interpretação estava errada e eu não o segui: o primeiro
   // número do par já não correspondia ao nível atual em Tecnologia e Estudo.
   "senior-2": { tecnologia: 6, dominio: 5, pessoas: 5, processos: 5, influencia: 5, estudo: 6 },
-  staff: { tecnologia: 5, dominio: 6, pessoas: 5, processos: 5, influencia: 5, estudo: 5 },
-  lead: { tecnologia: 6, dominio: 6, pessoas: 6, processos: 5, influencia: 6, estudo: 5 },
+  // Senior III, dos badges SÊNIOR III da tabela de rubrica.
+  "senior-3": { tecnologia: 6, dominio: 6, pessoas: 5, processos: 5, influencia: 6, estudo: 6 },
+  // Staff e Lead subiram onde ficariam ABAIXO do Senior III — em tecnologia,
+  // influência e estudo a barra caía de 6 para 5 ao subir de nível, e uma meta
+  // que diminui com a promoção não é meta. Ver a nota sobre o teto acima.
+  staff: { tecnologia: 6, dominio: 6, pessoas: 5, processos: 5, influencia: 6, estudo: 6 },
+  lead: { tecnologia: 6, dominio: 6, pessoas: 6, processos: 5, influencia: 6, estudo: 6 },
 }
 
 export const GESTAO_PDI_SEED: GestaoPdiData = {
