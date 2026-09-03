@@ -17,6 +17,7 @@ import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { MetricCard } from "@/components/ui/metric-card"
 import { Overline } from "@/components/ui/overline"
 import { useOptionalSession } from "@/hooks/use-optional-session"
+import { PDI_MAX_LEVEL } from "@/lib/profile/pdi"
 import {
   getGestaoPdiServerSnapshot,
   getGestaoPdiSnapshot,
@@ -266,11 +267,20 @@ function CicloCard({
                     <span className="min-w-0 truncate text-sm text-foreground">
                       {tema.label}
                     </span>
-                    <span className="flex shrink-0 items-center gap-2">
+                    <span className="flex shrink-0 items-center gap-3">
                       <DeltaDoTema delta={delta} />
-                      <span className="font-mono text-sm tabular-nums text-foreground">
+                      {/* O denominador é o TETO DA ESCALA, igual para todos os
+                          temas, não a expectativa do nível. Antes era o
+                          esperado, e "4/5" se lia como "4 de no máximo 5" —
+                          mas a escala do PDI vai a 6 em todos os seis temas. O
+                          esperado ganhou lugar próprio: são dois fatos
+                          diferentes e disputavam a mesma barra. */}
+                      <span className="w-12 text-right font-mono text-sm tabular-nums text-foreground">
                         {nivel}
-                        <span className="text-muted-foreground">/{esperado}</span>
+                        <span className="text-muted-foreground">/{PDI_MAX_LEVEL}</span>
+                      </span>
+                      <span className="w-20 text-right font-mono text-xs tabular-nums text-muted-foreground">
+                        {esperado === undefined ? "" : `esperado ${esperado}`}
                       </span>
                     </span>
                   </div>
