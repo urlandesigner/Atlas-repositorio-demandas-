@@ -78,7 +78,15 @@ export default function PdiHistoryPage() {
   return (
     <EvolutionShell
       title="Meus PDIs"
-      description="Todos os ciclos do seu plano de desenvolvimento, do atual ao mais antigo."
+      // A contagem entra na descrição porque é a única linha que se lê sem
+      // rolar. Antes o cartão do ciclo ativo tinha 1266px e o segundo ciclo
+      // começava em 1394 — descobrir que havia mais de um exigia rolar uma tela
+      // e meia.
+      description={
+        ciclos.length
+          ? `${ciclos.length} ${ciclos.length === 1 ? "ciclo" : "ciclos"} do seu plano de desenvolvimento, do atual ao mais antigo.`
+          : "Todos os ciclos do seu plano de desenvolvimento, do atual ao mais antigo."
+      }
     >
       <div className="flex max-w-3xl flex-col gap-4">
         {ciclos.length ? (
@@ -158,67 +166,90 @@ function CicloCard({
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="text-base">{assignment.cycleLabel}</CardTitle>
-        <CardDescription>
-          {framework?.name ?? "Framework removido"}
-          {nivelAtual ? ` · ${nivelAtual}` : ""}
-          {nivelMeta ? ` → meta ${nivelMeta}` : ""}
-          {avaliacao ? (
-            <>
-              <br />
-              {`Avaliado por ${avaliacao.evaluatedBy} · ${new Date(
-                avaliacao.evaluatedAt
-              ).toLocaleDateString("pt-BR")}`}
-            </>
-          ) : null}
-        </CardDescription>
-        <CardAction className="flex flex-wrap items-center gap-1.5 @md/card-header:justify-end">
-          <Badge variant={ativo ? "outline" : "secondary"}>
-            {ativo ? "Ativo" : "Encerrado"}
-          </Badge>
-        </CardAction>
-      </CardHeader>
+      {/* Cada ciclo recolhe. O ativo abre; os encerrados ficam como linha, e a
+          linha carrega número suficiente para comparar ciclos sem abrir nenhum
+          — prontidão e as duas notas. Assim o histórico inteiro cabe na
+          primeira tela, que era o problema: o cartão ativo tinha 1266px e o
+          segundo ciclo só aparecia em 1394. */}
+      <details open={ativo} className="group/ciclo flex flex-col">
+        <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-1.5 text-base">
+              <ChevronRight className="size-4 shrink-0 text-muted-foreground transition-transform group-open/ciclo:rotate-90" />
+              {assignment.cycleLabel}
+            </CardTitle>
+            <CardDescription>
+              {framework?.name ?? "Framework removido"}
+              {nivelAtual ? ` · ${nivelAtual}` : ""}
+              {nivelMeta ? ` → meta ${nivelMeta}` : ""}
+              {avaliacao ? (
+                <>
+                  <br />
+                  {`Avaliado por ${avaliacao.evaluatedBy} · ${new Date(
+                    avaliacao.evaluatedAt
+                  ).toLocaleDateString("pt-BR")}`}
+                </>
+              ) : null}
+              {/* Só enquanto fechado: aberto, as mesmas medidas aparecem
+                  logo abaixo como MetricCard, e repetir seria ruído. */}
+              <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tabular-nums group-open/ciclo:hidden">
+                <span>{prontidao}% prontidão</span>
+                {avaliacao ? (
+                  <>
+                    <span>{avaliacao.technicalScore}/6 técnica</span>
+                    <span>{avaliacao.behavioralScore}/5 comportamental</span>
+                  </>
+                ) : null}
+              </span>
+            </CardDescription>
+            <CardAction className="flex flex-wrap items-center gap-1.5 @md/card-header:justify-end">
+              <Badge variant={ativo ? "outline" : "secondary"}>
+                {ativo ? "Ativo" : "Encerrado"}
+              </Badge>
+            </CardAction>
+          </CardHeader>
+        </summary>
 
-      <CardContent className="flex flex-col gap-4">
-        <div className="grid grid-cols-2 gap-3">
-          <MetricCard
-            variant="inset"
-            label="Prontidão no ciclo"
-            value={prontidao}
-            suffix="%"
-            helper={
-              framework
-                ? `${framework.themes.length} temas avaliados`
-                : "sem framework"
-            }
-          />
-          <MetricCard
-            variant="inset"
-            label="Temas que subiram"
-            value={baseDaComparacao ? temasEvoluidos : "—"}
-            helper={baseDaComparacao ?? "primeiro ciclo, sem comparação"}
-          />
-        </div>
-
-        {avaliacao ? (
-          <div className="grid grid-cols-2 gap-3">
+        <CardContent className="mt-4 flex flex-col gap-4">
+          {/* Uma fileira só, não duas. As quatro medidas em 2×2 gastavam 226px
+              de altura; em quatro colunas gastam 113, e é o que faltava para o
+              segundo ciclo caber na primeira tela. Volta a 2×2 abaixo de 640px,
+              onde quatro colunas dariam ~80px cada e o número não caberia. */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <MetricCard
               variant="inset"
-              label="Nota final técnica"
-              value={avaliacao.technicalScore}
-              suffix="/6"
-              helper="escala do framework"
+              label="Prontidão no ciclo"
+              value={prontidao}
+              suffix="%"
+              helper={
+                framework ? `${framework.themes.length} temas` : "sem framework"
+              }
             />
             <MetricCard
               variant="inset"
-              label="Nota comportamental"
-              value={avaliacao.behavioralScore}
-              suffix="/5"
-              helper={`média de ${avaliacao.behavioral.length} dimensões`}
+              label="Temas que subiram"
+              value={baseDaComparacao ? temasEvoluidos : "—"}
+              helper={baseDaComparacao ?? "primeiro ciclo"}
             />
+            {avaliacao ? (
+              <>
+                <MetricCard
+                  variant="inset"
+                  label="Nota técnica"
+                  value={avaliacao.technicalScore}
+                  suffix="/6"
+                  helper="escala do framework"
+                />
+                <MetricCard
+                  variant="inset"
+                  label="Nota comportamental"
+                  value={avaliacao.behavioralScore}
+                  suffix="/5"
+                  helper={`${avaliacao.behavioral.length} dimensões`}
+                />
+              </>
+            ) : null}
           </div>
-        ) : null}
 
         {framework ? (
           <div>
@@ -279,7 +310,8 @@ function CicloCard({
             {assignment.notes}
           </p>
         ) : null}
-      </CardContent>
+        </CardContent>
+      </details>
     </Card>
   )
 }
@@ -345,19 +377,34 @@ function Comportamental({ dimensoes }: { dimensoes: PdiBehavioralDimension[] }) 
   const ehForca = new Set(forcas.map((item) => item.id))
   const ehDesenvolver = new Set(aDesenvolver.map((item) => item.id))
 
+  const soNome = (rotulo: string) => rotulo.split(" — ")[0]
+
   return (
-    <div className="@container/comportamental flex flex-col gap-4">
-      <div>
-        <Overline size="sm">Skills comportamentais</Overline>
+    // Recolhido por padrão: era o maior bloco do cartão, 438px de 1266, e é
+    // leitura de segundo nível — a nota comportamental já aparece como métrica
+    // acima. O resumo na própria linha diz o suficiente para decidir se abre.
+    <details className="group/comp @container/comportamental">
+      <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <Overline size="sm" className="flex items-center gap-1.5">
+          <ChevronRight className="size-3 shrink-0 transition-transform group-open/comp:rotate-90" />
+          Skills comportamentais
+        </Overline>
         <p className="mt-1 text-sm text-muted-foreground">
-          Média das avaliações dos formulários deste processo, de 0 a 5.
+          <span className="group-open/comp:hidden">
+            {dimensoes.length} dimensões · maior {forcas[0]?.score.toFixed(1)} em{" "}
+            {soNome(forcas[0]?.label ?? "")} · menor {aDesenvolver[0]?.score.toFixed(1)} em{" "}
+            {soNome(aDesenvolver[0]?.label ?? "")}
+          </span>
+          <span className="hidden group-open/comp:inline">
+            Média das avaliações dos formulários deste processo, de 0 a 5.
+          </span>
         </p>
-      </div>
+      </summary>
 
       {/* minmax(0,1fr) e não 1fr: em grade, `1fr` tem min-width auto, então a
           coluna das barras crescia até caber o rótulo mais longo por inteiro e
           empurrava a coluna de Forças 181px para fora do cartão. Medido. */}
-      <div className="grid gap-4 @xl/comportamental:grid-cols-[minmax(0,1fr)_14rem]">
+      <div className="mt-4 grid gap-4 @xl/comportamental:grid-cols-[minmax(0,1fr)_14rem]">
         <div className="flex flex-col gap-2">
           {ordenadas.map((dimensao) => (
             <div key={dimensao.id} className="flex items-center gap-3">
@@ -392,7 +439,7 @@ function Comportamental({ dimensoes }: { dimensoes: PdiBehavioralDimension[] }) 
           <ListaDeDestaque titulo="A desenvolver" itens={aDesenvolver} tom="desenvolver" />
         </div>
       </div>
-    </div>
+    </details>
   )
 }
 
