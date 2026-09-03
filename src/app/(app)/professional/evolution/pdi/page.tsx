@@ -261,9 +261,8 @@ function CicloCard({
                 const antes = nivelAnterior(tema.id)
                 const delta = antes === undefined ? null : nivel - antes
                 const esperado = esperados[tema.id]
-                const justificativa = avaliacao?.rationale[tema.id]
-                const linha = (
-                  <div className="flex items-center justify-between gap-3">
+                return (
+                  <div key={tema.id} className="flex items-center justify-between gap-3 py-2">
                     <span className="min-w-0 truncate text-sm text-foreground">
                       {tema.label}
                     </span>
@@ -285,30 +284,17 @@ function CicloCard({
                     </span>
                   </div>
                 )
-                // A justificativa vem recolhida: são seis parágrafos longos e,
-                // abertos de saída, empurram os níveis — que são o que se lê
-                // primeiro — para fora da tela.
-                return justificativa ? (
-                  <details key={tema.id} className="group/tema py-2">
-                    <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
-                      {linha}
-                      <span className="mt-1 flex items-center gap-1 text-xs text-muted-foreground group-open/tema:hidden">
-                        <ChevronRight className="size-3" />
-                        Por que essa nota
-                      </span>
-                    </summary>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                      {justificativa}
-                    </p>
-                  </details>
-                ) : (
-                  <div key={tema.id} className="py-2">
-                    {linha}
-                  </div>
-                )
               })}
             </div>
           </div>
+        ) : null}
+
+        {framework && avaliacao ? (
+          <Justificativas
+            framework={framework}
+            avaliacao={avaliacao}
+            niveisAtuais={niveisAtuais}
+          />
         ) : null}
 
         {avaliacao?.behavioral.length ? (
@@ -355,6 +341,78 @@ function DeltaDoTema({ delta }: { delta: number | null }) {
         {subiu ? "subiu" : "caiu"} {Math.abs(delta)} desde o ciclo anterior
       </span>
     </span>
+  )
+}
+
+/**
+ * Justificativa de cada nota, num bloco só.
+ *
+ * Antes era um accordion por tema, seis deles, cada um dentro da própria linha
+ * de nível. Dois problemas: a fileira de níveis — que é o que se lê primeiro —
+ * ficava com um "Por que essa nota" pendurado embaixo de cada linha, e o mesmo
+ * gesto se repetia seis vezes para o mesmo tipo de conteúdo.
+ *
+ * Aqui é um recolhível único, na forma que o próprio relatório usa
+ * ("Justificativa por skill"): a nota anterior e a acordada de cada tema, com o
+ * texto do gestor ao lado. As linhas de nível voltaram a ser só números.
+ */
+function Justificativas({
+  framework,
+  avaliacao,
+  niveisAtuais,
+}: {
+  framework: PdiFramework
+  avaliacao: NonNullable<PdiAssignment["evaluation"]>
+  niveisAtuais: Record<string, number>
+}) {
+  const temasComTexto = framework.themes.filter((tema) => avaliacao.rationale[tema.id])
+  if (!temasComTexto.length) return null
+
+  return (
+    <details className="group/just">
+      <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <Overline size="sm" className="flex items-center gap-1.5">
+          <ChevronRight className="size-3 shrink-0 transition-transform group-open/just:rotate-90" />
+          Justificativa por skill
+        </Overline>
+        <p className="mt-1 text-sm text-muted-foreground">
+          <span className="group-open/just:hidden">
+            {temasComTexto.length} temas com o porquê da nota, da nota anterior à acordada.
+          </span>
+          <span className="hidden group-open/just:inline">
+            Nota anterior → acordada, com o registro do gestor.
+          </span>
+        </p>
+      </summary>
+
+      <div className="mt-3 flex flex-col divide-y divide-border/60">
+        {temasComTexto.map((tema) => {
+          const antes = avaliacao.previous[tema.id]
+          const agora = niveisAtuais[tema.id]
+          return (
+            <div key={tema.id} className="flex flex-col gap-2 py-3 sm:flex-row sm:gap-4">
+              {/* self-start: sem isso o rótulo estica com a linha e o
+                  `items-center` o centra verticalmente contra um parágrafo de
+                  seis linhas, deixando "4 → 5 Tecnologia" flutuando no meio do
+                  texto em vez de encabeçá-lo. */}
+              <div className="flex shrink-0 items-center gap-2 sm:w-44 sm:self-start">
+                <span className="font-mono text-sm tabular-nums text-muted-foreground">
+                  {antes ?? "—"}
+                </span>
+                <ArrowRight className="size-3 shrink-0 text-muted-foreground" />
+                <span className="font-mono text-sm tabular-nums text-foreground">{agora}</span>
+                <span className="min-w-0 truncate text-sm font-semibold text-foreground">
+                  {tema.label}
+                </span>
+              </div>
+              <p className="min-w-0 flex-1 text-sm leading-relaxed text-muted-foreground">
+                {avaliacao.rationale[tema.id]}
+              </p>
+            </div>
+          )
+        })}
+      </div>
+    </details>
   )
 }
 
