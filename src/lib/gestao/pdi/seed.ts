@@ -61,17 +61,24 @@ export const GESTAO_PDI_SEED: GestaoPdiData = {
       managerId: "user-gestor",
       currentLevelId: "senior-1",
       targetLevelId: "senior-2",
+      // Níveis do PDI de janeiro/2026, informados pelo próprio avaliado.
+      //
+      // Domínio e Pessoas estavam trocados aqui — 4 e 3 em vez de 3 e 4 — e o
+      // dado se contradizia dentro do próprio store: `evaluation.previous` do
+      // PDI Design 2026, que registra o ponto de partida daquele ciclo, sempre
+      // trouxe 3 e 4. Os dois agora batem, e o delta por tema do ciclo atual
+      // (+1 em Tecnologia, Domínio, Influência e Estudo) fecha com os dois.
       current: {
         tecnologia: { level: 4, updatedAt: now },
-        dominio: { level: 4, updatedAt: now },
-        pessoas: { level: 3, updatedAt: now },
+        dominio: { level: 3, updatedAt: now },
+        pessoas: { level: 4, updatedAt: now },
         processos: { level: 4, updatedAt: now },
         influencia: { level: 3, updatedAt: now },
         estudo: { level: 3, updatedAt: now },
       },
       cycleLabel: "2026 · H1",
       status: "closed",
-      notes: "Ciclo genérico anterior ao PDI Design consolidado.",
+      notes: "Ciclo anterior ao PDI Design consolidado.",
       createdAt: now,
       updatedAt: now,
     },
