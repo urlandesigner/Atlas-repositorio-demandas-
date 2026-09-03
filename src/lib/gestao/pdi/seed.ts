@@ -45,12 +45,16 @@ PRODUCT_FRAMEWORK.expectations = {
   "pleno-1": { tecnologia: 2, dominio: 3, pessoas: 2, processos: 2, influencia: 1, estudo: 2 },
   "pleno-2": { tecnologia: 3, dominio: 4, pessoas: 3, processos: 3, influencia: 2, estudo: 3 },
   "senior-1": { tecnologia: 4, dominio: 4, pessoas: 4, processos: 4, influencia: 3, estudo: 3 },
-  // Linha do Senior II lida da tabela de rubrica do PDI Design, pelos badges
-  // SÊNIOR II por nível: nível 5 em Domínio, Pessoas, Processos e Influência;
-  // nível 6 em Tecnologia e Estudo. Estava em {5,5,4,4,4,4}, ou seja com teto 5
-  // — cinco dos seis temas errados — e por isso o denominador na tela nunca
-  // passava de 5 enquanto a escala do PDI vai até 6.
-  "senior-2": { tecnologia: 6, dominio: 5, pessoas: 5, processos: 5, influencia: 5, estudo: 6 },
+  // Linha do Senior II vinda do relatório de PDI de janeiro/2026, onde cada
+  // tema aparece como par `(+Nx, -Ny)`: o segundo número é o nível esperado.
+  //
+  //   TECNOLOGIA (+N5, -N6) -> 6      PROCESSOS  (+N4, -N5) -> 5
+  //   DOMÍNIO    (+N3, -N4) -> 4      INFLUÊNCIA (+N3, -N4) -> 4
+  //   PESSOAS    (+N4, -N5) -> 5      ESTUDA     (+N5, -N6) -> 6
+  //
+  // Preferi o relatório à leitura das bordas da tabela de rubrica: o PDF é
+  // texto, a borda é pixel, e eu já errei uma vez interpretando esses pares.
+  "senior-2": { tecnologia: 6, dominio: 4, pessoas: 5, processos: 5, influencia: 4, estudo: 6 },
   staff: { tecnologia: 5, dominio: 6, pessoas: 5, processos: 5, influencia: 5, estudo: 5 },
   lead: { tecnologia: 6, dominio: 6, pessoas: 6, processos: 5, influencia: 6, estudo: 5 },
 }
