@@ -6,7 +6,7 @@ import { AiInsightsPanel } from "@/components/profile/ai-insights-panel"
 import { CareerGoalCard } from "@/components/profile/career-goal-card"
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
 import { ImpactSummarySection } from "@/components/profile/impact-summary"
-import { NextPdiHighlight } from "@/components/profile/next-pdi-highlight"
+import { PdiHighlight } from "@/components/profile/pdi-highlight"
 import { PdiCompactCard } from "@/components/profile/pdi-compact-card"
 import { ProfileHeader } from "@/components/profile/profile-header"
 import { AssignedPdiSection } from "@/components/gestao/assign-pdi-sheet"
@@ -27,6 +27,7 @@ import {
 import {
   getFrameworkExpectations,
   computeFrameworkReadiness,
+  selectAssignmentsForUser,
 } from "@/lib/gestao/pdi/types"
 import {
   getGestaoPdiServerSnapshot,
@@ -78,6 +79,21 @@ export default function ProfilePage() {
       (assignment) => assignment.userId === session.userId && assignment.status === "active"
     )
   }, [gestaoPdi.assignments, session])
+
+  // Mesma ordenação da tela de Meus PDIs — ativo primeiro, depois o encerrado
+  // mais recente — para as duas não discordarem sobre qual é o ciclo do topo.
+  const cicloRecente = useMemo(() => {
+    if (!session) return undefined
+    return selectAssignmentsForUser(gestaoPdi.assignments, session.userId)[0]
+  }, [gestaoPdi.assignments, session])
+
+  const frameworkDoCicloRecente = useMemo(
+    () =>
+      cicloRecente
+        ? gestaoPdi.frameworks.find((framework) => framework.id === cicloRecente.frameworkId)
+        : undefined,
+    [cicloRecente, gestaoPdi.frameworks]
+  )
 
   const assignedFramework = useMemo(
     () => (assigned ? gestaoPdi.frameworks.find((framework) => framework.id === assigned.frameworkId) : undefined),
@@ -153,7 +169,12 @@ export default function ProfilePage() {
           avatarUrl={currentUser?.avatarUrl}
         />
 
-        <NextPdiHighlight baselineAt={pdi.baselineAt} className="h-full" />
+        <PdiHighlight
+          baselineAt={pdi.baselineAt}
+          cicloRecente={cicloRecente}
+          framework={frameworkDoCicloRecente}
+          className="h-full"
+        />
       </div>
 
       <ImpactSummarySection summary={summary} />
