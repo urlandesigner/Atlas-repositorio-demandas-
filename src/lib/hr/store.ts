@@ -1,4 +1,10 @@
 import type { UserRole } from "@/lib/org/types"
+import {
+  marcarVersao,
+  precisaRessincronizar,
+  registrarOferecidos,
+  unirPorId,
+} from "@/lib/seed-sync"
 
 export interface HrNotice {
   id: string
@@ -103,6 +109,21 @@ function normalize(data: unknown): HrNotice[] {
   })
 }
 
+/**
+ * Versão do conteúdo de seed dos avisos. Suba um ao corrigir aviso do seed que
+ * precise alcançar quem já tem snapshot salvo.
+ *
+ * O estado de leitura vive em outra chave (atlas_hr_notice_reads), então
+ * ressincronizar os avisos NÃO marca nada como não lido de novo — foi
+ * verificado antes de aplicar aqui.
+ *
+ * Custo declarado: aviso do seed editado pelo app volta ao valor do seed. Aviso
+ * criado pelo RH no app tem id próprio e não é tocado; apagado continua apagado.
+ */
+const HR_SEED_VERSAO = "1"
+const HR_VERSAO_KEY = "atlas_hr_notices_versao"
+const HR_OFERECIDOS_KEY = "atlas_hr_notices_seed_oferecidos"
+
 export function getHrNoticesSnapshot() {
   if (!isClient()) return HR_NOTICES_SEED
   if (cached) return cached
@@ -110,12 +131,25 @@ export function getHrNoticesSnapshot() {
   const raw = localStorage.getItem(HR_NOTICES_STORAGE_KEY)
   if (!raw) {
     localStorage.setItem(HR_NOTICES_STORAGE_KEY, JSON.stringify(HR_NOTICES_SEED))
+    registrarOferecidos(HR_NOTICES_SEED.map((aviso) => aviso.id), HR_OFERECIDOS_KEY)
+    marcarVersao(HR_VERSAO_KEY, HR_SEED_VERSAO)
     cached = HR_NOTICES_SEED
     return cached
   }
 
   try {
-    cached = normalize(JSON.parse(raw))
+    const salvo = normalize(JSON.parse(raw))
+    if (precisaRessincronizar(HR_VERSAO_KEY, HR_SEED_VERSAO)) {
+      const unido = unirPorId(salvo, HR_NOTICES_SEED, HR_OFERECIDOS_KEY)
+      try {
+        localStorage.setItem(HR_NOTICES_STORAGE_KEY, JSON.stringify(unido))
+      } catch {
+        // Vale para esta sessão.
+      }
+      cached = unido
+      return cached
+    }
+    cached = salvo
     return cached
   } catch {
     cached = HR_NOTICES_SEED

@@ -1,4 +1,10 @@
 import { ORG_SEED } from "./seed"
+import {
+  marcarVersao,
+  precisaRessincronizar,
+  registrarOferecidos,
+  unirPorId,
+} from "@/lib/seed-sync"
 import type { CollaboratorKind, OrgArea, OrgData, OrgUser, UserRole } from "./types"
 
 export const ORG_STORAGE_KEY = "atlas_org"
@@ -19,6 +25,27 @@ function normalizeOrg(raw: unknown): OrgData {
   }
 }
 
+/**
+ * Versão do conteúdo de seed do org. Suba um ao corrigir usuário ou área do
+ * seed que precise alcançar quem já tem snapshot salvo.
+ *
+ * Este store foi a causa concreta do mural de reconhecimentos aparecer vazio:
+ * os kudos apontavam para usuários do seed que o snapshot antigo de quem já usa
+ * o app não continha, e o filtro do mural descartava todos.
+ *
+ * Custo declarado: ao subir a versão, usuário ou área do seed que tenha sido
+ * EDITADO pelo app volta ao valor do seed. Quem foi criado pelo app tem id
+ * próprio e não é tocado; quem foi apagado continua apagado.
+ */
+const ORG_SEED_VERSAO = "1"
+const ORG_VERSAO_KEY = "atlas_org_versao"
+const ORG_OFERECIDOS_KEY = "atlas_org_seed_oferecidos"
+
+const idsDoSeedOrg = () => [
+  ...ORG_SEED.areas.map((area) => area.id),
+  ...ORG_SEED.users.map((user) => user.id),
+]
+
 export function getOrgSnapshot(): OrgData {
   if (!isClient()) return ORG_SEED
   if (cached) return cached
@@ -26,12 +53,28 @@ export function getOrgSnapshot(): OrgData {
   const raw = localStorage.getItem(ORG_STORAGE_KEY)
   if (!raw) {
     localStorage.setItem(ORG_STORAGE_KEY, JSON.stringify(ORG_SEED))
+    registrarOferecidos(idsDoSeedOrg(), ORG_OFERECIDOS_KEY)
+    marcarVersao(ORG_VERSAO_KEY, ORG_SEED_VERSAO)
     cached = ORG_SEED
     return ORG_SEED
   }
 
   try {
-    cached = normalizeOrg(JSON.parse(raw))
+    const salvo = normalizeOrg(JSON.parse(raw))
+    if (precisaRessincronizar(ORG_VERSAO_KEY, ORG_SEED_VERSAO)) {
+      const unido: OrgData = {
+        areas: unirPorId(salvo.areas, ORG_SEED.areas, ORG_OFERECIDOS_KEY),
+        users: unirPorId(salvo.users, ORG_SEED.users, ORG_OFERECIDOS_KEY),
+      }
+      try {
+        localStorage.setItem(ORG_STORAGE_KEY, JSON.stringify(unido))
+      } catch {
+        // Vale para esta sessão.
+      }
+      cached = unido
+      return unido
+    }
+    cached = salvo
     return cached
   } catch {
     cached = ORG_SEED

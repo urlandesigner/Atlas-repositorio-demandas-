@@ -3,6 +3,12 @@ import { getUserDisplayName } from "@/lib/gestao/notify-helpers"
 import { notifyUser } from "@/lib/notifications/store"
 import { getOrgUserById } from "@/lib/org/store"
 import {
+  marcarVersao,
+  precisaRessincronizar,
+  registrarOferecidos,
+  unirPorId,
+} from "@/lib/seed-sync"
+import {
   OBJECTIVE_STATUS_LABEL,
   PDI_DIMENSION_LABEL,
   PDI_DIMENSION_OPTIONS,
@@ -110,6 +116,17 @@ function normalizeObjective(raw: Partial<GestaoObjective>): GestaoObjective {
   }
 }
 
+/**
+ * Versão do conteúdo de seed dos objetivos do gestor. Suba um ao corrigir
+ * objetivo do seed que precise alcançar quem já tem snapshot salvo.
+ *
+ * Custo declarado: objetivo do seed editado pelo app volta ao valor do seed.
+ * Criado pelo gestor tem id próprio e não é tocado; apagado continua apagado.
+ */
+const OBJETIVOS_SEED_VERSAO = "1"
+const OBJETIVOS_VERSAO_KEY = "atlas_gestao_objectives_versao"
+const OBJETIVOS_OFERECIDOS_KEY = "atlas_gestao_objectives_seed_oferecidos"
+
 export function getGestaoObjectivesSnapshot(): GestaoObjective[] {
   if (!isClient()) return SEED
   if (cached) return cached
@@ -117,12 +134,25 @@ export function getGestaoObjectivesSnapshot(): GestaoObjective[] {
   const raw = localStorage.getItem(GESTAO_OBJECTIVES_STORAGE_KEY)
   if (!raw) {
     localStorage.setItem(GESTAO_OBJECTIVES_STORAGE_KEY, JSON.stringify(SEED))
+    registrarOferecidos(SEED.map((objetivo) => objetivo.id), OBJETIVOS_OFERECIDOS_KEY)
+    marcarVersao(OBJETIVOS_VERSAO_KEY, OBJETIVOS_SEED_VERSAO)
     cached = SEED
     return SEED
   }
 
   try {
-    cached = (JSON.parse(raw) as Partial<GestaoObjective>[]).map(normalizeObjective)
+    const salvo = (JSON.parse(raw) as Partial<GestaoObjective>[]).map(normalizeObjective)
+    if (precisaRessincronizar(OBJETIVOS_VERSAO_KEY, OBJETIVOS_SEED_VERSAO)) {
+      const unido = unirPorId(salvo, SEED, OBJETIVOS_OFERECIDOS_KEY)
+      try {
+        localStorage.setItem(GESTAO_OBJECTIVES_STORAGE_KEY, JSON.stringify(unido))
+      } catch {
+        // Vale para esta sessão.
+      }
+      cached = unido
+      return cached
+    }
+    cached = salvo
     return cached
   } catch {
     cached = SEED
