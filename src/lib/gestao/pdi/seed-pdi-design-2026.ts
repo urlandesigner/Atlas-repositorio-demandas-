@@ -1,16 +1,16 @@
 import type { PdiAssignment } from "./types"
 
 /**
- * PDI Design · ciclo 2026 · H1, avaliado em 24/08/2026.
+ * PDI Design · 2026, avaliado em 24/08/2026.
  *
  * Em arquivo próprio porque é volumoso — seis justificativas longas e catorze
  * dimensões comportamentais — e misturado ao seed.ts esconderia a estrutura do
  * seed, que é curta.
  *
- * Os níveis "anterior" ficam duplicados aqui e no ciclo 2025 · H2 do seed de
- * propósito: `evaluation.previous` é o que o gestor registrou como ponto de
- * partida DESTE ciclo, e não depende de existir um ciclo anterior no store. Os
- * dois coincidirem é o caso feliz, não uma garantia.
+ * `evaluation.previous` guarda o ponto de partida de cada tema neste ciclo, em
+ * vez de a tela derivar isso do ciclo anterior do store. É o número que o gestor
+ * registrou, e vale mesmo quando não existe ciclo anterior salvo, quando o
+ * anterior usou outro framework, ou quando a pessoa tem só este.
  */
 export const PDI_DESIGN_2026_H1: PdiAssignment = {
   id: "assignment-colab-pdi-design-2026h1",
