@@ -93,6 +93,9 @@ export function HrNoticesPanel({
           "Novo", então a primeira versão se contradizia na própria tela — dizia
           que estava tudo em dia com dois "Novo" logo acima. */}
       {notices.length > 0 && notices.length < (showAll ? Number.POSITIVE_INFINITY : compact ? 3 : 4) ? (
+        // Sem ação: aviso do RH quem cria é o admin, não quem lê. Um link aqui
+        // seria simetria pela simetria, levando a uma tela que não faz nada
+        // além de repetir esta lista.
         <CardListNote>Nenhum outro aviso no momento.</CardListNote>
       ) : null}
     </CardList>

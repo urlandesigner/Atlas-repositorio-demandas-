@@ -154,7 +154,16 @@ export function KudosReceivedCard({ className }: { className?: string }) {
       </CardListBody>
       {/* Nada oculto: `kudos` e a lista inteira, cortada so na renderizacao. */}
       {kudos.length > 0 && kudos.length <= MAX_ON_HOME ? (
-        <CardListNote>Nenhum outro elogio recente.</CardListNote>
+        <CardListNote
+          action={
+            <Link href="/people" className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink hover:underline">
+              Reconhecer um colega
+              <ArrowUpRight className="size-3.5" />
+            </Link>
+          }
+        >
+          Nenhum outro elogio recente.
+        </CardListNote>
       ) : null}
     </CardList>
   )

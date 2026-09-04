@@ -108,12 +108,26 @@ export function CardListRows({ className, ...props }: React.ComponentProps<"div"
  * itens do que cabe, o que a linha tem a dizer é outro: quantos ficaram de
  * fora.
  */
-export function CardListNote({ className, ...props }: React.ComponentProps<"p">) {
+export function CardListNote({
+  action,
+  className,
+  children,
+  ...props
+}: {
+  /** Ação que a nota oferece, quando existe uma. Fica à direita, na mesma linha. */
+  action?: ReactNode
+} & React.ComponentProps<"div">) {
   return (
-    <p
-      className={cn("mt-auto px-6 pt-3 pb-5 text-xs text-muted-foreground", className)}
+    <div
+      className={cn(
+        "mt-auto flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-6 pt-3 pb-5",
+        className
+      )}
       {...props}
-    />
+    >
+      <p className="min-w-0 text-xs text-muted-foreground">{children}</p>
+      {action}
+    </div>
   )
 }
 

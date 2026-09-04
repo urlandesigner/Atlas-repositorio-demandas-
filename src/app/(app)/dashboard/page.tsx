@@ -535,7 +535,16 @@ export default function DashboardPage() {
             )}
           </CardListBody>
           {nextObjectives.length > 0 && nextObjectives.length < 4 ? (
-            <CardListNote>Estes são todos os objetivos ativos do ciclo.</CardListNote>
+            <CardListNote
+              action={
+                <Link href="/professional/objectives" className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink hover:underline">
+                  Criar objetivo
+                  <ArrowUpRight className="size-3.5" />
+                </Link>
+              }
+            >
+              Estes são todos os objetivos ativos do ciclo.
+            </CardListNote>
           ) : null}
         </CardList>
 
