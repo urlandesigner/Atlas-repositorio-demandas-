@@ -94,10 +94,24 @@ export function PeopleDirectory() {
         <MyNetworkCard user={currentUser} profile={currentProfile} className="lg:hidden" />
       ) : null}
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        {/* Coluna principal: toolbar + grade de perfis */}
-        <div className="flex flex-col gap-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+      {/* Duas colunas e DUAS linhas: a toolbar ocupa a linha 1 da coluna
+          esquerda, e a linha 2 recebe os cartoes e o rail lado a lado. Antes a
+          grade tinha uma linha so, com a toolbar dentro da coluna esquerda —
+          entao as duas colunas comecavam juntas, mas a esquerda gastava os
+          primeiros 52px com a busca e o rail arrancava 52px acima dos cartoes.
+
+          `lg:gap-y-4` porque a distancia toolbar -> cartoes e a de rotulo para
+          conteudo (16px), nao a de coluna para coluna (24px, que o `gap-6` da
+          base mantem no eixo x). */}
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-y-4">
+        {/* Coluna principal: toolbar + grade de perfis.
+            `lg:contents` dissolve esta caixa no desktop, para que a toolbar e a
+            grade sejam itens da grade externa e possam ocupar linhas
+            diferentes. Abaixo de lg ela volta a ser uma coluna flex, e o
+            espacamento de secao entre os cartoes e o mural continua sendo o
+            `gap-6` da grade. */}
+        <div className="flex flex-col gap-4 lg:contents">
+          <div className="flex flex-wrap items-center justify-between gap-3 lg:col-start-1 lg:row-start-1">
             <InputGroup className="h-9 w-full max-w-sm">
               <InputGroupAddon align="inline-start">
                 <Search />
@@ -116,7 +130,7 @@ export function PeopleDirectory() {
           </div>
 
           {filtered.length ? (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2 lg:col-start-1 lg:row-start-2">
               {filtered.map(({ user, person, profile, kudosCount }) => {
                 const isCurrentUser = user.id === session?.userId
 
@@ -195,6 +209,7 @@ export function PeopleDirectory() {
             </div>
           ) : (
             <EmptyStateCard
+              className="lg:col-start-1 lg:row-start-2"
               title="Nenhuma pessoa encontrada"
               description="Tente buscar por outro nome, cargo, setor, skill ou gestor."
             />
@@ -202,7 +217,7 @@ export function PeopleDirectory() {
         </div>
 
         {/* Rail: âncora pessoal + mural */}
-        <div className="flex flex-col gap-4 lg:sticky lg:top-6">
+        <div className="flex flex-col gap-4 lg:col-start-2 lg:row-start-2 lg:sticky lg:top-6">
           {currentUser ? (
             <MyNetworkCard
               user={currentUser}
