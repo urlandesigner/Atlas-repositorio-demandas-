@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button"
 import {
   CardList,
   CardListBody,
+  CardListNote,
   CardListHeader,
   CardListItem,
   CardListRows,
@@ -151,6 +152,10 @@ export function KudosReceivedCard({ className }: { className?: string }) {
           </div>
         )}
       </CardListBody>
+      {/* Nada oculto: `kudos` e a lista inteira, cortada so na renderizacao. */}
+      {kudos.length > 0 && kudos.length <= MAX_ON_HOME ? (
+        <CardListNote>Nenhum outro elogio recente.</CardListNote>
+      ) : null}
     </CardList>
   )
 }

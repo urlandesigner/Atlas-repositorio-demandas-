@@ -92,6 +92,31 @@ export function CardListRows({ className, ...props }: React.ComponentProps<"div"
   )
 }
 
+/**
+ * Linha de fechamento de um CardList, presa ao fundo do cartão.
+ *
+ * Existe por causa da sobra: numa fileira de cartões de altura igual, quem tem
+ * menos itens fica com o resto em branco — na Início, "Foco do ciclo" usava
+ * 182px de um cartão de 367px, metade de ar.
+ *
+ * A alternativa era desigualar as alturas. Esta é a outra: a sobra passa a
+ * dizer por que é sobra. O ganho não é estético — um cartão curto ao lado de um
+ * cheio deixa a dúvida de se algo não carregou, e a nota responde isso.
+ *
+ * `mt-auto` prende no fundo, então ela só usa a sobra quando existe sobra; sem
+ * ela, encosta nas linhas. Use apenas quando NADA está oculto — se houver mais
+ * itens do que cabe, o que a linha tem a dizer é outro: quantos ficaram de
+ * fora.
+ */
+export function CardListNote({ className, ...props }: React.ComponentProps<"p">) {
+  return (
+    <p
+      className={cn("mt-auto px-6 pt-3 pb-5 text-xs text-muted-foreground", className)}
+      {...props}
+    />
+  )
+}
+
 export function CardListRow({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

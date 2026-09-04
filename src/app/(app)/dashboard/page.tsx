@@ -30,6 +30,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import {
   CardList,
   CardListBody,
+  CardListNote,
   CardListHeader,
   CardListItem,
   CardListRow,
@@ -533,6 +534,9 @@ export default function DashboardPage() {
               </div>
             )}
           </CardListBody>
+          {nextObjectives.length > 0 && nextObjectives.length < 4 ? (
+            <CardListNote>Estes são todos os objetivos ativos do ciclo.</CardListNote>
+          ) : null}
         </CardList>
 
         <KudosReceivedCard

@@ -8,6 +8,7 @@ import { buttonVariants } from "@/components/ui/button"
 import {
   CardList,
   CardListBody,
+  CardListNote,
   CardListHeader,
   CardListRows,
 } from "@/components/ui/card-list"
@@ -82,6 +83,18 @@ export function HrNoticesPanel({
           </div>
         )}
       </CardListBody>
+      {/* Só quando a lista veio MENOR que o teto: `slice(0, limit)` devolve
+          menos que `limit` apenas quando não há mais nada, então aqui é certo
+          dizer que não há. Com a lista cheia, o que faltaria dizer seria outra
+          coisa — quantos ficaram de fora —, e isso é trabalho do cabeçalho.
+
+          "Nenhum outro" e não "você está em dia": a nota fala de COMPLETUDE da
+          lista, e "em dia" falaria de leitura. O cartão marca não-lido com badge
+          "Novo", então a primeira versão se contradizia na própria tela — dizia
+          que estava tudo em dia com dois "Novo" logo acima. */}
+      {notices.length > 0 && notices.length < (showAll ? Number.POSITIVE_INFINITY : compact ? 3 : 4) ? (
+        <CardListNote>Nenhum outro aviso no momento.</CardListNote>
+      ) : null}
     </CardList>
   )
 }
