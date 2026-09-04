@@ -62,7 +62,7 @@ const GESTAO_PDI_SEEDED_KEY = "atlas_gestao_pdi_seeded"
  * DO SEED voltam ao valor do seed. Registros criados pela pessoa nunca são
  * tocados — a sincronia age só sobre ids que o seed conhece.
  */
-const GESTAO_PDI_SEED_VERSAO = "3"
+const GESTAO_PDI_SEED_VERSAO = "4"
 const GESTAO_PDI_VERSAO_KEY = "atlas_gestao_pdi_versao"
 
 /**

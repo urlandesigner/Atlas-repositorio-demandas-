@@ -4,6 +4,17 @@ import { PDI_DESIGN_2026_H1 } from "./seed-pdi-design-2026"
 
 const now = "2026-06-01T00:00:00.000Z"
 
+/* Data do ciclo 2026 · H1: seis meses antes da avaliacao do PDI Design
+   (24/08/2026), que e o ciclo seguinte. Estava usando o `now` genarico do seed,
+   entao o ciclo "anterior" aparecia a dois meses e meio do outro — perto demais
+   para dois semestres.
+
+   Ao MEIO-DIA e nao a meia-noite, de proposito: meia-noite UTC volta um dia em
+   fuso negativo, e ja mordeu esta data uma vez (rendia 31/05 com 01/06
+   gravado). A tela agora formata em UTC e nao dependeria disso, mas gravar ao
+   meio-dia protege qualquer outro leitor do mesmo registro. */
+const CICLO_H1 = "2026-02-24T12:00:00.000Z"
+
 const ENGINEERING_FRAMEWORK_ID = "framework-engineering"
 const PRODUCT_FRAMEWORK_ID = "framework-product"
 
@@ -102,8 +113,8 @@ export const GESTAO_PDI_SEED: GestaoPdiData = {
       cycleLabel: "2026 · H1",
       status: "closed",
       notes: "Ciclo anterior ao PDI Design consolidado.",
-      createdAt: now,
-      updatedAt: now,
+      createdAt: CICLO_H1,
+      updatedAt: CICLO_H1,
     },
   ],
   promotionRequests: [
