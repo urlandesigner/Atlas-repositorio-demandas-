@@ -211,7 +211,12 @@ export function AssignedPdiSection({
         <CardTitle className="text-base">{framework.name}</CardTitle>
         <CardDescription>
           Nível na trilha: {currentLevelName}
-          {targetLevelName ? ` · meta: ${targetLevelName}` : ""}
+          {/* "próximo nível", nao "meta". Em Meu Perfil este cartao convive com
+              o "Objetivo de carreira · Design Lead · meta 2027" no rodape da
+              mesma tela: duas metas diferentes, sem nada dizendo qual perseguir.
+              Sao horizontes distintos — este e o degrau seguinte, aquele e o
+              destino — e nomear o horizonte resolve com uma palavra. */}
+          {targetLevelName ? ` · próximo nível: ${targetLevelName}` : ""}
         </CardDescription>
         {/* CardAction põe os badges na coluna da direita, alinhados ao topo e
             atravessando as duas linhas do header (título + descrição). É o slot
@@ -220,7 +225,13 @@ export function AssignedPdiSection({
             até agora só existia no catálogo do design system. */}
         <CardAction className="flex flex-wrap items-center gap-1.5 @md/card-header:justify-end">
           <Badge variant="outline">{cycleLabel}</Badge>
-          {readOnly ? <Badge variant="secondary">Definido pelo gestor</Badge> : null}
+          {/* Contorno, nao preenchimento. Em preto (#14171C, contraste
+                      17,96) esta badge era o elemento MAIS escuro da tela, e o
+                      olho ia nela antes do titulo do cartao — sendo ela um
+                      rotulo de procedencia, o metadado mais dispensavel da
+                      linha. Mesma decisao dos cartoes de Pessoas: uma fileira
+                      de metadado, um peso so. */}
+          {readOnly ? <Badge variant="outline">Definido pelo gestor</Badge> : null}
         </CardAction>
       </CardHeader>
       <CardContent>

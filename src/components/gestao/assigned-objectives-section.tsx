@@ -83,7 +83,10 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
                 </StatusBadge>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
-                <Badge variant="secondary">
+                {/* Contorno: esta badge dividia a fileira com as dimensoes em
+                    contorno, e o preenchimento preto puxava o olho para a
+                    procedencia em vez de para a dimensao. Um peso por fileira. */}
+                <Badge variant="outline">
                   Definido pelo gestor
                 </Badge>
                 {objective.dimensions.map((dimension) => (
@@ -118,7 +121,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
                   <StatusBadge tone={OBJECTIVE_STATUS_TONE[selected.status]}>
                     {OBJECTIVE_STATUS_LABEL[selected.status]}
                   </StatusBadge>
-                  <Badge variant="secondary">Definido pelo gestor</Badge>
+                  <Badge variant="outline">Definido pelo gestor</Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {formatDeadline(selected.deadline) ? `Prazo: ${formatDeadline(selected.deadline)}` : "Sem prazo definido"}
