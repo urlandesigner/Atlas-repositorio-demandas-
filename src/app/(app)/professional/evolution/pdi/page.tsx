@@ -203,11 +203,16 @@ function CicloCard({
                 ) : null}
               </span>
             </CardDescription>
-            <CardAction className="flex flex-wrap items-center gap-1.5 @md/card-header:justify-end">
-              <Badge variant={ativo ? "outline" : "secondary"}>
-                {ativo ? "Ativo" : "Encerrado"}
-              </Badge>
-            </CardAction>
+            {/* Mesma regra do cartão de Resumo: badge só no ciclo encerrado.
+                "Ativo" não informava nada — o ciclo vigente já é o que está
+                aberto e no topo da lista, então o badge repetia em palavra o
+                que a posição e o estado expandido já dizem. "Encerrado"
+                informa, porque é a exceção. */}
+            {ativo ? null : (
+              <CardAction className="flex flex-wrap items-center gap-1.5 @md/card-header:justify-end">
+                <Badge variant="secondary">Encerrado</Badge>
+              </CardAction>
+            )}
           </CardHeader>
         </summary>
 

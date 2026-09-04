@@ -135,7 +135,14 @@ export function PeopleDirectory() {
                           size="xl"
                           className="-mt-6 ring-4 ring-card"
                         />
-                        {isCurrentUser ? <Badge variant="secondary">Você</Badge> : null}
+                        {/* Branca como todas as outras. Ela era preta para se
+                            destacar como marcador de identidade em vez de
+                            metadado, mas o que a distingue já é a POSIÇÃO:
+                            está ao lado do avatar, acima do nome, fora da
+                            fileira de badges. O preenchimento preto só
+                            reintroduzia o segundo peso que a fileira acabou
+                            de perder. */}
+                        {isCurrentUser ? <Badge variant="outline">Você</Badge> : null}
                       </div>
                       <div className="min-w-0">
                         <p className="truncate text-md font-semibold tracking-tight text-foreground">

@@ -38,21 +38,35 @@ export function MyNetworkCard({
       <Link
         href={`/people/${user.id}`}
         className={cn(
-          "flex items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-3 transition-colors hover:border-brand/40",
+          "block rounded-2xl border border-border/70 bg-card px-4 py-3 transition-colors hover:border-brand/40",
           className
         )}
       >
-        <PersonAvatar name={user.name} imageUrl={user.avatarUrl} size="sm" />
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-medium text-foreground">{user.name}</p>
-          <p className="truncate text-xs text-muted-foreground">
-            {profile?.headline}
-          </p>
+        {/* A fileira vive num filho, não na raiz. Estava na raiz como `flex`, e
+            aí o `hidden lg:block` que o rail de Pessoas passa para esconder o
+            card no mobile sobrescrevia esse `flex` — display é um só, e o do
+            chamador ganha. Resultado: no desktop o avatar, o nome e o link
+            empilhavam, e ninguém aqui tinha escrito nada errado.
+
+            A versão mobile do mesmo card passa `lg:hidden`, que só mexe no
+            display a partir do lg, então ela continuava certa — o que fazia o
+            defeito aparecer em uma das duas cópias e parecer coisa da página.
+
+            Com a fileira aqui dentro, o display da raiz fica livre para o
+            chamador: `lg:block`, `lg:grid`, `md:inline-flex`, qualquer um. */}
+        <div className="flex items-center gap-3">
+          <PersonAvatar name={user.name} imageUrl={user.avatarUrl} size="sm" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium text-foreground">{user.name}</p>
+            <p className="truncate text-xs text-muted-foreground">
+              {profile?.headline}
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink">
+            Meu perfil
+            <ArrowUpRight className="size-3.5" />
+          </span>
         </div>
-        <span className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink">
-          Meu perfil
-          <ArrowUpRight className="size-3.5" />
-        </span>
       </Link>
     )
   }
