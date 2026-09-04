@@ -130,8 +130,31 @@ export default function EvolutionPromotionPage() {
 
   return (
     <EvolutionShell
+      /* As duas ações vivem no cabeçalho, que é onde esta shell põe ação de
+         página — Reconhecimentos já fazia assim.
+
+         Estavam numa fileira solta logo abaixo da barra de carreira, exatamente
+         onde a página de Competências põe as abas: uma pílula preenchida ao
+         lado de um rótulo aparentemente sem caixa. Lidas em conjunto, naquela
+         posição, pareciam uma aba ativa e uma inativa — e não são abas, são
+         dois jeitos de gerar o mesmo dossiê. */
       title="Dossiê de evolução"
       description="Narrativa executiva com evidências para conversas de progressão."
+      actions={
+        <>
+          <Button size="sm" onClick={() => generate(false)} disabled={generating}>
+            {generating ? "Gerando…" : "Gerar dossiê"}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => generate(true)}
+            disabled={generating}
+          >
+            Gerar e refinar com IA
+          </Button>
+        </>
+      }
     >
       <div className="flex flex-col gap-6">
         <CareerContextBar
@@ -143,15 +166,6 @@ export default function EvolutionPromotionPage() {
           strongCompetencies={strongCount}
           totalCompetencies={competencyViews.length}
         />
-
-        <div className="flex flex-wrap gap-2">
-          <Button onClick={() => generate(false)} disabled={generating}>
-            {generating ? "Gerando…" : "Gerar dossiê"}
-          </Button>
-          <Button variant="outline" onClick={() => generate(true)} disabled={generating}>
-            Gerar e refinar com IA
-          </Button>
-        </div>
 
         {activeReport ? (
           <ReportEditor
