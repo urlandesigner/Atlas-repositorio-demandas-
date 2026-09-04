@@ -181,17 +181,16 @@ function CicloCard({
               {framework?.name ?? "Framework removido"}
               {nivelAtual ? ` · ${nivelAtual}` : ""}
               {nivelMeta ? ` → meta ${nivelMeta}` : ""}
-              {/* Só enquanto fechado: aberto, as mesmas medidas aparecem
-                  logo abaixo como MetricCard, e repetir seria ruído. */}
-              <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tabular-nums group-open/ciclo:hidden">
-                <span>{avanco}% de avanço</span>
-                {avaliacao ? (
-                  <>
-                    <span>{avaliacao.technicalScore}/6 técnica</span>
-                    <span>{avaliacao.behavioralScore}/5 comportamental</span>
-                  </>
-                ) : null}
-              </span>
+              {/* Nenhuma medida no cartão fechado. Existia uma linha com
+                  avanço, nota técnica e comportamental, visível só no colapso,
+                  para o cartão não ficar sem número nenhum quando fechado.
+
+                  Mas o motivo desta lista virar acordeão foi altura: com três
+                  números, o cartão fechado passava de duas linhas e a lista
+                  voltava a exigir rolagem para descobrir que existe mais de um
+                  ciclo. Fechado agora diz o que identifica o ciclo — nome,
+                  trilha, nível, data — e as medidas vivem abertas, como
+                  MetricCard, onde cabem com rótulo. */}
               {/* A data fecha o cartão, como em toda linha de lista do app.
                   Estava numa linha do meio, colada em "Avaliado por <nome>", e
                   quem avaliou saiu — o nome do avaliador não muda nada no que o
