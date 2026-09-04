@@ -34,8 +34,6 @@ const PAIRS = [
   ["--sidebar-foreground", "--sidebar", 4.5, "texto da sidebar"],
   ["--sidebar-primary-foreground", "--sidebar-primary", 4.5, "texto do item ativo da sidebar"],
   ["--input", "--card", 1.5, "borda de campo de formulário sobre card"],
-  ["--foreground", "--muted", 4.5, "texto digitado dentro do campo"],
-  ["--muted-foreground", "--muted", 4.5, "placeholder dentro do campo"],
   ["--hairline-strong", "--card", 2, "borda de botão outline sobre card"],
   ["--ring", "--background", 3, "anel de foco"],
   ["--gauge-on", "--card", 3, "medidor aceso (TrilhaGauge) sobre card"],
@@ -82,18 +80,25 @@ const PAIRS = [
 // este arquivo verifica em 3:1. Quem navega por teclado mantém boundary forte;
 // quem varre a tela com o olho perde.
 //
-// A mitigação foi aplicada: o campo ganhou preenchimento em `--muted`, então o
-// controle passou a ser identificado por ÁREA e não por linha — coerente com a
-// linguagem de cartão sem borda do resto do app. O passo de claridade contra o
-// cartão é ΔL* 3,8 no claro e 6,2 no escuro.
+// Houve uma tentativa de mitigação e ela foi DESFEITA, o que muda o estado deste
+// arquivo — daí a reescrita em vez de um remendo.
 //
-// Isso não recupera o critério formal de 1.4.11, que fala de contraste de
-// contorno, mas recupera o que o critério protege: saber onde o campo começa e
-// termina sem depender de enxergar uma linha de 1,6:1.
+// A tentativa: dar ao campo um preenchimento em `--muted`, para o controle ser
+// identificado por ÁREA e não por linha. Funcionava como acessibilidade e falhava
+// como produto — campo cinza dentro de cartão branco lê como bloco desabilitado,
+// e o preenchimento nunca foi pedido; foi iniciativa minha ao clarear a borda.
+// O dono do produto pediu o campo branco, e essa é a decisão que vale.
 //
-// Como o campo virou superfície própria, os dois pares abaixo passaram a ser
-// verificados contra `--muted` em vez de `--card`: texto digitado e placeholder
-// ficavam medidos contra o fundo errado.
+// Então hoje não há mitigação de ÁREA. O que sobra: rótulo em texto acima de
+// 4,5:1, `placeholder` em `--muted-foreground`, e no foco `border-ring` mais um
+// anel de 3px em `--ring`, verificado aqui em 3:1. Quem navega por teclado mantém
+// boundary forte; quem varre a tela com o olho perde. Isso está registrado, não
+// resolvido.
+//
+// Dois pares saíram da lista junto com o preenchimento: "texto digitado dentro do
+// campo" e "placeholder dentro do campo", que mediam contra `--muted`. Com o
+// campo de volta a `--card`, viraram duplicata exata de "texto principal sobre
+// card" e "texto secundário sobre card", que já estão acima.
 
 function extractBlock(css, selector) {
   // Localiza `selector {` no início de uma linha e captura até a chave que fecha.

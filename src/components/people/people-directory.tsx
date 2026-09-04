@@ -119,12 +119,7 @@ export function PeopleDirectory() {
                 lado, e o campo ocupava um terco da faixa acima de uma grade que
                 ia de ponta a ponta — a busca e a unica acao desta tela, e media
                 menos que um cartao. */}
-            {/* `dark:bg-card` tambem, nao so `bg-card`: o InputGroup traz
-                `dark:bg-input/30` de fabrica, e variante `dark:` ganha de
-                utilitario sem variante — o tailwind-merge nao desempata isso,
-                porque para ele sao chaves diferentes. Sem o par, o campo ficava
-                branco no claro e cinza-azulado no escuro. */}
-            <InputGroup className="h-9 w-full bg-card dark:bg-card">
+            <InputGroup className="h-9 w-full">
               <InputGroupAddon align="inline-start">
                 <Search />
               </InputGroupAddon>
