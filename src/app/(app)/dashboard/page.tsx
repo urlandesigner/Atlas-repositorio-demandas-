@@ -625,7 +625,7 @@ export default function DashboardPage() {
           <CardList>
             <CardListHeader
               title="Projetos recentes"
-              action={<FolderOpen className="size-4 text-muted-foreground" />}
+              icon={<FolderOpen />}
             />
             <CardListBody>
               {latestProjects.length ? (
@@ -649,7 +649,7 @@ export default function DashboardPage() {
           <CardList>
             <CardListHeader
               title="Apresentações"
-              action={<Presentation className="size-4 text-muted-foreground" />}
+              icon={<Presentation />}
             />
             <CardListBody className="flex flex-col gap-4 px-4 py-4">
               <div className="grid grid-cols-2 gap-3">

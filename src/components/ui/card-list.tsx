@@ -22,12 +22,26 @@ export function CardListHeader({
   title,
   description,
   action,
+  icon,
   className,
   ...props
 }: {
   title: ReactNode
   description?: ReactNode
   action?: ReactNode
+  /**
+   * Ícone que classifica o card, à ESQUERDA do título.
+   *
+   * Existe porque cinco cards passavam o ícone em `action`, e `action` é a
+   * coluna da direita — a mesma onde os cards vizinhos põem "Ver todos ↗" e
+   * botões. Numa fileira, uns tinham ali algo clicável e outros um desenho
+   * inerte, no mesmo lugar e no mesmo tamanho.
+   *
+   * O tratamento é do componente e não de quem chama: sem isso, cada card
+   * escolhia o próprio tamanho e a própria cor, e a fileira voltava a divergir.
+   * Passe o ícone sem classes.
+   */
+  icon?: ReactNode
 } & React.ComponentProps<typeof CardHeader>) {
   return (
     <CardHeader
@@ -47,7 +61,14 @@ export function CardListHeader({
         )}
       >
         <div className="min-w-0 space-y-1">
-          <CardTitle className="text-base font-semibold tracking-tight">{title}</CardTitle>
+          <CardTitle className="flex items-center gap-2 text-base font-semibold tracking-tight">
+            {icon ? (
+              <span className="flex shrink-0 items-center text-muted-foreground [&_svg]:size-4">
+                {icon}
+              </span>
+            ) : null}
+            {title}
+          </CardTitle>
           {description ? (
             <CardDescription className="text-xs leading-relaxed">{description}</CardDescription>
           ) : null}

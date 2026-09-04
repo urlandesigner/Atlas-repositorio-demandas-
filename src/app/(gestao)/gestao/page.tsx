@@ -138,7 +138,7 @@ export default function GestaoHomePage() {
         <CardList className="border-border/60">
           <CardListHeader
             title="Meu time"
-            action={<Users className="size-4 text-muted-foreground" />}
+            icon={<Users />}
           />
           <CardListBody className="space-y-2 p-4">
             {directReports.length ? (
@@ -187,7 +187,7 @@ export default function GestaoHomePage() {
         <CardList className="border-border/60">
           <CardListHeader
             title="Metas do time"
-            action={<Flag className="size-4 text-muted-foreground" />}
+            icon={<Flag />}
           />
           <CardListBody className="space-y-2 p-4">
             {teamObjectives.length ? (

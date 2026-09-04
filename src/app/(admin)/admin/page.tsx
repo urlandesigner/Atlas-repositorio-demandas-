@@ -218,7 +218,7 @@ export default function AdminHomePage() {
         <CardList className="border-border/60">
           <CardListHeader
             title="Acesso rápido"
-            action={<ShieldCheck className="size-4 text-muted-foreground" />}
+            icon={<ShieldCheck />}
           />
           <CardListBody className="flex flex-wrap gap-2 p-4">
             {adminShortcuts.map((item) => (
