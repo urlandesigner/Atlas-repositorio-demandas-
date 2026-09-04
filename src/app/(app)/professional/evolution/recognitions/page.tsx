@@ -211,11 +211,18 @@ export default function EvolutionRecognitionsPage() {
                               da rede
                             </Badge>
                           </div>
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {fromName} · {new Date(kudo.createdAt).toLocaleDateString("pt-BR")}
-                          </p>
-                          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                             “{kudo.message}”
+                          </p>
+                          {/* Quem elogiou e quando fecham o cartão.
+                              Estavam entre o título e a mensagem, separando as
+                              duas coisas que se leem juntas — o tipo do elogio
+                              e o que foi dito. E a atribuição é o que se lê
+                              DEPOIS: primeiro o elogio, depois de quem veio.
+                              Mesma ordem das outras listas do app, onde a data
+                              é sempre o último item da linha. */}
+                          <p className="mt-2 text-xs text-muted-foreground">
+                            {fromName} · {new Date(kudo.createdAt).toLocaleDateString("pt-BR")}
                           </p>
                         </div>
                         <div className="order-last flex w-full shrink-0 justify-end sm:order-none sm:w-auto">

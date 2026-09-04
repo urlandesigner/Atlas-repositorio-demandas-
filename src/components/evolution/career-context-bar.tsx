@@ -54,7 +54,15 @@ export function CareerContextBar({
           ) : null}
         </div>
       </div>
-      <div className="mt-4 overflow-x-auto">
+      {/* `-my-1 py-1` para o anel do nível atual caber.
+          `overflow-x-auto` sozinho não existe: quando um eixo deixa de ser
+          `visible`, o outro deixa também — `overflow-y` computa `auto` e passa
+          a CORTAR. O nó atual tem `ring-2 ring-offset-2`, ou seja 4px além da
+          própria caixa, e o topo dele encostava exatamente no topo do scroller
+          (folga medida: 0px acima). O anel saía cortado em cima.
+          O padding abre os 4px por dentro e a margem negativa devolve, então
+          nada se move na página. */}
+      <div className="mt-4 -my-1 overflow-x-auto py-1">
         <Trilha ladder={ladder} currentLevelId={currentLevelId} size="sm" />
       </div>
     </div>
