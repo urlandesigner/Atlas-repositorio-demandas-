@@ -4,10 +4,8 @@ import { useMemo, useSyncExternalStore } from "react"
 import { ArrowRight, ChevronRight, Minus, TrendingUp } from "lucide-react"
 
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
-import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -183,14 +181,6 @@ function CicloCard({
               {framework?.name ?? "Framework removido"}
               {nivelAtual ? ` · ${nivelAtual}` : ""}
               {nivelMeta ? ` → meta ${nivelMeta}` : ""}
-              {avaliacao ? (
-                <>
-                  <br />
-                  {`Avaliado por ${avaliacao.evaluatedBy} · ${new Date(
-                    avaliacao.evaluatedAt
-                  ).toLocaleDateString("pt-BR")}`}
-                </>
-              ) : null}
               {/* Só enquanto fechado: aberto, as mesmas medidas aparecem
                   logo abaixo como MetricCard, e repetir seria ruído. */}
               <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-xs tabular-nums group-open/ciclo:hidden">
@@ -202,17 +192,25 @@ function CicloCard({
                   </>
                 ) : null}
               </span>
+              {/* A data fecha o cartão, como em toda linha de lista do app.
+                  Estava numa linha do meio, colada em "Avaliado por <nome>", e
+                  quem avaliou saiu — o nome do avaliador não muda nada no que o
+                  leitor faz com o próprio PDI, e este repositório é público.
+
+                  Em mono tabular pelo mesmo motivo das outras listas: é o
+                  último item de toda linha, e em tabular os dígitos ocupam a
+                  mesma largura, então a coluna fecha reta. */}
+              {avaliacao ? (
+                <span className="mt-2 block font-mono text-2xs leading-none font-medium tracking-[0.08em] uppercase tabular-nums text-muted-foreground">
+                  {new Date(avaliacao.evaluatedAt).toLocaleDateString("pt-BR")}
+                </span>
+              ) : null}
             </CardDescription>
-            {/* Mesma regra do cartão de Resumo: badge só no ciclo encerrado.
-                "Ativo" não informava nada — o ciclo vigente já é o que está
-                aberto e no topo da lista, então o badge repetia em palavra o
-                que a posição e o estado expandido já dizem. "Encerrado"
-                informa, porque é a exceção. */}
-            {ativo ? null : (
-              <CardAction className="flex flex-wrap items-center gap-1.5 @md/card-header:justify-end">
-                <Badge variant="secondary">Encerrado</Badge>
-              </CardAction>
-            )}
+            {/* Sem badge de estado. Foram as duas, em duas rodadas: "Ativo"
+                primeiro, porque o ciclo vigente já é o que está no topo e
+                aberto, e agora "Encerrado". O que resta dizendo o estado é a
+                ordem da lista — do atual ao mais antigo, como a descrição da
+                página anuncia — e o ciclo aberto por padrão. */}
           </CardHeader>
         </summary>
 
