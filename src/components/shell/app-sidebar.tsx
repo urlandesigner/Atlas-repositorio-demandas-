@@ -30,7 +30,6 @@ import { shellHeaderClassName } from "@/components/shell/shell-header-styles"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { PersonAvatar } from "@/components/ui/person-avatar"
-import { ThemeToggle } from "@/components/ui/theme-toggle"
 import { cn } from "@/lib/utils"
 import {
   Sidebar,
@@ -262,8 +261,14 @@ export function AppSidebar() {
               Atlas
             </span>
           </div>
+          {/* O alternador de tema saiu daqui. Consequencia, para ficar
+              registrada: nao sobrou nenhum caminho na interface para trocar de
+              tema, e o ThemeProvider tem `defaultTheme="dark"` — quem abrir o
+              app pela primeira vez fica no escuro sem poder sair. Quem ja
+              escolheu claro continua no claro, porque next-themes guarda a
+              escolha em localStorage. O componente segue existindo em
+              components/ui/theme-toggle. */}
           <div className="flex items-center gap-1 group-data-[collapsible=icon]:hidden">
-            <ThemeToggle className="size-8 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground" />
             <SidebarTrigger className="size-8 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground" />
           </div>
         </div>
@@ -296,8 +301,11 @@ export function AppSidebar() {
         )}
       </SidebarContent>
 
+      {/* Sem divisor. Eram dois: um acima da trilha e um acima do cartao do
+          usuario. A trilha saiu e este ficou orfao — o cartao do usuario tem
+          borda e superficie proprias, entao ja se separa da lista de navegacao
+          sem precisar de uma linha a mais logo acima da sua. */}
       <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
-        <SidebarSeparator />
         <div className="px-4">
           <div className="rounded-lg border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
             <div className="flex items-start gap-3">

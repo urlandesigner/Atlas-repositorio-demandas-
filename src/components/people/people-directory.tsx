@@ -94,24 +94,27 @@ export function PeopleDirectory() {
         <MyNetworkCard user={currentUser} profile={currentProfile} className="lg:hidden" />
       ) : null}
 
-      {/* Duas colunas e DUAS linhas: a toolbar ocupa a linha 1 da coluna
-          esquerda, e a linha 2 recebe os cartoes e o rail lado a lado. Antes a
-          grade tinha uma linha so, com a toolbar dentro da coluna esquerda —
-          entao as duas colunas comecavam juntas, mas a esquerda gastava os
-          primeiros 52px com a busca e o rail arrancava 52px acima dos cartoes.
+      {/* Duas colunas, UMA linha: o topo do rail e o topo da coluna esquerda,
+          que e o topo da busca.
 
-          `lg:gap-y-4` porque a distancia toolbar -> cartoes e a de rotulo para
-          conteudo (16px), nao a de coluna para coluna (24px, que o `gap-6` da
-          base mantem no eixo x). */}
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-y-4">
-        {/* Coluna principal: toolbar + grade de perfis.
-            `lg:contents` dissolve esta caixa no desktop, para que a toolbar e a
-            grade sejam itens da grade externa e possam ocupar linhas
-            diferentes. Abaixo de lg ela volta a ser uma coluna flex, e o
-            espacamento de secao entre os cartoes e o mural continua sendo o
-            `gap-6` da grade. */}
-        <div className="flex flex-col gap-4 lg:contents">
-          <div className="flex flex-col gap-2 lg:col-start-1 lg:row-start-1">
+          Isto foi e voltou, e o registro importa mais que o resultado. Comecou
+          assim. Virou uma grade de duas linhas — busca na linha 1, cartoes e
+          rail na linha 2 — porque o rail arrancava 52px acima dos cartoes e
+          parecia desalinhado; naquela epoca a busca era um campo estreito com o
+          contador ao lado, uma faixa sem borda superior para o rail encostar,
+          entao a referencia visual eram os cartoes. Com a busca virando barra
+          de largura total, a borda de cima dela passou a ser a primeira linha
+          horizontal da coluna, e o alinhamento certo voltou a ser o original.
+
+          Tentei chegar la mantendo as duas linhas, com `lg:row-span-2` no rail.
+          Nao funciona: linha automatica cresce para caber o item que a
+          atravessa, entao a linha 1 inflou com a altura do mural e empurrou os
+          cartoes 491px para baixo. Uma linha so nao tem esse problema, porque
+          nao ha nada para inflar. */}
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        {/* Coluna principal: busca + grade de perfis. */}
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2">
             {/* Largura da coluna inteira. Estava em `max-w-sm` com a contagem ao
                 lado, e o campo ocupava um terco da faixa acima de uma grade que
                 ia de ponta a ponta — a busca e a unica acao desta tela, e media
@@ -146,7 +149,7 @@ export function PeopleDirectory() {
           </div>
 
           {filtered.length ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:col-start-1 lg:row-start-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               {filtered.map(({ user, person, profile, kudosCount }) => {
                 const isCurrentUser = user.id === session?.userId
 
@@ -242,7 +245,6 @@ export function PeopleDirectory() {
             </div>
           ) : (
             <EmptyStateCard
-              className="lg:col-start-1 lg:row-start-2"
               title="Nenhuma pessoa encontrada"
               description="Tente buscar por outro nome, cargo, setor, skill ou gestor."
             />
@@ -250,7 +252,7 @@ export function PeopleDirectory() {
         </div>
 
         {/* Rail: âncora pessoal + mural */}
-        <div className="flex flex-col gap-4 lg:col-start-2 lg:row-start-2 lg:sticky lg:top-6">
+        <div className="flex flex-col gap-4 lg:sticky lg:top-6">
           {currentUser ? (
             <MyNetworkCard
               user={currentUser}
