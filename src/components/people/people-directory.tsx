@@ -111,8 +111,17 @@ export function PeopleDirectory() {
             espacamento de secao entre os cartoes e o mural continua sendo o
             `gap-6` da grade. */}
         <div className="flex flex-col gap-4 lg:contents">
-          <div className="flex flex-wrap items-center justify-between gap-3 lg:col-start-1 lg:row-start-1">
-            <InputGroup className="h-9 w-full max-w-sm">
+          <div className="flex flex-col gap-2 lg:col-start-1 lg:row-start-1">
+            {/* Largura da coluna inteira. Estava em `max-w-sm` com a contagem ao
+                lado, e o campo ocupava um terco da faixa acima de uma grade que
+                ia de ponta a ponta — a busca e a unica acao desta tela, e media
+                menos que um cartao. */}
+            {/* `dark:bg-card` tambem, nao so `bg-card`: o InputGroup traz
+                `dark:bg-input/30` de fabrica, e variante `dark:` ganha de
+                utilitario sem variante — o tailwind-merge nao desempata isso,
+                porque para ele sao chaves diferentes. Sem o par, o campo ficava
+                branco no claro e cinza-azulado no escuro. */}
+            <InputGroup className="h-9 w-full bg-card dark:bg-card">
               <InputGroupAddon align="inline-start">
                 <Search />
               </InputGroupAddon>
@@ -122,11 +131,18 @@ export function PeopleDirectory() {
                 placeholder="Buscar pessoa, cargo ou skill"
               />
             </InputGroup>
-            <p className="text-xs text-muted-foreground">
-              {normalizedQuery
-                ? `${filtered.length} de ${people.length} pessoas`
-                : `${people.length} pessoas na rede`}
-            </p>
+            {/* O contador some em repouso e fica na BUSCA.
+                "11 pessoas na rede" nao servia a ninguem: a grade abaixo mostra
+                as pessoas, e o total nao muda nada no que se faz aqui.
+                "3 de 11" serve — e a unica confirmacao de que o filtro pegou, e
+                sem ela uma busca que devolve dois cartoes nao diz se sobraram
+                dois de onze ou dois de dois. Abaixo do campo, para nao disputar
+                a largura com ele. */}
+            {normalizedQuery ? (
+              <p className="text-xs text-muted-foreground">
+                {filtered.length} de {people.length} pessoas
+              </p>
+            ) : null}
           </div>
 
           {filtered.length ? (
@@ -138,25 +154,42 @@ export function PeopleDirectory() {
                   <Link
                     key={user.id}
                     href={`/people/${user.id}`}
-                    className="group overflow-hidden rounded-2xl border border-border/70 bg-card transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg"
                   >
-                    <div className={cn("h-16", getPersonCoverClassName(person.name))} />
-                    <div className="flex flex-col gap-2 px-5 pb-5">
-                      <div className="flex items-end justify-between">
+                    <div className={cn("h-16 shrink-0", getPersonCoverClassName(person.name))} />
+                    {/* Ancorada no canto do CARTAO, sobre a capa.
+                        Estava numa fileira `items-end` com o avatar — e o
+                        avatar sobe 24px por cima da capa (`-mt-6`), entao a
+                        fileira media a altura dele e a badge caia no branco
+                        abaixo da capa, sem borda nem conteudo por perto para
+                        se alinhar. Parecia solta porque estava: era o unico
+                        elemento da tela sem nada definindo sua posicao.
+
+                        `bg-card` porque agora ela pousa sobre cor: em contorno
+                        puro o pastel apareceria por dentro dela. Continua
+                        branca, que era a regra. */}
+                    {isCurrentUser ? (
+                      <Badge variant="outline" className="absolute top-4 right-4 bg-card">
+                        Você
+                      </Badge>
+                    ) : null}
+                    {/* `flex-1` para o conteudo ocupar a sobra de altura, e o
+                        rodape descer com `mt-auto` la embaixo.
+
+                        Os cartoes de uma fileira JA tinham a mesma altura — a
+                        grade estica —, mas o conteudo parava onde o texto
+                        parava, entao o divisor e a contagem flutuavam na altura
+                        do headline de cada pessoa. Duas pessoas lado a lado com
+                        bio de tamanho diferente davam dois cartoes com a mesma
+                        borda e organizacao interna diferente. */}
+                    <div className="flex flex-1 flex-col gap-2 px-5 pb-5">
+                      <div className="flex">
                         <PersonAvatar
                           name={person.name}
                           imageUrl={person.avatarUrl}
                           size="xl"
                           className="-mt-6 ring-4 ring-card"
                         />
-                        {/* Branca como todas as outras. Ela era preta para se
-                            destacar como marcador de identidade em vez de
-                            metadado, mas o que a distingue já é a POSIÇÃO:
-                            está ao lado do avatar, acima do nome, fora da
-                            fileira de badges. O preenchimento preto só
-                            reintroduzia o segundo peso que a fileira acabou
-                            de perder. */}
-                        {isCurrentUser ? <Badge variant="outline">Você</Badge> : null}
                       </div>
                       <div className="min-w-0">
                         <p className="truncate text-md font-semibold tracking-tight text-foreground">
@@ -190,7 +223,7 @@ export function PeopleDirectory() {
                           <Badge variant="outline">+{profile.skills.length - 3}</Badge>
                         ) : null}
                       </div>
-                      <div className="mt-1 flex items-center justify-between border-t border-border/60 pt-3">
+                      <div className="mt-auto flex items-center justify-between border-t border-border/60 pt-3">
                         <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
                           <Sparkles className="size-3.5 text-accent-ink" />
                           {kudosCount === 1

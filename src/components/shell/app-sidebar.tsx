@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useSyncExternalStore } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -26,17 +26,11 @@ import {
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
-import { Trilha } from "@/components/career/trilha"
 import { shellHeaderClassName } from "@/components/shell/shell-header-styles"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { ThemeToggle } from "@/components/ui/theme-toggle"
-import {
-  getProfileServerSnapshot,
-  getProfileSnapshot,
-  subscribeProfileStore,
-} from "@/lib/profile/store"
 import { cn } from "@/lib/utils"
 import {
   Sidebar,
@@ -218,28 +212,6 @@ function CollapsibleNavGroup({
   )
 }
 
-/** Trilha compacta na sidebar — a posição na carreira fica sempre visível. */
-function SidebarTrilha() {
-  const profile = useSyncExternalStore(
-    subscribeProfileStore,
-    getProfileSnapshot,
-    getProfileServerSnapshot
-  )
-
-  if (!profile.ladder.length) return null
-
-  return (
-    <div className="px-4">
-      <Trilha
-        ladder={profile.ladder}
-        currentLevelId={profile.identity.levelId}
-        targetLevelId={profile.goal.targetLevelId}
-        variant="mini"
-      />
-    </div>
-  )
-}
-
 export function AppSidebar() {
   const pathname = usePathname()
   const { session, logout } = useAuth()
@@ -325,12 +297,6 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
-        {/* Separador e trilha somem juntos no colapso — um wrapper `contents` evita
-            que sobre uma barra órfã sem nada entre as duas. */}
-        <div className="contents group-data-[collapsible=icon]:hidden">
-          <SidebarSeparator />
-          <SidebarTrilha />
-        </div>
         <SidebarSeparator />
         <div className="px-4">
           <div className="rounded-lg border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
