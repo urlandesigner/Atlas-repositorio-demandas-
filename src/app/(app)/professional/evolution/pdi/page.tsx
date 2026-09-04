@@ -143,6 +143,17 @@ function CicloCard({
 
   const avaliacao = assignment.evaluation
 
+  /* Data do ciclo, com queda para a do proprio registro.
+     `evaluatedAt` so existe em ciclo avaliado, e o 2026 · H1 nao tem avaliacao
+     — o cartao dele ficava sem data enquanto o vizinho tinha uma, e a lista
+     perdia a informacao que a ordena.
+     `createdAt` nao e data de avaliacao, e vale registrar a diferenca: para um
+     ciclo avaliado o numero diz "quando foi avaliado", para um sem avaliacao
+     diz "quando o ciclo foi registrado". As duas respondem "quando foi este
+     ciclo", que e a pergunta que a data responde nesta lista, e a ordem
+     cronologica sai certa nos dois casos. */
+  const dataDoCiclo = avaliacao?.evaluatedAt ?? assignment.createdAt
+
   // De onde vem o "antes" de cada tema. `evaluation.previous` ganha do ciclo
   // anterior do store porque é o ponto de partida que o gestor registrou NESTE
   // ciclo — não depende de o ciclo anterior existir, nem de ele ter usado o
@@ -199,9 +210,16 @@ function CicloCard({
                   Em mono tabular pelo mesmo motivo das outras listas: é o
                   último item de toda linha, e em tabular os dígitos ocupam a
                   mesma largura, então a coluna fecha reta. */}
-              {avaliacao ? (
+              {dataDoCiclo ? (
                 <span className="mt-2 block font-mono text-2xs leading-none font-medium tracking-[0.08em] uppercase tabular-nums text-muted-foreground">
-                  {new Date(avaliacao.evaluatedAt).toLocaleDateString("pt-BR")}
+                  {/* `timeZone: "UTC"` porque isto e data de CALENDARIO, nao
+                      instante. Sem isso, um valor gravado a meia-noite UTC
+                      volta um dia em fuso negativo: o 2026-06-01 do 2026 · H1
+                      aparecia como 31/05/2026 no Brasil. A avaliacao do PDI
+                      Design escapou por acidente, porque esta gravada ao
+                      meio-dia. Fixando o fuso, dois leitores em paises
+                      diferentes leem a mesma data do ciclo. */}
+                  {new Date(dataDoCiclo).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
                 </span>
               ) : null}
             </CardDescription>
