@@ -219,6 +219,24 @@ function PresentationRow({ presentation }: { presentation: PresentationEntry }) 
   )
 }
 
+/**
+ * Guia de primeiro uso escondido, a pedido — trocar para `true` devolve.
+ *
+ * Escondido com interruptor em vez de apagado porque o pedido foi "por
+ * enquanto": o componente inteiro segue aqui, alcançável pelo compilador, e
+ * voltar é uma palavra. Apagar custaria reescrever as cinco etapas.
+ *
+ * Por que ele aparecia em um navegador e não em outro: a condição de renderizar
+ * é `records.length === 0`, e registro vive em `localStorage` na chave
+ * `atlas_records` — por navegador, não por conta. Navegador sem registro via o
+ * guia; navegador com um registro, não. Era o projetado, não defeito.
+ *
+ * Se um dia voltar, vale voltar diferente: "já vi isso" é outra pergunta que
+ * "não tenho registros". Uma chave própria mais um botão de dispensar resolvem,
+ * e param de trazer o guia de volta para veterano que abriu em janela anônima.
+ */
+const MOSTRAR_GUIA_DE_FLUXO = false
+
 function WorkFlowGuide({
   projectCount,
   objectiveCount,
@@ -686,7 +704,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {records.length === 0 ? (
+      {MOSTRAR_GUIA_DE_FLUXO && records.length === 0 ? (
         <WorkFlowGuide
           projectCount={activeProjects.length}
           objectiveCount={activeObjectives.length}
