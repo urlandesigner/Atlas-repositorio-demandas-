@@ -26,6 +26,7 @@ import {
 } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
+import { FeedbackInvite } from "@/components/shell/feedback-invite"
 import { shellHeaderClassName } from "@/components/shell/shell-header-styles"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -306,6 +307,7 @@ export function AppSidebar() {
           borda e superficie proprias, entao ja se separa da lista de navegacao
           sem precisar de uma linha a mais logo acima da sua. */}
       <SidebarFooter className="mt-4 gap-4 p-0 pb-4">
+        <FeedbackInvite />
         <div className="px-4">
           <div className="rounded-lg border border-border/70 bg-card/90 p-3 group-data-[collapsible=icon]:hidden">
             <div className="flex items-start gap-3">

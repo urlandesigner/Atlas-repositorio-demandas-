@@ -365,6 +365,23 @@ export function addProjectToCollection(
   }
 }
 
+/**
+ * Exclusao permanente. Nao ha cascata de proposito: registros, reconhecimentos e
+ * clientes guardam uma copia de `projectName` junto do id, entao continuam exibindo
+ * o nome certo depois que o projeto sai. E `mergeWithSeed` percorre o que esta
+ * salvo, nao a SEED - um projeto de seed excluido nao volta no proximo load.
+ */
+export function deleteProjectFromCollection(
+  allProjects: Record<WorkspaceTab, ProjectEntry[]>,
+  workspace: WorkspaceTab,
+  projectId: string
+) {
+  return {
+    ...allProjects,
+    [workspace]: allProjects[workspace].filter((project) => project.id !== projectId),
+  }
+}
+
 export function findProject(
   allProjects: Record<WorkspaceTab, ProjectEntry[]>,
   workspace: WorkspaceTab,

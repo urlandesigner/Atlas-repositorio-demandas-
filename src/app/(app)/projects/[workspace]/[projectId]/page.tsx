@@ -9,6 +9,7 @@ import { useRecords } from "@/components/shell/records-provider"
 import type { RecordEntry } from "@/lib/records/types"
 import { getRecordImpactText } from "@/lib/records/display"
 import {
+  deleteProjectFromCollection,
   emitProjectsChange,
   findProject,
   getProjectsServerSnapshot,
@@ -52,6 +53,7 @@ import { PROJECT_STATUS_TONE } from "@/lib/status-tone"
 import { Textarea } from "@/components/ui/textarea"
 import {
   Activity,
+  AlertTriangle,
   CalendarDays,
   Clock3,
   CreditCard,
@@ -343,6 +345,7 @@ function ProjectDetailSurface({
   const [editObs, setEditObs] = useState(project.observations ?? "")
   const [editValue, setEditValue] = useState(project.value != null ? String(project.value) : "")
   const [editLinks, setEditLinks] = useState<ProjectLinkEntry[]>(project.links)
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [editTimeline, setEditTimeline] = useState<ProjectTimelineEntry[]>(project.timeline ?? [])
   const [isLinkComposerOpen, setIsLinkComposerOpen] = useState(false)
   const [editingLinkIndex, setEditingLinkIndex] = useState<number | null>(null)
@@ -443,7 +446,18 @@ function ProjectDetailSurface({
     const automaticEvents = buildAutomaticTimelineEvents(project, nextProject)
     const updatedTimeline = [...automaticEvents, ...editTimeline].sort((a, b) => b.created_at.localeCompare(a.created_at))
     persist({ ...nextProject, timeline: updatedTimeline })
-    router.push(`/projects/${workspace}`)
+    // `/projects/${workspace}` e 404: nao existe rota de lista por workspace, so
+    // `/projects` (que fixa WORKSPACE = "professional") e o detalhe aninhado.
+    router.push("/projects")
+  }
+
+  function handleDelete() {
+    const next = deleteProjectFromCollection(allProjects, workspace, project.id)
+    saveProjects(next)
+    emitProjectsChange()
+    // Sem o push a pagina se re-renderiza no lugar e cai em "Projeto nao encontrado
+    // ou removido." - um beco sem saida que a propria acao acabou de criar.
+    router.push("/projects")
   }
 
   function handleReset() {
@@ -999,6 +1013,42 @@ function ProjectDetailSurface({
               onChange={(e) => setEditObs(e.target.value)}
               className="min-h-[120px] resize-none"
             />
+          </DetailSection>
+
+          {/* A confirmacao acontece no lugar do botao, e nao num dialogo do sistema:
+              mesmo padrao do record-detail, que e o unico outro lugar do app onde se
+              apaga algo que custou trabalho criar. */}
+          <DetailSection
+            title="Excluir projeto"
+            description="O projeto sai da lista permanentemente. Registros e reconhecimentos ligados a ele continuam no histórico, com o nome do projeto preservado."
+          >
+            {confirmDelete ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <AlertTriangle className="size-3.5 text-destructive" />
+                  Excluir permanentemente? Esta ação não pode ser desfeita.
+                </span>
+                <div className="ml-auto flex gap-2">
+                  <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(false)}>
+                    Cancelar
+                  </Button>
+                  <Button variant="destructive" size="sm" className="gap-1.5" onClick={handleDelete}>
+                    <Trash2 className="size-3.5" />
+                    Excluir
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1.5 text-muted-foreground hover:text-destructive"
+                onClick={() => setConfirmDelete(true)}
+              >
+                <Trash2 className="size-3.5" />
+                Excluir projeto
+              </Button>
+            )}
           </DetailSection>
         </div>
       </div>
