@@ -24,7 +24,7 @@ export function ProfessionalTimeline({
           <div className="flex flex-col gap-5">
             {groups.map((group) => (
               <div key={group.monthLabel}>
-                <Overline className="mb-2 text-muted-foreground/70">
+                <Overline className="mb-2 text-muted-foreground">
                   {group.monthLabel}
                 </Overline>
                 <div className="relative flex flex-col gap-1 border-l border-border/70 pl-4">

@@ -619,7 +619,7 @@ function InputStep({
                 : "Vincule a um projeto, a um objetivo ou aos dois."}
             </p>
           </div>
-          <Overline size="sm" className="text-muted-foreground/70">
+          <Overline size="sm" className="text-muted-foreground">
             {hasLockedContext ? "Contexto atual" : "Opcional"}
           </Overline>
         </div>
@@ -740,7 +740,7 @@ function InputStep({
                 <>
                   <span className="text-muted-foreground/40 text-2xs">·</span>
                   {detection!.tags.map((tag) => (
-                    <span key={tag} className="text-2xs text-muted-foreground/60">
+                    <span key={tag} className="text-2xs text-muted-foreground">
                       #{tag}
                     </span>
                   ))}
@@ -759,7 +759,7 @@ function InputStep({
 
       {/* Examples */}
       <div className="px-5 pb-2">
-        <Overline size="sm" className="mb-2 text-muted-foreground/60">
+        <Overline size="sm" className="mb-2 text-muted-foreground">
           Inspiração
         </Overline>
         <FilterPillGroup aria-label="Exemplos de registro">
@@ -859,7 +859,7 @@ function ProcessingStep({ visibleSteps }: { visibleSteps: number }) {
 
 function SidebarLabel({ children }: { children: React.ReactNode }) {
   return (
-    <Overline size="sm" className="text-muted-foreground/60">
+    <Overline size="sm" className="text-muted-foreground">
       {children}
     </Overline>
   )
@@ -1017,7 +1017,7 @@ function ReviewStep({
                   ))}
                 </div>
               ) : (
-                <span className="text-2xs text-muted-foreground/50">
+                <span className="text-2xs text-muted-foreground">
                   Nenhuma competência identificada
                 </span>
               )}

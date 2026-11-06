@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { Overline } from "@/components/ui/overline"
 import { useOptionalSession } from "@/hooks/use-optional-session"
 import { PDI_MAX_LEVEL } from "@/lib/profile/pdi"
@@ -236,9 +236,8 @@ function CicloCard({
               de altura; em quatro colunas gastam 113, e é o que faltava para o
               segundo ciclo caber na primeira tela. Volta a 2×2 abaixo de 640px,
               onde quatro colunas dariam ~80px cada e o número não caberia. */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <MetricCard
-              variant="inset"
+          <StatStrip inset>
+            <Stat inset
               label="Avanço no ciclo"
               value={avanco}
               suffix="%"
@@ -246,23 +245,20 @@ function CicloCard({
                 framework ? `${framework.themes.length} temas` : "sem framework"
               }
             />
-            <MetricCard
-              variant="inset"
+            <Stat inset
               label="Temas que subiram"
               value={baseDaComparacao ? temasEvoluidos : "—"}
               helper={baseDaComparacao ?? "primeiro ciclo"}
             />
             {avaliacao ? (
               <>
-                <MetricCard
-                  variant="inset"
+                <Stat inset
                   label="Nota técnica"
                   value={avaliacao.technicalScore}
                   suffix="/6"
                   helper="escala do framework"
                 />
-                <MetricCard
-                  variant="inset"
+                <Stat inset
                   label="Nota comportamental"
                   value={avaliacao.behavioralScore}
                   suffix="/5"
@@ -270,7 +266,7 @@ function CicloCard({
                 />
               </>
             ) : null}
-          </div>
+          </StatStrip>
 
         {framework ? (
           <div>

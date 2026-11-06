@@ -73,7 +73,7 @@ export function NotificationsPopover() {
           {unreadCount > 0 ? (
             <button
               type="button"
-              className="text-xs font-medium hover:underline"
+              className="text-xs font-medium link-draw"
               onClick={() => markAllNotificationsRead(session.userId)}
             >
               Marcar todas como lidas

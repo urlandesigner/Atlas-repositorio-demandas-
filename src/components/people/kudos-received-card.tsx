@@ -117,7 +117,7 @@ export function KudosReceivedCard({ className }: { className?: string }) {
                     from ? (
                       <Link
                         href={`/people/${from.id}`}
-                        className="hover:text-accent-ink hover:underline"
+                        className="hover:text-accent-ink link-draw"
                       >
                         {from.name}
                       </Link>
@@ -156,7 +156,7 @@ export function KudosReceivedCard({ className }: { className?: string }) {
       {kudos.length > 0 && kudos.length <= MAX_ON_HOME ? (
         <CardListNote
           action={
-            <Link href="/people" className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink hover:underline">
+            <Link href="/people" className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink link-draw">
               Reconhecer um colega
               <ArrowUpRight className="size-3.5" />
             </Link>

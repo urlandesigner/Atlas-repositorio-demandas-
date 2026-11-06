@@ -227,7 +227,7 @@ function LideradoDetailContent({ userId }: { userId: string }) {
           <CardTitle className="text-base">Radar de competências</CardTitle>
           <p className="text-sm text-muted-foreground">
             Pilares e notas customizáveis por liderado. Use o{" "}
-            <Link href="/gestao/soft-skills" className="text-accent-ink hover:underline">
+            <Link href="/gestao/soft-skills" className="text-accent-ink link-draw">
               template da área
             </Link>{" "}
             como ponto de partida.

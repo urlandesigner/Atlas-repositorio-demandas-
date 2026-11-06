@@ -33,7 +33,7 @@ export function TrilhaGauge({
             "aria-valuemin": 0,
             "aria-valuemax": 100,
             "aria-valuenow": Math.round(clamped),
-            "aria-label": "Avanço para o próximo nível",
+            "aria-label": "Avanço no PDI",
           })}
       className={cn("flex items-end gap-[3px]", className)}
     >

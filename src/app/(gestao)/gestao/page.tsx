@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useMemo, useState, useSyncExternalStore } from "react"
-import { ArrowUpRight, Flag, Users } from "lucide-react"
+import { ArrowRight, Flag, Users } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
@@ -13,8 +13,14 @@ import {
   CardListHeader,
 } from "@/components/ui/card-list"
 import { buttonVariants } from "@/components/ui/button"
-import { MetricCard } from "@/components/ui/metric-card"
+import {
+  AttentionColumn,
+  AttentionRow,
+  BrandSurface,
+  BrandSurfaceHeading,
+} from "@/components/ui/brand-surface"
 import { PageHeader } from "@/components/ui/page-header"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   getGestaoObjectivesServerSnapshot,
@@ -22,7 +28,6 @@ import {
   OBJECTIVE_STATUS_LABEL,
   subscribeGestaoObjectivesStore,
 } from "@/lib/gestao/objectives/store"
-import { cn } from "@/lib/utils"
 import {
   getGestaoPdiServerSnapshot,
   getGestaoPdiSnapshot,
@@ -73,7 +78,7 @@ export default function GestaoHomePage() {
     () =>
       pdiData.promotionRequests.filter(
         (request) => request.managerId === session?.userId && request.status === "pending"
-      ).length,
+      ),
     [pdiData.promotionRequests, session?.userId]
   )
 
@@ -95,150 +100,193 @@ export default function GestaoHomePage() {
       if (!objective.deadline) return false
       const diff = new Date(objective.deadline).getTime() - nowTs
       return diff >= 0 && diff <= 1000 * 60 * 60 * 24 * 30
-    }).length
+    })
   }, [nowTs, teamObjectives])
+
+  const activeGoals = teamObjectives.filter((objective) => objective.status === "in_progress").length
+  const attentionParts = [
+    pendingRequests.length
+      ? `${pendingRequests.length} ${pendingRequests.length === 1 ? "pendência de PDI" : "pendências de PDI"}`
+      : null,
+    dueSoonGoals.length
+      ? `${dueSoonGoals.length} ${dueSoonGoals.length === 1 ? "meta vence" : "metas vencem"} em 30 dias`
+      : null,
+  ].filter((part): part is string => Boolean(part))
 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Visão geral"
-        description={
-          pendingRequests > 0
-            ? `${pendingRequests} ${
-                pendingRequests === 1 ? "pendência de PDI" : "pendências de PDI"
-              }`
-            : undefined
-        }
+        description="O que pede sua atenção, como o time está e o que vem pela frente."
       />
 
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-        <MetricCard
-          label="Pessoas do time"
-          value={directReports.length}
-          helper="Sob sua gestão direta"
+      {/* Mesma superfície de marca do Início e da Visão geral do admin: a casa
+          de cada papel abre com o que pede atenção. Antes eram quatro números
+          soltos, e a única pista de pendência era a linha cinza do cabeçalho. */}
+      <BrandSurface labelledBy="gestao-attention-title">
+        <BrandSurfaceHeading
+          id="gestao-attention-title"
+          label="Pede sua atenção"
+          parts={attentionParts}
+          empty="Time em dia"
         />
-        <MetricCard
-          label="PDIs ativos"
-          value={activePdis}
-          helper="Com trilha em andamento"
-        />
-        <MetricCard
-          label="Metas ativas"
-          value={teamObjectives.filter((objective) => objective.status === "in_progress").length}
-          helper="Em execução agora"
-        />
-        <MetricCard
-          label="Prazo próximo"
-          value={dueSoonGoals}
-          helper="Vencem em até 30 dias"
-        />
-      </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.05fr_0.95fr]">
-        <CardList className="border-border/60">
+        <div className="grid gap-6 p-6 lg:grid-cols-2 lg:gap-8 lg:p-8">
+          <AttentionColumn
+            title="Pendências de PDI"
+            count={pendingRequests.length}
+            footerHref="/gestao/pdi"
+            footerLabel="Abrir PDIs"
+            emptyText="Nenhuma subida aguardando você."
+          >
+            {pendingRequests.slice(0, 4).map((request) => {
+              const assignment = pdiData.assignments.find((entry) => entry.id === request.assignmentId)
+              const framework = assignment
+                ? pdiData.frameworks.find((entry) => entry.id === assignment.frameworkId)
+                : undefined
+              const user = directReports.find((report) => report.id === request.userId)
+              const fromName =
+                framework?.ladder.find((level) => level.id === request.fromLevelId)?.name ?? "—"
+              const toName =
+                framework?.ladder.find((level) => level.id === request.toLevelId)?.name ?? "—"
+
+              return (
+                <AttentionRow
+                  key={request.id}
+                  href={`/gestao/liderados/${request.userId}`}
+                  name={user?.name ?? "Colaborador"}
+                  avatarUrl={user?.avatarUrl}
+                  meta={`${fromName} → ${toName}`}
+                  trailing={
+                    <Badge variant={request.readiness >= 80 ? "default" : "outline"}>
+                      {request.readiness}% pronto
+                    </Badge>
+                  }
+                />
+              )
+            })}
+          </AttentionColumn>
+
+          <AttentionColumn
+            title="Vencem em 30 dias"
+            count={dueSoonGoals.length}
+            footerHref="/gestao/objetivos"
+            footerLabel="Abrir metas do time"
+            emptyText="Nenhuma meta perto do prazo."
+          >
+            {dueSoonGoals.slice(0, 4).map((objective) => {
+              const user = directReports.find((report) => report.id === objective.userId)
+              return (
+                <AttentionRow
+                  key={objective.id}
+                  href={`/gestao/liderados/${objective.userId}`}
+                  name={user?.name ?? "Colaborador"}
+                  avatarUrl={user?.avatarUrl}
+                  meta={`${objective.title} · ${formatDeadline(objective.deadline)}`}
+                />
+              )
+            })}
+          </AttentionColumn>
+        </div>
+      </BrandSurface>
+
+      <StatStrip aria-label="Números do time">
+        <Stat href="/gestao/liderados" label="Pessoas do time" value={directReports.length} helper="Sob sua gestão direta" />
+        <Stat href="/gestao/pdi" label="PDIs ativos" value={activePdis} helper="Com trilha em andamento" />
+        <Stat href="/gestao/objetivos" label="Metas ativas" value={activeGoals} helper="Em execução agora" />
+        <Stat href="/gestao/objetivos" label="Prazo próximo" value={dueSoonGoals.length} helper="Vencem em até 30 dias" />
+      </StatStrip>
+
+      {/* Colunas de jornal, como no Início e no Admin: as duas listas têm
+          altura que depende do time, e em grade sobrava buraco. */}
+      <div className="columns-1 gap-4 *:mb-4 *:break-inside-avoid xl:columns-2 -mb-4">
+        <CardList>
           <CardListHeader
             title="Meu time"
             icon={<Users />}
+            action={
+              <Link href="/gestao/liderados" className={buttonVariants({ variant: "outline", size: "sm" })}>
+                Ver time completo
+                <ArrowRight data-icon="inline-end" />
+              </Link>
+            }
           />
-          <CardListBody className="space-y-2 p-4">
+          <CardListBody className="divide-y divide-border/60 px-2 pb-2">
             {directReports.length ? (
-              directReports.slice(0, 5).map((user) => (
-                <div
+              directReports.slice(0, 6).map((user) => (
+                <Link
                   key={user.id}
-                  className="flex flex-col gap-2 rounded-lg border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
+                  href={`/gestao/liderados/${user.id}`}
+                  className="flex items-center justify-between gap-3 rounded-lg px-4 py-3.5 outline-none transition-colors hover:bg-muted/40 focus-visible:ring-3 focus-visible:ring-ring/30"
                 >
-                  <div className="flex min-w-0 items-start gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
                     <PersonAvatar name={user.name} imageUrl={user.avatarUrl} />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium">{user.name}</p>
-                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                      <p className="truncate text-sm font-medium">{user.name}</p>
+                      <p className="truncate text-xs text-muted-foreground">{user.email}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="outline">
-                      {user.role === "gestor"
-                        ? "Gestor"
-                        : user.role === "admin"
-                          ? "Admin"
-                          : "Colaborador"}
-                    </Badge>
-                    <Link
-                      href={`/gestao/liderados/${user.id}`}
-                      className={buttonVariants({ variant: "outline", size: "sm" })}
-                    >
-                      Abrir ficha
-                    </Link>
-                  </div>
-                </div>
+                  <Badge variant="outline">
+                    {user.role === "gestor" ? "Gestor" : user.role === "admin" ? "Admin" : "Colaborador"}
+                  </Badge>
+                </Link>
               ))
             ) : (
-              <p className="px-1 py-10 text-center text-sm text-muted-foreground">
+              <p className="px-4 py-10 text-center text-sm text-muted-foreground">
                 Nenhuma pessoa no seu time ainda.
               </p>
             )}
-            <div className="flex flex-wrap gap-2 pt-2">
-              <Link href="/gestao/liderados" className={buttonVariants({ variant: "outline", size: "sm" })}>
-                Ver time completo
-              </Link>
-            </div>
           </CardListBody>
         </CardList>
 
-        <CardList className="border-border/60">
+        <CardList>
           <CardListHeader
             title="Metas do time"
             icon={<Flag />}
+            action={
+              <Link href="/gestao/objetivos" className={buttonVariants({ variant: "outline", size: "sm" })}>
+                Abrir metas
+                <ArrowRight data-icon="inline-end" />
+              </Link>
+            }
           />
-          <CardListBody className="space-y-2 p-4">
+          <CardListBody className="divide-y divide-border/60 px-2 pb-2">
             {teamObjectives.length ? (
-              teamObjectives.slice(0, 5).map((objective) => {
+              teamObjectives.slice(0, 6).map((objective) => {
                 const user = directReports.find((report) => report.id === objective.userId)
                 return (
-                  <div
-                    key={objective.id}
-                    className="flex flex-col gap-2 rounded-lg border border-border/60 px-4 py-3"
-                  >
+                  <div key={objective.id} className="flex flex-col gap-2 px-4 py-3.5">
                     <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm font-medium">{objective.title}</p>
-                      <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]}>{OBJECTIVE_STATUS_LABEL[objective.status]}</StatusBadge>
+                      <StatusBadge tone={OBJECTIVE_STATUS_TONE[objective.status]}>
+                        {OBJECTIVE_STATUS_LABEL[objective.status]}
+                      </StatusBadge>
                     </div>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <PersonAvatar
-                        name={user?.name ?? "Colaborador"}
-                        imageUrl={user?.avatarUrl}
-                        size="sm"
-                      />
+                      <PersonAvatar name={user?.name ?? "Colaborador"} imageUrl={user?.avatarUrl} size="sm" />
                       <p>
-                        {user?.name ?? "Colaborador"}
-                        {objective.deadline ? ` · prazo ${objective.deadline}` : " · sem prazo definido"}
+                        {user?.name ?? "Colaborador"} · {formatDeadline(objective.deadline)}
                       </p>
                     </div>
                   </div>
                 )
               })
             ) : (
-              <p className="px-1 py-10 text-center text-sm text-muted-foreground">
+              <p className="px-4 py-10 text-center text-sm text-muted-foreground">
                 Nenhuma meta cadastrada para o time ainda.
               </p>
             )}
-            <div className="flex flex-wrap gap-2 pt-2">
-              <Link href="/gestao/objetivos" className={buttonVariants({ variant: "outline", size: "sm" })}>
-                Abrir metas do time
-              </Link>
-              <Link href="/gestao/pdi" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-                Abrir PDIs
-              </Link>
-              <Link
-                href="/dashboard"
-                className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "gap-1")}
-              >
-                Área profissional
-                <ArrowUpRight className="size-3.5" />
-              </Link>
-            </div>
           </CardListBody>
         </CardList>
       </div>
     </div>
   )
+}
+
+/** "2026-07-19" vira "prazo 19 de jul."; sem prazo, diz isso. */
+function formatDeadline(deadline: string | null | undefined) {
+  if (!deadline) return "sem prazo definido"
+  const date = new Date(`${deadline.slice(0, 10)}T00:00:00`)
+  if (Number.isNaN(date.getTime())) return `prazo ${deadline}`
+  return `prazo ${date.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}`
 }

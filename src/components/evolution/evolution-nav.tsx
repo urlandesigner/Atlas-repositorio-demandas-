@@ -76,7 +76,7 @@ export function EvolutionNav({ className }: { className?: string }) {
               <span
                 className={cn(
                   "text-xs font-normal",
-                  active ? "text-brand-muted-foreground/70" : "text-muted-foreground/70"
+                  active ? "text-brand-muted-foreground" : "text-muted-foreground"
                 )}
               >
                 {item.description}

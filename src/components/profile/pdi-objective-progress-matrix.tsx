@@ -60,7 +60,7 @@ export function PdiObjectiveProgressMatrix({
         </div>
         <Link
           href="/professional/objectives"
-          className="inline-flex items-center gap-1 self-start text-xs font-medium text-brand-muted-foreground underline-offset-2 hover:underline"
+          className="inline-flex items-center gap-1 self-start text-xs font-medium text-brand-muted-foreground link-draw"
         >
           Objetivos
           <ArrowUpRight className="size-3.5" />

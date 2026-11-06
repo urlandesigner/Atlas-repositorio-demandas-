@@ -217,7 +217,7 @@ function DetailBody({
 
         {competencyMatches.length > 0 && (
           <div className="flex flex-wrap items-center gap-1.5">
-            <span className="text-3xs text-muted-foreground/60 shrink-0">Contribui para:</span>
+            <span className="text-3xs text-muted-foreground shrink-0">Contribui para:</span>
             {competencyMatches.map((c) => (
               <span
                 key={c.id}
@@ -235,21 +235,21 @@ function DetailBody({
         {editing ? (
           <div className="flex flex-col gap-5">
             <div className="flex flex-col gap-1.5">
-              <Overline size="sm" className="text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground">
                 Titulo
               </Overline>
               <Input value={draftTitle} onChange={(e) => setDraftTitle(e.target.value)} />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Overline size="sm" className="text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground">
                 Projeto
               </Overline>
               <Input value={draftProjectName} onChange={(e) => setDraftProjectName(e.target.value)} placeholder="Nome do projeto" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Overline size="sm" className="text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground">
                 Data
               </Overline>
               <Input type="date" value={draftDate} onChange={(e) => setDraftDate(e.target.value)} className="w-fit" />
@@ -257,28 +257,28 @@ function DetailBody({
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Overline size="sm" className="text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground">
                 Contexto
               </Overline>
               <Textarea value={draftContext} onChange={(e) => setDraftContext(e.target.value)} className="min-h-[110px] resize-none" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Overline size="sm" className="text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground">
                 Solucao / contribuicao
               </Overline>
               <Textarea value={draftContribution} onChange={(e) => setDraftContribution(e.target.value)} className="min-h-[110px] resize-none" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Overline size="sm" className="text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground">
                 Impacto
               </Overline>
               <Textarea value={draftImpact} onChange={(e) => setDraftImpact(e.target.value)} className="min-h-[110px] resize-none" />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <Overline size="sm" className="text-muted-foreground/60">
+              <Overline size="sm" className="text-muted-foreground">
                 Destaque
               </Overline>
               <Input
@@ -300,21 +300,21 @@ function DetailBody({
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,260px)]">
               <div className="flex flex-col gap-5">
                 <div className="flex flex-col gap-2">
-                  <Overline size="sm" className="text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground">
                     Tipo de atuacao
                   </Overline>
                   <AtuacaoPicker value={draftAtuacao} onChange={setDraftAtuacao} />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                  <Overline size="sm" className="text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground">
                     Area
                   </Overline>
                   <AreaPicker value={draftArea} onChange={setDraftArea} />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <Overline size="sm" className="text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground">
                     Tags
                   </Overline>
                   <Input
@@ -341,7 +341,7 @@ function DetailBody({
               if (!value) return null
               return (
                 <div key={key} className="flex flex-col gap-1">
-                  <Overline size="sm" className="text-muted-foreground/60">
+                  <Overline size="sm" className="text-muted-foreground">
                     {FIELD_LABELS[key]}
                   </Overline>
                   <p className="text-sm leading-relaxed text-foreground/90">

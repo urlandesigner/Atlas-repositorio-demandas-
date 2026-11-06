@@ -71,7 +71,9 @@ export function SoftSkillsTemplatePanel({ readOnlyHint }: { readOnlyHint?: strin
   if (!areaId) return null
 
   return (
-    <Card>
+    // Largura de formulário: são seis nomes curtos. Em largura total a lista
+    // esticava os campos por 1.100px e sobrava um vão à direita do card.
+    <Card className="max-w-3xl">
       <CardHeader className="flex flex-row items-center justify-between gap-3">
         <div>
           <CardTitle className="text-base">Modelo de competências</CardTitle>

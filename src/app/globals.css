@@ -18,8 +18,8 @@
      pontos distantes concordarem sem ninguém conferir.
      Sem `--line-height` de propósito: as chamadas antigas só fixavam o
      tamanho e herdavam a entrelinha. Declarar uma aqui mudaria layout. */
-  --text-3xs: 0.625rem;
-  --text-2xs: 0.6875rem;
+  --text-3xs: 0.6875rem; /* 11px — era 10px; abaixo disso o rótulo em caixa alta deixa de ser lido */
+  --text-2xs: 0.75rem; /* 12px — era 11px */
   --text-xs: 0.8125rem;
   --text-xs--line-height: 1.125rem;
   --text-md: 0.9375rem;
@@ -193,7 +193,10 @@
   --sidebar-foreground: #E7E9ED;
   --sidebar-primary: #7B8CFF;
   --sidebar-primary-foreground: #0B0C0E;
-  --sidebar-accent: #1A1F25;
+  /* Igual ao brand-muted, como no tema claro, onde os dois já coincidem. O
+     valor anterior era quase o mesmo do fundo da barra, e o item ativo não se
+     distinguia dela. */
+  --sidebar-accent: #1B1F3A;
   --sidebar-accent-foreground: #7B8CFF;
   --sidebar-border: #1F242A;
   --sidebar-ring: #7B8CFF;
@@ -223,6 +226,11 @@
   --spacing: 0.25rem;
   --letter-spacing: 0em;
   --tracking-normal: 0em;
+  /* Curva única de resposta ao ponteiro: sai rápido e assenta devagar, para o
+     hover parecer imediato sem dar tranco. Fica no :root, e não no
+     `@theme inline`, porque lá o valor é embutido nos utilitários e a variável
+     não chega ao CSS, e `hover-lift` e `link-draw` a leem por var(). */
+  --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
 }
 
 .light {
@@ -396,10 +404,58 @@
   /* Rótulo de instrumento: mono, caixa alta, muito espaçado. */
   .label-mono {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     line-height: 1.2;
     font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
+  }
+}
+
+/* Camada de resposta ao ponteiro.
+   Antes havia 12 cards com elevação no hover escritos à mão, em três tempos
+   (150ms, 200ms e nenhum: alguns pulavam de uma vez) e nenhum respeitava
+   movimento reduzido. Estes dois utilitários são o padrão único.
+   `@utility`, não `@layer utilities`: no Tailwind 4 é assim que uma classe
+   própria vira utilitário de verdade e combina com variantes. */
+
+/* Card ou linha clicável: sobe 2px. Só em ponteiro de verdade (no toque o
+   hover "gruda" depois do toque) e parado com movimento reduzido. */
+@utility hover-lift {
+  transition-property: translate, background-color, border-color, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: var(--ease-snappy);
+
+  @media (hover: hover) {
+    &:hover {
+      translate: 0 -2px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0ms;
+
+    &:hover {
+      translate: none;
+    }
+  }
+}
+
+/* Link de texto: o sublinhado se desenha da esquerda para a direita. */
+@utility link-draw {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 220ms var(--ease-snappy);
+
+  &:hover,
+  &:focus-visible {
+    background-size: 100% 1px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0ms;
   }
 }

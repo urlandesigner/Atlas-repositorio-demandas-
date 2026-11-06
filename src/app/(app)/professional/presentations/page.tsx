@@ -177,7 +177,7 @@ function PresentationCard({
 
   return (
     <Card
-      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover"
+      className="h-full cursor-pointer hover-lift hover:border-foreground/12 hover:shadow-card-hover"
       onClick={onClick}
     >
       <CardHeader className="pb-2">
@@ -218,7 +218,7 @@ function PresentationCard({
         ) : null}
 
         {!hasAnyDetail ? (
-          <p className="text-xs text-muted-foreground/60">Sem detalhes adicionais</p>
+          <p className="text-xs text-muted-foreground">Sem detalhes adicionais</p>
         ) : null}
       </CardContent>
     </Card>
@@ -310,7 +310,7 @@ function PresentationDrawer({
                       href={item.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-sm text-accent-ink hover:underline"
+                      className="inline-flex items-center gap-2 text-sm text-accent-ink link-draw"
                     >
                       <ExternalLink className="size-4" />
                       Abrir material

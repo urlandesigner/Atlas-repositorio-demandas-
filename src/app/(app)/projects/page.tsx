@@ -79,7 +79,7 @@ function ProjectCard({
   onRecord: () => void
 }) {
   return (
-    <Card className="h-full hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
+    <Card className="h-full hover-lift hover:border-foreground/12 hover:shadow-card-hover">
       <Link
         href={createProjectPath(WORKSPACE, project.id)}
         className="flex flex-1 cursor-pointer flex-col gap-4"
@@ -95,16 +95,16 @@ function ProjectCard({
 
         <CardContent className="grid gap-3 pt-0">
           <p
-            className={`truncate text-xs ${
-              project.description?.trim() ? "text-muted-foreground" : "text-muted-foreground/60"
+            className={`truncate text-xs text-muted-foreground ${
+              project.description?.trim() ? "" : "italic"
             }`}
           >
             {project.description?.trim() || "Sem descrição"}
           </p>
 
           <p
-            className={`truncate text-xs ${
-              project.started_at || project.ended_at ? "text-muted-foreground" : "text-muted-foreground/60"
+            className={`truncate text-xs text-muted-foreground ${
+              project.started_at || project.ended_at ? "" : "italic"
             }`}
           >
             {formatProjectPeriod(project)}

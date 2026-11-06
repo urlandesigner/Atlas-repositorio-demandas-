@@ -18,7 +18,7 @@ export function CareerGoalCard({
       <CardContent className="flex flex-col gap-5">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <p className="text-xs text-muted-foreground/70">Objetivo de carreira</p>
+            <p className="text-xs text-muted-foreground">Objetivo de carreira</p>
             <p className="mt-0.5 text-base font-medium">
               {goal.targetRole}
               {goal.targetYear ? (
@@ -33,7 +33,7 @@ export function CareerGoalCard({
             <div className="text-xl font-semibold text-brand-muted-foreground tabular-nums">
               {progress}%
             </div>
-            <p className="text-2xs text-muted-foreground/70">avanço no PDI</p>
+            <p className="text-2xs text-muted-foreground">avanço no PDI</p>
           </div>
         </div>
 

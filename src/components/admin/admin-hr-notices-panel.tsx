@@ -22,7 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { Field } from "@/components/ui/field"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import {
   Dialog,
   DialogContent,
@@ -119,11 +119,11 @@ export function AdminHrNoticesPanel() {
           </PageHeaderActions>
         </PageHeader>
 
-        <div className="grid gap-3 md:grid-cols-3">
-          <MetricCard label="Avisos ativos" value={areaNotices.length} helper="Comunicados visíveis na área" />
-          <MetricCard label="Em destaque" value={pinnedCount} helper="Fixados no topo da leitura" />
-          <MetricCard label="Segmentados" value={roleScopedCount} helper="Direcionados por público" />
-        </div>
+        <StatStrip>
+          <Stat label="Avisos ativos" value={areaNotices.length} helper="Comunicados visíveis na área" />
+          <Stat label="Em destaque" value={pinnedCount} helper="Fixados no topo da leitura" />
+          <Stat label="Segmentados" value={roleScopedCount} helper="Direcionados por público" />
+        </StatStrip>
 
         <CardList>
           <CardListHeader

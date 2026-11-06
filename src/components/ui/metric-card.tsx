@@ -79,7 +79,7 @@ export function MetricCard({
 
   const rootClassName = cn(
     SUPERFICIE[variant],
-    href && cn("block transition-colors", HOVER[variant]),
+    href && cn("block hover-lift", HOVER[variant]),
     className
   )
 

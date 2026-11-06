@@ -57,28 +57,52 @@ export function SoftSkillsEditor({
         </div>
 
         <div className="space-y-4">
-          <div className="space-y-3">
-            <span className="text-sm font-medium">Notas (1–5)</span>
-            {value.pillars.map((pillar) => (
-              <div key={pillar.id} className="rounded-lg border px-3 py-2">
-                <div className="mb-2 text-sm font-medium">{pillar.label}</div>
-                <div className="flex items-center gap-3">
-                  <Slider
-                    min={1}
-                    max={5}
-                    step={1}
-                    value={value.scores[pillar.id] ?? 3}
-                    onValueChange={(next) =>
-                      updateScore(pillar.id, Array.isArray(next) ? next[0] : next)
-                    }
-                    aria-label={`Nota de ${pillar.label}`}
-                  />
-                  <span className="w-6 text-right text-sm font-medium tabular-nums">
-                    {value.scores[pillar.id] ?? 3}
-                  </span>
-                </div>
-              </div>
-            ))}
+          {/* Mesmo desenho da lista de pilares logo acima: uma moldura só,
+              linhas numeradas e divisórias. Antes cada nota era uma caixa com
+              borda dentro do card, seis vezes. No computador cada nota cabe numa
+              linha (número, nome, barra, valor); no celular a barra desce para
+              uma segunda linha, abaixo do nome. */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-sm font-medium">Notas</span>
+              <span className="label-mono text-muted-foreground">de 1 a 5</span>
+            </div>
+            <ol className="divide-y divide-border/60 overflow-hidden rounded-lg border border-border/60">
+              {value.pillars.map((pillar, index) => {
+                const score = value.scores[pillar.id] ?? 3
+                return (
+                  <li
+                    key={pillar.id}
+                    className="grid grid-cols-[1.5rem_minmax(0,1fr)_2rem] items-center gap-x-3 gap-y-3 px-4 py-3.5 sm:grid-cols-[1.5rem_minmax(0,10rem)_minmax(0,1fr)_2rem]"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="label-mono text-muted-foreground tabular-nums"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="truncate text-sm font-medium" title={pillar.label}>
+                      {pillar.label}
+                    </span>
+                    <div className="order-last col-span-2 col-start-2 sm:order-none sm:col-span-1 sm:col-start-auto">
+                      <Slider
+                        min={1}
+                        max={5}
+                        step={1}
+                        value={score}
+                        onValueChange={(next) =>
+                          updateScore(pillar.id, Array.isArray(next) ? next[0] : next)
+                        }
+                        aria-label={`Nota de ${pillar.label}`}
+                      />
+                    </div>
+                    <span className="text-right font-mono text-sm font-medium text-foreground tabular-nums">
+                      {score}
+                    </span>
+                  </li>
+                )
+              })}
+            </ol>
           </div>
 
           <Button

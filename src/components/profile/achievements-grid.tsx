@@ -84,7 +84,7 @@ export function AchievementsGrid({ achievements }: { achievements: Achievement[]
   return (
     <section>
       <div className="mb-3 flex items-baseline justify-between gap-3">
-        <Overline render={<h2 />} className="text-muted-foreground/70">
+        <Overline render={<h2 />} className="text-muted-foreground">
           Conquistas
         </Overline>
         <span className="text-xs text-muted-foreground tabular-nums">

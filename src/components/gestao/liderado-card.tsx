@@ -67,7 +67,7 @@ export function LideradoCard({
         <div className="flex flex-wrap gap-2">
           <Link
             href={`/gestao/liderados/${user.id}`}
-            className={cn(buttonVariants({ variant: "default", size: "sm" }), "gap-1")}
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-1")}
           >
             Abrir ficha
             <ArrowUpRight className="size-3.5" />

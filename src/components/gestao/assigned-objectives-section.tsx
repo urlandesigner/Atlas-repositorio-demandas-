@@ -72,7 +72,7 @@ export function AssignedObjectivesSection({ userId }: { userId: string }) {
         {assigned.map((objective) => (
           <Card
             key={objective.id}
-            className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover"
+            className="h-full cursor-pointer hover-lift hover:border-foreground/12 hover:shadow-card-hover"
             onClick={() => setSelected(objective)}
           >
             <CardHeader className="pb-3">

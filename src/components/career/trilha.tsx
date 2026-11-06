@@ -27,6 +27,52 @@ const NODE_SIZE = {
   lg: "size-8",
 } as const;
 
+function TrilhaDot({
+  state,
+  variant,
+  size,
+}: {
+  state: LevelState;
+  variant: TrilhaVariant;
+  size: "sm" | "lg";
+}) {
+  const isMini = variant === "mini";
+  const nodeSize = isMini
+    ? "size-2"
+    : variant === "hero"
+      ? "size-7"
+      : NODE_SIZE[size];
+
+  return (
+    <div
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-full",
+        nodeSize,
+        state === "done" &&
+          (isMini ? "bg-gauge-on" : "bg-primary text-primary-foreground"),
+        state === "current" &&
+          cn(
+            isMini ? "bg-gauge-on" : "bg-primary text-primary-foreground",
+            "ring-2 ring-primary/35 ring-offset-2 ring-offset-card motion-safe:animate-pulse",
+          ),
+        state === "future" && "border border-hairline-strong bg-muted",
+      )}
+    >
+      {variant !== "mini" && state === "done" ? (
+        <Check className={size === "lg" ? "size-4" : "size-3.5"} />
+      ) : null}
+      {variant !== "mini" && state === "current" ? (
+        <span
+          className={cn(
+            "rounded-full bg-primary-foreground",
+            size === "lg" ? "size-2.5" : "size-2",
+          )}
+        />
+      ) : null}
+    </div>
+  );
+}
+
 function TrilhaNode({
   level,
   state,
@@ -43,11 +89,6 @@ function TrilhaNode({
   isNext: boolean;
 }) {
   const isMini = variant === "mini";
-  const nodeSize = isMini
-    ? "size-2"
-    : variant === "hero"
-      ? "size-7"
-      : NODE_SIZE[size];
 
   return (
     <div
@@ -59,32 +100,7 @@ function TrilhaNode({
         isMini ? "shrink-0" : "min-w-0",
       )}
     >
-      <div
-        className={cn(
-          "flex items-center justify-center rounded-full",
-          nodeSize,
-          state === "done" &&
-            (isMini ? "bg-gauge-on" : "bg-primary text-primary-foreground"),
-          state === "current" &&
-            cn(
-              isMini ? "bg-gauge-on" : "bg-primary text-primary-foreground",
-              "ring-2 ring-primary/35 ring-offset-2 ring-offset-card motion-safe:animate-pulse",
-            ),
-          state === "future" && "border border-hairline-strong bg-muted",
-        )}
-      >
-        {variant !== "mini" && state === "done" ? (
-          <Check className={size === "lg" ? "size-4" : "size-3.5"} />
-        ) : null}
-        {variant !== "mini" && state === "current" ? (
-          <span
-            className={cn(
-              "rounded-full bg-primary-foreground",
-              size === "lg" ? "size-2.5" : "size-2",
-            )}
-          />
-        ) : null}
-      </div>
+      <TrilhaDot state={state} variant={variant} size={size} />
       {variant !== "mini" ? (
         <span
           title={level.name}
@@ -137,8 +153,17 @@ export function Trilha({
     ? ladder[levelIndex(ladder, targetLevelId)]
     : undefined;
 
+  const isMini = variant === "mini";
+
+  // Abaixo de 480px a fileira não cabe. Os degraus são `flex-1` (base 0), então
+  // dividem a largura em partes iguais, e o degrau de "ESPECIALISTA" (~98px em
+  // 11px, mais 12px de conector) precisa de ~110px: 4 × 110 + o último ≈ 473. Antes disso os rótulos
+  // truncavam para "SENIOR…" três vezes e não dava para saber qual nível era
+  // qual. Estreito, a trilha empilha e cada nível mostra o nome inteiro.
+  // `display: none` tira a versão escondida da árvore de acessibilidade, então
+  // o leitor de tela não ouve os níveis duas vezes.
   const track = (
-    <div className="flex items-start">
+    <div className={cn("items-start", isMini ? "flex" : "hidden @min-[480px]:flex")}>
       {ladder.map((level, index) => (
         // `min-w-0` no wrapper do segmento, não só no nó: sem ele o mínimo do
         // item flex é o min-content do conteúdo — a palavra "ESPECIALISTA" —, o
@@ -173,6 +198,54 @@ export function Trilha({
         </div>
       ))}
     </div>
+  );
+
+  const stackedTrack = isMini ? null : (
+    <ol className="flex flex-col @min-[480px]:hidden">
+      {ladder.map((level, index) => {
+        const state = stateFor(index, currentIndex);
+        const isNext = index === currentIndex + 1;
+        return (
+          <li
+            key={level.id}
+            aria-current={state === "current" ? "step" : undefined}
+            className="flex flex-col"
+          >
+            <div className="flex items-center gap-3">
+              <TrilhaDot state={state} variant="detail" size="sm" />
+              <span
+                className={cn(
+                  "text-sm",
+                  state === "current"
+                    ? "font-semibold text-foreground"
+                    : "text-muted-foreground",
+                )}
+              >
+                {level.name}
+              </span>
+              {state === "current" || isNext ? (
+                <span className="text-2xs font-medium text-accent-ink">
+                  {state === "current" ? "você está aqui" : "próximo nível"}
+                </span>
+              ) : (
+                <span className="sr-only">
+                  , {stateDescription(state, isNext)}
+                </span>
+              )}
+            </div>
+            {index < ladder.length - 1 ? (
+              <span
+                aria-hidden="true"
+                className={cn(
+                  "my-1 ml-[11px] h-3 w-0.5 rounded-full",
+                  index < currentIndex ? "bg-primary" : "bg-border",
+                )}
+              />
+            ) : null}
+          </li>
+        );
+      })}
+    </ol>
   );
 
   if (variant === "mini") {
@@ -216,12 +289,15 @@ export function Trilha({
                 </span>
               ) : null}
             </p>
-            <div className="mt-4">{track}</div>
+            <div className="mt-4">
+              {track}
+              {stackedTrack}
+            </div>
           </div>
           {typeof readiness === "number" ? (
             <div className="flex shrink-0 flex-col items-start gap-2 @xl:items-end">
               <span className="label-mono text-muted-foreground">
-                Avanço
+                Avanço no PDI
               </span>
               <p className="figure text-foreground">
                 {Math.round(readiness)}
@@ -239,5 +315,10 @@ export function Trilha({
     );
   }
 
-  return <div className={className}>{track}</div>;
+  return (
+    <div className={cn("@container", className)}>
+      {track}
+      {stackedTrack}
+    </div>
+  );
 }

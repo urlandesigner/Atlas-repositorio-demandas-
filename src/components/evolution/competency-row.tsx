@@ -47,7 +47,7 @@ export function CompetencyRow({
           </div>
           <p className="mt-1 text-xs text-muted-foreground">{view.description}</p>
           {themeLabels ? (
-            <p className="mt-1 text-2xs text-muted-foreground/80">
+            <p className="mt-1 text-2xs text-muted-foreground">
               Contribui para a matriz PDI: {themeLabels}
             </p>
           ) : null}

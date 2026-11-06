@@ -385,7 +385,7 @@ function FeaturedStoryCard({
   onOpen: (record: RecordEntry) => void
 }) {
   return (
-    <article className="flex h-full flex-col rounded-lg border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
+    <article className="flex h-full flex-col rounded-lg border border-border/60 bg-card p-4 shadow-card hover-lift hover:border-foreground/12 hover:shadow-card-hover">
       <div className="flex items-start justify-between gap-3">
         <Overline size="sm" className="min-w-0">
           {item.projectName || item.areaLabel}
@@ -446,7 +446,7 @@ function StoryCard({
         <ImpactDots level={item.impactLevel} className="mt-2.5" />
       </div>
 
-      <article className="rounded-lg border border-border/60 bg-card p-4 shadow-card transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover">
+      <article className="rounded-lg border border-border/60 bg-card p-4 shadow-card hover-lift hover:border-foreground/12 hover:shadow-card-hover">
         <div className="flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 space-y-1">
@@ -537,12 +537,16 @@ export default function TimelinePage() {
         title="Registros"
         description="Histórico das suas entregas, decisões e impactos."
       >
-        <PageHeaderActions>
-          <Button size="sm" onClick={() => openCapture()}>
-            <SparklesIcon data-icon="inline-start" />
-            Registrar progresso
-          </Button>
-        </PageHeaderActions>
+        {/* Vazia, a tela já tem o chamado no estado vazio. Os dois juntos eram
+            dois botões principais iguais, lado a lado na mesma dobra. */}
+        {stories.length > 0 ? (
+          <PageHeaderActions>
+            <Button size="sm" onClick={() => openCapture()}>
+              <SparklesIcon data-icon="inline-start" />
+              Registrar progresso
+            </Button>
+          </PageHeaderActions>
+        ) : null}
       </PageHeader>
 
       {stories.length === 0 ? (

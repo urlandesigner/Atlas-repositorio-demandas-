@@ -1,16 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
 import { useMemo, useSyncExternalStore } from "react"
-import {
-  CheckSquare,
-  Megaphone,
-  ShieldCheck,
-  Target,
-  UserCog,
-  Users,
-} from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Badge } from "@/components/ui/badge"
@@ -20,10 +12,16 @@ import {
   CardListBody,
   CardListHeader,
 } from "@/components/ui/card-list"
-import { MetricCard } from "@/components/ui/metric-card"
 import { PageHeader } from "@/components/ui/page-header"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Progress } from "@/components/ui/progress"
+import {
+  AttentionColumn,
+  AttentionRow,
+  BrandSurface,
+  BrandSurfaceHeading,
+} from "@/components/ui/brand-surface"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import {
   getHrNoticesServerSnapshot,
   getHrNoticesSnapshot,
@@ -43,7 +41,6 @@ import {
 
 export default function AdminHomePage() {
   const { session } = useAuth()
-  const pathname = usePathname()
   const org = useSyncExternalStore(subscribeOrgStore, getOrgSnapshot, getOrgServerSnapshot)
   const pdiData = useSyncExternalStore(
     subscribeGestaoPdiStore,
@@ -144,50 +141,113 @@ export default function AdminHomePage() {
     [areaId]
   )
 
-  const adminShortcuts = useMemo(
-    () =>
-      [
-        { href: "/admin/pdis", label: "Revisar PDIs" },
-        { href: "/admin/colaboradores", label: "Colaboradores" },
-        { href: "/admin/gestores", label: "Gestores" },
-        { href: "/admin/avisos-rh", label: "Avisos RH" },
-        { href: "/admin/permissoes", label: "Permissões" },
-        { href: "/admin/auditoria", label: "Auditoria" },
-      ].filter((item) => item.href !== pathname),
-    [pathname]
-  )
+  const leadersWithReports = managersWithReports.filter((item) => item.reports > 0).length
+  const pendingCount = pendingRequests.length
+  const uncoveredCount = collaborators.length - activePdis
+  const decisionSummary = [
+    pendingCount ? `${pendingCount} ${pendingCount === 1 ? "aprovação aguardando" : "aprovações aguardando"}` : null,
+    uncoveredCount > 0
+      ? `${uncoveredCount} ${uncoveredCount === 1 ? "pessoa sem PDI" : "pessoas sem PDI"}`
+      : null,
+  ].filter((part): part is string => Boolean(part))
 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Visão geral"
-        description={
-          pendingRequests.length > 0
-            ? `${pendingRequests.length} ${
-                pendingRequests.length === 1 ? "aprovação aguardando" : "aprovações aguardando"
-              }`
-            : undefined
-        }
+        description="O que pede sua decisão, como a área está e o que os colaboradores enxergam."
       />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard variant="card" icon={UserCog} label="Gestores" value={managers.length} helper="Quem opera a área" />
-        <MetricCard variant="card" icon={Users} label="Colaboradores" value={collaborators.length} helper="Vinculados à área" />
-        <MetricCard variant="card" icon={Target} label="PDIs ativos" value={activePdis} helper={`${coverage}% da base acompanhada`} />
-        <MetricCard
-          variant="card"
-          icon={CheckSquare}
-          label="Aprovações pendentes"
-          value={pendingRequests.length}
-          helper={pendingRequests.length ? "Subidas aguardando decisão" : "Sem fila de aprovação"}
+      {/* Destaque de marca, a mesma superfície do Início do colaborador e da
+          Visão geral do gestor: o primeiro bloco é o que só o admin pode
+          destravar. Antes a fila vinha na terceira fileira, depois de cinco
+          números e de um painel de atalhos. */}
+      <BrandSurface labelledBy="admin-decision-title">
+        <BrandSurfaceHeading
+          id="admin-decision-title"
+          label="Pede sua decisão"
+          parts={decisionSummary}
+          empty="Nada pendente na área"
         />
-        <MetricCard variant="card" icon={Megaphone} label="Avisos RH" value={hrNoticesCount} helper="Publicados na home da área" />
-      </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-        <CardList className="border-border/60">
+        <div className="grid gap-6 p-6 lg:grid-cols-2 lg:gap-8 lg:p-8">
+          <AttentionColumn
+            title="Aprovações de subida"
+            count={pendingCount}
+            footerHref="/admin/pdis"
+            footerLabel="Abrir PDIs"
+            emptyText="Nenhuma aprovação pendente."
+          >
+            {pendingRequests.slice(0, 4).map((request) => {
+              const assignment = pdiData.assignments.find((entry) => entry.id === request.assignmentId)
+              const framework = assignment
+                ? pdiData.frameworks.find((entry) => entry.id === assignment.frameworkId)
+                : undefined
+              const collaborator = collaborators.find((user) => user.id === request.userId)
+              const fromName =
+                framework?.ladder.find((level) => level.id === request.fromLevelId)?.name ?? "—"
+              const toName =
+                framework?.ladder.find((level) => level.id === request.toLevelId)?.name ?? "—"
+
+              return (
+                <AttentionRow
+                  key={request.id}
+                  href="/admin/pdis"
+                  name={collaborator?.name ?? "Colaborador"}
+                  avatarUrl={collaborator?.avatarUrl}
+                  meta={`${fromName} → ${toName}`}
+                  trailing={
+                    <Badge variant={request.readiness >= 80 ? "default" : "outline"}>
+                      {request.readiness}% pronto
+                    </Badge>
+                  }
+                />
+              )
+            })}
+          </AttentionColumn>
+
+          <AttentionColumn
+            title="Sem PDI ativo"
+            count={uncoveredCount}
+            footerHref="/admin/colaboradores"
+            footerLabel="Ver colaboradores"
+            emptyText="Toda a base já está com PDI ativo."
+          >
+            {collaboratorsWithoutPdi.slice(0, 4).map((item) => (
+              <AttentionRow
+                key={item.id}
+                href="/admin/colaboradores"
+                name={item.name}
+                avatarUrl={item.avatarUrl}
+                meta={`Gestor: ${item.managerName}`}
+              />
+            ))}
+          </AttentionColumn>
+        </div>
+      </BrandSurface>
+
+      {/* Cada número leva à página dele, o que torna redundante o antigo painel
+          "Acesso rápido", que repetia o menu lateral item por item. */}
+      <StatStrip aria-label="Números da área">
+        <Stat href="/admin/colaboradores" label="Colaboradores" value={collaborators.length} helper="Vinculados à área" />
+        <Stat href="/admin/gestores" label="Gestores" value={managers.length} helper="Quem opera a área" />
+        <Stat href="/admin/pdis" label="PDIs ativos" value={activePdis} helper={`${coverage}% da base`} />
+        <Stat
+          href="/admin/pdis"
+          label="Aprovações"
+          value={pendingCount}
+          helper={pendingCount ? "Aguardando decisão" : "Fila vazia"}
+        />
+        <Stat href="/admin/avisos-rh" label="Avisos RH" value={hrNoticesCount} helper="Publicados na área" />
+      </StatStrip>
+
+      {/* Colunas de jornal, como no Início: a altura dos três painéis depende
+          do dado (um gestor ou dez), e em grade a fileira ficava com o buraco
+          do painel mais baixo. */}
+      <div className="columns-1 gap-4 *:mb-4 *:break-inside-avoid xl:columns-2 -mb-4">
+        <CardList>
           <CardListHeader title="Indicadores da área" />
-          <CardListBody className="space-y-4 p-4">
+          <CardListBody className="divide-y divide-border/60 px-6 pb-2">
             <HealthRow
               label="Cobertura de PDI"
               value={`${coverage}%`}
@@ -196,162 +256,31 @@ export default function AdminHomePage() {
             />
             <HealthRow
               label="Estrutura de liderança"
-              value={`${managersWithReports.filter((item) => item.reports > 0).length}/${managers.length || 0}`}
+              value={`${leadersWithReports}/${managers.length || 0}`}
               description="Gestores com pessoas atribuídas"
-              progress={
-                managers.length
-                  ? Math.round(
-                      (managersWithReports.filter((item) => item.reports > 0).length / managers.length) * 100
-                    )
-                  : 0
-              }
+              progress={managers.length ? Math.round((leadersWithReports / managers.length) * 100) : 0}
             />
             <HealthRow
               label="Trilhas disponíveis"
               value={`${frameworksCount}`}
-              description="Trilhas globais e da área disponíveis"
+              description="Trilhas globais e da área"
               progress={Math.min(100, frameworksCount * 20)}
             />
           </CardListBody>
         </CardList>
 
-        <CardList className="border-border/60">
-          <CardListHeader
-            title="Acesso rápido"
-            icon={<ShieldCheck />}
-          />
-          <CardListBody className="flex flex-wrap gap-2 p-4">
-            {adminShortcuts.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={buttonVariants({ variant: "outline", size: "sm" })}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </CardListBody>
-        </CardList>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <CardList className="border-border/60 xl:col-span-2">
-          <CardListHeader
-            title="Fila de decisão"
-            description="Solicitações que dependem de resposta do admin de área."
-            action={
-              <Link href="/admin/pdis" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-                Abrir PDIs
-              </Link>
-            }
-          />
-          <CardListBody className="space-y-2 p-4">
-            {pendingRequests.length ? (
-              pendingRequests.slice(0, 5).map((request) => {
-                const assignment = pdiData.assignments.find((entry) => entry.id === request.assignmentId)
-                const framework = assignment
-                  ? pdiData.frameworks.find((entry) => entry.id === assignment.frameworkId)
-                  : undefined
-                const collaborator = collaborators.find((user) => user.id === request.userId)
-                const fromName =
-                  framework?.ladder.find((level) => level.id === request.fromLevelId)?.name ?? "—"
-                const toName =
-                  framework?.ladder.find((level) => level.id === request.toLevelId)?.name ?? "—"
-
-                return (
-                  <div
-                    key={request.id}
-                    className="flex flex-col gap-2 rounded-lg border border-border/60 px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-3">
-                        <PersonAvatar
-                          name={collaborator?.name ?? "Colaborador"}
-                          imageUrl={collaborator?.avatarUrl}
-                        />
-                        <p className="text-sm font-medium">{collaborator?.name ?? "Colaborador"}</p>
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {framework?.name ?? "Trilha"} · {fromName} → {toName}
-                      </p>
-                    </div>
-                    <Badge variant={request.readiness >= 80 ? "default" : "outline"}>
-                      {request.readiness}% pronto
-                    </Badge>
-                  </div>
-                )
-              })
-            ) : (
-              <EmptyMiniState text="Nenhuma aprovação pendente no momento." />
-            )}
-          </CardListBody>
-        </CardList>
-
-        <CardList className="border-border/60">
-          <CardListHeader
-            title="Cobertura imediata"
-            description="Colaboradores que ainda não estão cobertos por um PDI ativo."
-          />
-          <CardListBody className="space-y-2 p-4">
-            {collaboratorsWithoutPdi.length ? (
-              collaboratorsWithoutPdi.map((item) => (
-                <div
-                  key={item.id}
-                  className="rounded-lg border border-border/60 px-4 py-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <PersonAvatar name={item.name} imageUrl={item.avatarUrl} />
-                    <p className="text-sm font-medium">{item.name}</p>
-                  </div>
-                  <p className="text-xs text-muted-foreground">Gestor: {item.managerName}</p>
-                </div>
-              ))
-            ) : (
-              <EmptyMiniState text="Toda a base já está com PDI ativo." />
-            )}
-          </CardListBody>
-        </CardList>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1fr_0.9fr]">
-        <CardList className="border-border/60">
-          <CardListHeader
-            title="Gestores da área"
-            action={
-              <Link href="/admin/gestores" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-                Ver gestão
-              </Link>
-            }
-          />
-          <CardListBody className="space-y-2 p-4">
-            {managersWithReports.length ? (
-              managersWithReports.map((manager) => (
-                <div
-                  key={manager.id}
-                  className="flex items-center justify-between rounded-lg border border-border/60 px-4 py-3"
-                >
-                  <div className="flex items-center gap-3">
-                    <PersonAvatar name={manager.name} imageUrl={manager.avatarUrl} />
-                    <div>
-                      <p className="text-sm font-medium">{manager.name}</p>
-                      <p className="text-xs text-muted-foreground">{manager.title}</p>
-                    </div>
-                  </div>
-                  <Badge variant="outline">{manager.reports} liderado(s)</Badge>
-                </div>
-              ))
-            ) : (
-              <EmptyMiniState text="Nenhum gestor cadastrado para esta área." />
-            )}
-          </CardListBody>
-        </CardList>
-
-        <CardList className="border-border/60">
+        <CardList>
           <CardListHeader
             title="Visibilidade da área"
-            description="O que os colaboradores podem enxergar hoje no próprio perfil."
+            description="O que os colaboradores enxergam hoje no próprio perfil."
+            action={
+              <Link href="/admin/permissoes" className={buttonVariants({ variant: "outline", size: "sm" })}>
+                Ajustar
+                <ArrowRight data-icon="inline-end" />
+              </Link>
+            }
           />
-          <CardListBody className="space-y-2 p-4">
+          <CardListBody className="divide-y divide-border/60 px-6 pb-2">
             <PermissionRow
               label="Perfil comportamental"
               enabled={permissions?.collaboratorCanViewDisc ?? false}
@@ -364,11 +293,38 @@ export default function AdminHomePage() {
               label="Orientações de liderança"
               enabled={permissions?.collaboratorCanViewHowToLead ?? false}
             />
-            <div className="pt-2">
-              <Link href="/admin/permissoes" className={buttonVariants({ variant: "outline", size: "sm" })}>
-                Ajustar permissões
+          </CardListBody>
+        </CardList>
+
+        <CardList>
+          <CardListHeader
+            title="Gestores da área"
+            action={
+              <Link href="/admin/gestores" className={buttonVariants({ variant: "outline", size: "sm" })}>
+                Ver gestão
+                <ArrowRight data-icon="inline-end" />
               </Link>
-            </div>
+            }
+          />
+          <CardListBody className="divide-y divide-border/60 px-6 pb-2">
+            {managersWithReports.length ? (
+              managersWithReports.map((manager) => (
+                <div key={manager.id} className="flex items-center justify-between gap-3 py-3.5">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <PersonAvatar name={manager.name} imageUrl={manager.avatarUrl} />
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium">{manager.name}</p>
+                      <p className="text-xs text-muted-foreground">{manager.title}</p>
+                    </div>
+                  </div>
+                  <Badge variant="outline">
+                    {manager.reports} {manager.reports === 1 ? "liderado" : "liderados"}
+                  </Badge>
+                </div>
+              ))
+            ) : (
+              <EmptyMiniState text="Nenhum gestor cadastrado para esta área." />
+            )}
           </CardListBody>
         </CardList>
       </div>
@@ -388,7 +344,7 @@ function HealthRow({
   progress: number
 }) {
   return (
-    <div className="space-y-2 rounded-lg border border-border/60 bg-background/35 px-4 py-4">
+    <div className="space-y-2 py-4">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-medium">{label}</p>
         <span className="text-sm font-semibold">{value}</span>
@@ -401,7 +357,7 @@ function HealthRow({
 
 function PermissionRow({ label, enabled }: { label: string; enabled: boolean }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-border/60 bg-background/35 px-4 py-3">
+    <div className="flex items-center justify-between gap-3 py-3.5">
       <span className="text-sm">{label}</span>
       <Badge variant={enabled ? "default" : "outline"}>{enabled ? "Ativo" : "Oculto"}</Badge>
     </div>

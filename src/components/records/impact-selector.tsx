@@ -57,7 +57,7 @@ export function ImpactSelector({
     <div className="flex flex-col gap-5">
       {/* Level */}
       <div className="flex flex-col gap-2">
-        <Overline size="sm" className="text-muted-foreground/60">Nível de Impacto</Overline>
+        <Overline size="sm" className="text-muted-foreground">Nível de Impacto</Overline>
         <FilterPillGroup aria-label="Nível de impacto">
           {([1, 2, 3, 4, 5] as ImpactLevel[]).map((l) => (
             <FilterPill
@@ -80,7 +80,7 @@ export function ImpactSelector({
 
       {/* Scope */}
       <div className="flex flex-col gap-2">
-        <Overline size="sm" className="text-muted-foreground/60">Alcance</Overline>
+        <Overline size="sm" className="text-muted-foreground">Alcance</Overline>
         <div className="grid grid-cols-2 gap-1.5">
           {SCOPES.map((s) => {
             const Icon = s.icon

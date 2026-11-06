@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { Field } from "@/components/ui/field"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Dialog,
@@ -118,11 +118,11 @@ export function AdminCollaboratorsManager() {
         </PageHeaderActions>
       </PageHeader>
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <MetricCard label="Pessoas cadastradas" value={collaborators.length} helper="Base atual da área" />
-        <MetricCard label="Gestores disponíveis" value={managers.length} helper="Responsáveis possíveis para vínculo" />
-        <MetricCard label="Sem gestor" value={withoutManager} helper="Precisam de vínculo para acompanhamento" />
-      </div>
+      <StatStrip>
+        <Stat label="Pessoas cadastradas" value={collaborators.length} helper="Base atual da área" />
+        <Stat label="Gestores disponíveis" value={managers.length} helper="Responsáveis possíveis para vínculo" />
+        <Stat label="Sem gestor" value={withoutManager} helper="Precisam de vínculo para acompanhamento" />
+      </StatStrip>
 
       {!managers.length ? (
         <Card>
@@ -169,7 +169,7 @@ export function AdminCollaboratorsManager() {
                 <div className="flex flex-wrap items-center gap-2 lg:justify-end">
                   <Link
                     href={`/gestao/liderados/${user.id}`}
-                    className={buttonVariants({ variant: "default", size: "sm" })}
+                    className={buttonVariants({ variant: "outline", size: "sm" })}
                   >
                     Abrir ficha
                     <ArrowUpRight data-icon="inline-end" />

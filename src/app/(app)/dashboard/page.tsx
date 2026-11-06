@@ -18,6 +18,7 @@ import {
 
 import { useAuth } from "@/components/auth/auth-provider"
 import { Trilha } from "@/components/career/trilha"
+import { TrilhaGauge } from "@/components/career/trilha-gauge"
 import { HrNoticesPanel } from "@/components/hr/hr-notices-panel"
 import { KudosReceivedCard } from "@/components/people/kudos-received-card"
 import { useEvolutionData } from "@/hooks/use-evolution-data"
@@ -26,7 +27,6 @@ import { PageHeaderActions } from "@/components/shell/page-header-actions"
 import { PageHeader } from "@/components/ui/page-header"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import {
   CardList,
   CardListBody,
@@ -41,8 +41,10 @@ import {
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { MetricCard } from "@/components/ui/metric-card"
 import { Overline } from "@/components/ui/overline"
+import { BrandSurface } from "@/components/ui/brand-surface"
 import { Separator } from "@/components/ui/separator"
-import { cn, formatListDate } from "@/lib/utils"
+import { StatLink } from "@/components/ui/stat-link"
+import { formatListDate } from "@/lib/utils"
 import { StatusBadge } from "@/components/ui/status-badge"
 import { OBJECTIVE_STATUS_TONE, PROJECT_STATUS_TONE } from "@/lib/status-tone"
 import {
@@ -59,6 +61,7 @@ import {
   type ProjectEntry,
   type WorkspaceTab,
 } from "@/lib/projects/store"
+import { levelIndex } from "@/lib/profile/store"
 import type { LevelDef } from "@/lib/profile/types"
 import { getRecordImpactText } from "@/lib/records/display"
 import type { RecordEntry } from "@/lib/records/types"
@@ -348,7 +351,20 @@ function WorkFlowGuide({
   )
 }
 
-function CareerProgressCard({
+/**
+ * Destaque do Início: a Trilha de carreira é o elemento-assinatura do Atlas, e
+ * aqui ela abre a página em largura total, sobre a superfície de marca.
+ *
+ * Antes ela dividia uma fileira com dois cards de número soltos e concorria com
+ * mais três painéis do mesmo peso — nada na página dizia "comece por aqui". Os
+ * dois números entraram na faixa de baixo, junto com as competências com
+ * evidência, que é o par natural do avanço no PDI: um é o nível avaliado, o
+ * outro o que já foi provado.
+ *
+ * O botão principal da página é "Registrar progresso", no cabeçalho. As ações
+ * daqui são secundárias de propósito, para não ter dois primários na tela.
+ */
+function CareerHero({
   ladder,
   currentLevelId,
   targetLevelId,
@@ -356,8 +372,11 @@ function CareerProgressCard({
   targetYear,
   readiness,
   recordCount,
+  recordsThisMonth,
+  activeObjectives,
+  doneObjectives,
   strongCount,
-  className,
+  totalCompetencies,
 }: {
   ladder: LevelDef[]
   currentLevelId: string
@@ -366,45 +385,103 @@ function CareerProgressCard({
   targetYear?: number | null
   readiness: number
   recordCount: number
+  recordsThisMonth: number
+  activeObjectives: number
+  doneObjectives: number
   strongCount: number
-  className?: string
+  totalCompetencies: number
 }) {
-  const evidenceLabel =
-    recordCount === 0
-      ? "Registre entregas para construir evidência para o próximo nível."
-      : `${recordCount} ${recordCount === 1 ? "evidência sustenta" : "evidências sustentam"} sua evolução${
-          strongCount ? ` · ${strongCount} ${strongCount === 1 ? "competência forte" : "competências fortes"}` : ""
-        }.`
+  const currentLevel = ladder.length ? ladder[levelIndex(ladder, currentLevelId)] : undefined
+  const targetLevel =
+    targetLevelId && ladder.length ? ladder[levelIndex(ladder, targetLevelId)] : undefined
+  const goalLine = targetRole
+    ? `Meta: ${targetRole}${targetYear ? ` até ${targetYear}` : ""}`
+    : "Defina um objetivo de carreira no seu perfil"
 
   return (
-    <Card className={cn("overflow-hidden", className)}>
-      <CardContent className="flex flex-col gap-5">
-        <Trilha
-          ladder={ladder}
-          currentLevelId={currentLevelId}
-          targetLevelId={targetLevelId}
-          readiness={readiness}
-          variant="hero"
-        />
-        <p className="max-w-xl text-xs leading-relaxed text-muted-foreground">
-          {evidenceLabel}
-          {targetRole ? ` Meta: ${targetRole}${targetYear ? ` até ${targetYear}` : ""}.` : ""}
-        </p>
+    <BrandSurface labelledBy="career-hero-title">
+
+      <div className="grid gap-8 p-6 lg:p-8 xl:grid-cols-[minmax(0,1fr)_auto] xl:gap-12">
+        <div className="min-w-0">
+          <span className="label-mono text-brand-muted-foreground">Trilha de carreira</span>
+          <h2
+            id="career-hero-title"
+            className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl"
+          >
+            {currentLevel?.name ?? "Seu nível atual"}
+            {targetLevel ? (
+              <span className="text-brand-muted-foreground"> → {targetLevel.name}</span>
+            ) : null}
+          </h2>
+          <p className="mt-1.5 text-sm text-muted-foreground">{goalLine}</p>
+
+          <Trilha
+            ladder={ladder}
+            currentLevelId={currentLevelId}
+            size="lg"
+            className="mt-7"
+          />
+        </div>
+
+        <div className="flex flex-row items-end justify-between gap-6 xl:flex-col xl:items-end xl:justify-start">
+          <div className="xl:text-right">
+            <span className="label-mono text-brand-muted-foreground">Avanço no PDI</span>
+            <p className="figure-lg mt-2 text-foreground">
+              {Math.round(readiness)}
+              <span className="ml-1 text-2xl text-muted-foreground">%</span>
+            </p>
+            <p className="mt-1.5 text-xs text-muted-foreground">Pelo nível avaliado</p>
+          </div>
+          <TrilhaGauge value={readiness} className="h-12 w-40" hideFromScreenReader />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-6 border-t border-brand/15 px-6 py-5 lg:px-8 xl:flex-row xl:items-center xl:justify-between">
+        <div className="grid grid-cols-1 gap-6 min-[420px]:grid-cols-3 lg:gap-12">
+          <StatLink
+            className="-m-3 rounded-lg p-3 hover:bg-brand/[0.06]"
+            labelClassName="text-brand-muted-foreground"
+            href="/professional/timeline"
+            label="Registros este mês"
+            value={recordsThisMonth}
+            helper={recordCount === 0 ? "Nenhum no histórico ainda" : `${recordCount} no histórico`}
+          />
+          <StatLink
+            className="-m-3 rounded-lg p-3 hover:bg-brand/[0.06]"
+            labelClassName="text-brand-muted-foreground"
+            href="/professional/objectives"
+            label="Objetivos ativos"
+            value={activeObjectives}
+            helper={`${doneObjectives} ${doneObjectives === 1 ? "concluído" : "concluídos"}`}
+          />
+          <StatLink
+            className="-m-3 rounded-lg p-3 hover:bg-brand/[0.06]"
+            labelClassName="text-brand-muted-foreground"
+            href="/professional/evolution/radar"
+            label="Com evidência"
+            value={`${strongCount}/${totalCompetencies}`}
+            helper="Competências comprovadas"
+          />
+        </div>
+
         <div className="flex flex-wrap gap-2">
-          <Link href="/professional/evolution/radar" className={buttonVariants({ size: "sm" })}>
+          <Link
+            href="/professional/evolution/radar"
+            className={buttonVariants({ variant: "outline", size: "sm" })}
+          >
             <TrendingUp data-icon="inline-start" />
             Ver evolução
           </Link>
           <Link
             href="/professional/evolution/promotion"
-            className={buttonVariants({ variant: "outline", size: "sm" })}
+            className={buttonVariants({ variant: "ghost", size: "sm" })}
           >
             Montar dossiê
-            <ArrowUpRight data-icon="inline-end" />
+            <ArrowRight data-icon="inline-end" />
           </Link>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </BrandSurface>
   )
 }
 
@@ -419,6 +496,7 @@ export default function DashboardPage() {
     readiness,
     profile,
     strongCount,
+    competencyViews,
   } = useEvolutionData()
   const displayName = session?.name?.trim()
   const { notices: hrNotices } = useHrNotices(3)
@@ -460,27 +538,6 @@ export default function DashboardPage() {
       .slice(0, 5)
   }, [objectives, records])
 
-  const kpiCards = (
-    <>
-      <MetricCard
-        variant="card"
-        label="Registros este mês"
-        value={recordsThisMonth.length}
-        icon={Zap}
-        href="/professional/timeline"
-        helper={`${records.length} no histórico`}
-      />
-      <MetricCard
-        variant="card"
-        label="Objetivos ativos"
-        value={activeObjectives.length}
-        icon={Target}
-        href="/professional/objectives"
-        helper={`${objectives.filter((item) => item.status === "done").length} concluídos`}
-      />
-    </>
-  )
-
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
@@ -501,18 +558,29 @@ export default function DashboardPage() {
         </PageHeaderActions>
       </PageHeader>
 
-      {/* Faixa de abertura: o que chegou (RH), o que falta fazer (Foco) e o que
-          já foi notado (Elogios). Em lg três colunas ficariam com ~220px cada,
-          então os elogios descem e ocupam a linha inteira; a partir de xl cabem
-          as três lado a lado. */}
-      <div
-        className={cn(
-          "grid grid-cols-1 gap-4",
-          hrNotices.length > 0 ? "lg:grid-cols-2 xl:grid-cols-3" : "lg:grid-cols-2"
-        )}
-      >
-        {hrNotices.length > 0 ? <HrNoticesPanel hideWhenEmpty compact /> : null}
+      <CareerHero
+        ladder={profile.ladder}
+        currentLevelId={profile.identity.levelId}
+        targetLevelId={profile.goal.targetLevelId}
+        targetRole={profile.goal.targetRole}
+        targetYear={profile.goal.targetYear}
+        readiness={readiness}
+        recordCount={records.length}
+        recordsThisMonth={recordsThisMonth.length}
+        activeObjectives={activeObjectives.length}
+        doneObjectives={objectives.filter((item) => item.status === "done").length}
+        strongCount={strongCount}
+        totalCompetencies={competencyViews.length}
+      />
 
+      {/* Colunas de jornal, não grade. Os painéis daqui têm altura que depende
+          do dado (um objetivo ou quatro, nenhum aviso ou três), e numa grade a
+          fileira toma a altura do mais alto: "Últimas movimentações" com um
+          item deixava um buraco do tamanho da coluna vizinha. Em colunas cada
+          painel começa onde o anterior acabou e o navegador equilibra o fim.
+          A ordem do DOM é a de prioridade, e é nela que o celular empilha e o
+          Tab percorre: o que fazer, o que chegou, o que mudou, o resto. */}
+      <div className="columns-1 gap-4 *:mb-4 *:break-inside-avoid lg:columns-2 xl:columns-3 -mb-4">
         <CardList>
           <CardListHeader
             title="Foco do ciclo"
@@ -555,7 +623,7 @@ export default function DashboardPage() {
           {nextObjectives.length > 0 && nextObjectives.length < 4 ? (
             <CardListNote
               action={
-                <Link href="/professional/objectives" className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink hover:underline">
+                <Link href="/professional/objectives" className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink link-draw">
                   Criar objetivo
                   <ArrowUpRight className="size-3.5" />
                 </Link>
@@ -566,42 +634,9 @@ export default function DashboardPage() {
           ) : null}
         </CardList>
 
-        <KudosReceivedCard
-          className={cn(hrNotices.length > 0 && "lg:col-span-2 xl:col-span-1")}
-        />
-      </div>
+        {hrNotices.length > 0 ? <HrNoticesPanel hideWhenEmpty compact /> : null}
 
-      {/* Um terço para os dois KPIs empilhados, dois terços para a Trilha. Os
-          KPIs são label + número + apoio: lado a lado sobrava metade do card
-          vazio, e a Trilha, que precisa de largura para caber cinco nós com
-          rótulo mais o medidor, ficava apertada em metade da fileira.
-          `lg:grid-rows-2` faz os dois dividirem a altura da Trilha em vez de
-          deixarem sobra embaixo. */}
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="grid grid-cols-1 gap-4 lg:grid-rows-2">{kpiCards}</div>
-
-        <CareerProgressCard
-          className="lg:col-span-2"
-          ladder={profile.ladder}
-          currentLevelId={profile.identity.levelId}
-          targetLevelId={profile.goal.targetLevelId}
-          targetRole={profile.goal.targetRole}
-          targetYear={profile.goal.targetYear}
-          readiness={readiness}
-          recordCount={records.length}
-          strongCount={strongCount}
-        />
-      </div>
-
-      {/* Dois terços para o feed, um terço com Projetos e Apresentações
-          empilhados. O feed é a lista mais pesada da página — até 5 linhas de
-          badge + título + duas linhas de descrição + data, ~126px cada — e é
-          quem precisa de largura; os outros dois são compactos e parecidos.
-          Com 5 registros as duas colunas fecham quase iguais (697px contra
-          750px); com poucos registros o feed fica curto e sobra vazio à
-          esquerda. */}
-      <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3">
-        <CardList className="lg:col-span-2">
+        <CardList>
           <CardListHeader
             title="Últimas movimentações"
             action={
@@ -639,69 +674,69 @@ export default function DashboardPage() {
           </CardListBody>
         </CardList>
 
-        <div className="grid grid-cols-1 gap-4">
-          <CardList>
-            <CardListHeader
-              title="Projetos recentes"
-              icon={<FolderOpen />}
-            />
-            <CardListBody>
-              {latestProjects.length ? (
-                <CardListRows>
-                  {latestProjects.map((project) => (
-                    <ProjectRow key={`${project.workspace}-${project.id}`} project={project} />
-                  ))}
-                </CardListRows>
-              ) : (
-                <div className="px-4 py-4">
-                  <EmptyStateCard
-                    icon={FolderOpen}
-                    title="Nenhum projeto cadastrado"
-                    description="Os projetos que você criar aparecem aqui."
-                  />
-                </div>
-              )}
-            </CardListBody>
-          </CardList>
+        <KudosReceivedCard />
 
-          <CardList>
-            <CardListHeader
-              title="Apresentações"
-              icon={<Presentation />}
-            />
-            <CardListBody className="flex flex-col gap-4 px-4 py-4">
-              <div className="grid grid-cols-2 gap-3">
-                <MetricCard
-                  variant="inset"
-                  label="Realizadas"
-                  value={completedPresentations.length}
-                  icon={CheckCircle2}
-                />
-                <MetricCard
-                  variant="inset"
-                  label="Agendadas"
-                  value={scheduledPresentations.length}
-                  icon={Clock3}
-                />
-              </div>
-
-              {presentations.length ? <Separator /> : null}
-
-              {presentations.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  Nenhuma apresentação registrada ainda.
-                </p>
-              ) : null}
-            </CardListBody>
-            {presentations.length ? (
+        <CardList>
+          <CardListHeader
+            title="Projetos recentes"
+            icon={<FolderOpen />}
+          />
+          <CardListBody>
+            {latestProjects.length ? (
               <CardListRows>
-                {presentations.slice(0, 3).map((item) => (
-                  <PresentationRow key={item.id} presentation={item} />
+                {latestProjects.map((project) => (
+                  <ProjectRow key={`${project.workspace}-${project.id}`} project={project} />
                 ))}
               </CardListRows>
+            ) : (
+              <div className="px-4 py-4">
+                <EmptyStateCard
+                  icon={FolderOpen}
+                  title="Nenhum projeto cadastrado"
+                  description="Os projetos que você criar aparecem aqui."
+                />
+              </div>
+            )}
+          </CardListBody>
+        </CardList>
+
+        <CardList>
+          <CardListHeader
+            title="Apresentações"
+            icon={<Presentation />}
+          />
+          <CardListBody className="flex flex-col gap-4 px-4 py-4">
+            <div className="grid grid-cols-2 gap-3">
+              <MetricCard
+                variant="inset"
+                label="Realizadas"
+                value={completedPresentations.length}
+                icon={CheckCircle2}
+              />
+              <MetricCard
+                variant="inset"
+                label="Agendadas"
+                value={scheduledPresentations.length}
+                icon={Clock3}
+              />
+            </div>
+
+            {presentations.length ? <Separator /> : null}
+
+            {presentations.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                Nenhuma apresentação registrada ainda.
+              </p>
             ) : null}
-          </CardList>
-        </div>
+          </CardListBody>
+          {presentations.length ? (
+            <CardListRows>
+              {presentations.slice(0, 3).map((item) => (
+                <PresentationRow key={item.id} presentation={item} />
+              ))}
+            </CardListRows>
+          ) : null}
+        </CardList>
       </div>
 
       {MOSTRAR_GUIA_DE_FLUXO && records.length === 0 ? (

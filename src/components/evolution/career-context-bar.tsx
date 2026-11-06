@@ -34,7 +34,7 @@ export function CareerContextBar({
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="min-w-0">
-          <Overline className="text-muted-foreground/70">
+          <Overline className="text-muted-foreground">
             Objetivo de carreira
           </Overline>
           <p className="mt-1 text-lg font-semibold tracking-tight">{goal.targetRole}</p>
@@ -44,12 +44,22 @@ export function CareerContextBar({
           </p>
         </div>
         <div className="flex shrink-0 gap-3">
-          <MetricCard variant="inset" label="Avanço no PDI" value={readiness} suffix="%" />
+          {/* Os dois números medem coisas diferentes e aparecem lado a lado: um
+              vem do nível avaliado no PDI, o outro de registros. Sem dizer a
+              fonte, "78%" ao lado de "0/8" parece contradição. */}
+          <MetricCard
+            variant="inset"
+            label="Avanço no PDI"
+            value={readiness}
+            suffix="%"
+            helper="Pelo nível avaliado"
+          />
           {strongCompetencies !== undefined && totalCompetencies !== undefined ? (
             <MetricCard
               variant="inset"
               label="Competências evidenciadas"
               value={`${strongCompetencies}/${totalCompetencies}`}
+              helper="Comprovadas por registros"
             />
           ) : null}
         </div>

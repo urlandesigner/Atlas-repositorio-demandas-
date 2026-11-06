@@ -238,7 +238,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
                             {from ? (
                               <Link
                                 href={`/people/${from.id}`}
-                                className="text-sm font-medium text-foreground hover:text-accent-ink hover:underline"
+                                className="text-sm font-medium text-foreground hover:text-accent-ink link-draw"
                               >
                                 {from.name}
                               </Link>
@@ -289,7 +289,7 @@ export function PersonPublicProfile({ userId }: { userId: string }) {
                   person.managerId ? (
                     <Link
                       href={`/people/${person.managerId}`}
-                      className="text-accent-ink hover:underline"
+                      className="text-accent-ink link-draw"
                     >
                       {person.managerName}
                     </Link>

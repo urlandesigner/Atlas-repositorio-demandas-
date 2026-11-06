@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
 
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import type { ImpactSummary } from "@/lib/profile/derive"
 import { Overline } from "@/components/ui/overline"
 
@@ -16,7 +16,7 @@ export function ImpactSummarySection({ summary }: { summary: ImpactSummary }) {
 
   return (
     <section>
-      <Overline render={<h2 />} className="mb-2 text-muted-foreground/70">
+      <Overline render={<h2 />} className="mb-2 text-muted-foreground">
         Resumo de impacto
       </Overline>
       {/* Conta vazia vira UMA linha, nao cinco numeros grandes.
@@ -44,20 +44,20 @@ export function ImpactSummarySection({ summary }: { summary: ImpactSummary }) {
           </p>
           <Link
             href="/professional/timeline"
-            className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink hover:underline"
+            className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-accent-ink link-draw"
           >
             Ir para Registros
             <ArrowUpRight className="size-3.5" />
           </Link>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          <MetricCard variant="tile" label="Registros" value={summary.totalRecords} />
-          <MetricCard variant="tile" label="Projetos" value={summary.projectCount} />
-          <MetricCard variant="tile" label="Iniciativas estratégicas" value={summary.strategicCount} />
-          <MetricCard variant="tile" label="Ações de liderança" value={summary.leadershipCount} />
-          <MetricCard variant="tile" label="Mentorias" value={summary.mentorshipCount} />
-        </div>
+        <StatStrip>
+          <Stat label="Registros" value={summary.totalRecords} />
+          <Stat label="Projetos" value={summary.projectCount} />
+          <Stat label="Iniciativas estratégicas" value={summary.strategicCount} />
+          <Stat label="Ações de liderança" value={summary.leadershipCount} />
+          <Stat label="Mentorias" value={summary.mentorshipCount} />
+        </StatStrip>
       )}
     </section>
   )

@@ -152,7 +152,7 @@ export function PeopleDirectory() {
                   <Link
                     key={user.id}
                     href={`/people/${user.id}`}
-                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-lg"
+                    className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card hover-lift hover:border-brand/40 hover:shadow-lg"
                   >
                     <div className={cn("h-16 shrink-0", getPersonCoverClassName(person.name))} />
                     {/* Ancorada no canto do CARTAO, sobre a capa.
@@ -293,7 +293,7 @@ export function PeopleDirectory() {
                           reconheceu{" "}
                           <Link
                             href={`/people/${to.id}`}
-                            className="font-medium text-accent-ink hover:underline"
+                            className="font-medium text-accent-ink link-draw"
                           >
                             {to.name}
                           </Link>

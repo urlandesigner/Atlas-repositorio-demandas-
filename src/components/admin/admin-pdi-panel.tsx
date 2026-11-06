@@ -25,7 +25,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Field } from "@/components/ui/field"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -216,11 +216,11 @@ export function AdminPdiPanel() {
   return (
     <div className="flex flex-col gap-8">
       <section className="space-y-3">
-        <div className="grid gap-3 md:grid-cols-3">
-          <MetricCard label="Em análise" value={pending.length} />
-          <MetricCard label="Ativos" value={activeAssignments.length} />
-          <MetricCard label="Histórico recente" value={resolved.length} />
-        </div>
+        <StatStrip>
+          <Stat label="Em análise" value={pending.length} />
+          <Stat label="Ativos" value={activeAssignments.length} />
+          <Stat label="Histórico recente" value={resolved.length} />
+        </StatStrip>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2">
@@ -259,7 +259,7 @@ export function AdminPdiPanel() {
           <CardListHeader
             title="Fila e acompanhamento"
             description="Pendentes primeiro, depois PDIs ativos da área."
-            action={<Badge variant="outline">{filteredRows.length} registros</Badge>}
+            action={<Badge variant="outline">{filteredRows.length} {filteredRows.length === 1 ? "registro" : "registros"}</Badge>}
           />
           <CardListBody>
             {filteredRows.length ? (

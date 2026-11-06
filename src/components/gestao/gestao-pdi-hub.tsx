@@ -26,7 +26,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import {
   computeFrameworkReadiness,
   getFrameworkExpectations,
@@ -166,11 +166,11 @@ export function GestaoPdiHub() {
 
       {error ? <p className="text-sm text-destructive">{error}</p> : null}
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <MetricCard label="Trilhas disponíveis" value={pdiData.frameworks.length} helper="Bases prontas para aplicar no time" />
-        <MetricCard label="PDIs ativos" value={activeAssignments.length} helper="Pessoas com acompanhamento em andamento" />
-        <MetricCard label="Avanço médio" value={averageReadiness} helper="Média atual do time em %" suffix="%" />
-      </div>
+      <StatStrip>
+        <Stat label="Trilhas disponíveis" value={pdiData.frameworks.length} helper="Bases prontas para aplicar no time" />
+        <Stat label="PDIs ativos" value={activeAssignments.length} helper="Pessoas com acompanhamento em andamento" />
+        <Stat label="Avanço médio" value={averageReadiness} helper="Média atual do time em %" suffix="%" />
+      </StatStrip>
 
       <section className="flex flex-col gap-3">
         <CardList>

@@ -27,7 +27,7 @@ import {
   CardListRowTitle,
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Dialog,
@@ -192,11 +192,11 @@ export function CollaboratorsManager({
           </PageHeaderActions>
         </PageHeader>
 
-        <div className="grid gap-3 md:grid-cols-3">
-          <MetricCard label="Pessoas no time" value={summary.total} />
-          <MetricCard label="Com perfil definido" value={summary.withDisc} />
-          <MetricCard label="Em gestão ou coordenação" value={summary.gestao} />
-        </div>
+        <StatStrip>
+          <Stat label="Pessoas no time" value={summary.total} />
+          <Stat label="Com perfil definido" value={summary.withDisc} />
+          <Stat label="Em gestão ou coordenação" value={summary.gestao} />
+        </StatStrip>
 
         <CardList>
           <CardListHeader
@@ -240,7 +240,7 @@ export function CollaboratorsManager({
                       <div className="flex flex-wrap items-center gap-2 lg:justify-end">
                         <Link
                           href={`/gestao/liderados/${user.id}`}
-                          className={cn(buttonVariants({ variant: "default", size: "sm" }), "gap-1")}
+                          className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-1")}
                         >
                           Abrir ficha
                           <ArrowUpRight className="size-3.5" />

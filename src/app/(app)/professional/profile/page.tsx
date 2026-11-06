@@ -3,12 +3,10 @@
 import { useMemo, useSyncExternalStore } from "react"
 
 import { AiInsightsPanel } from "@/components/profile/ai-insights-panel"
-import { CareerGoalCard } from "@/components/profile/career-goal-card"
 import { EvolutionShell } from "@/components/evolution/evolution-shell"
 import { ImpactSummarySection } from "@/components/profile/impact-summary"
-import { PdiHighlight } from "@/components/profile/pdi-highlight"
 import { PdiCompactCard } from "@/components/profile/pdi-compact-card"
-import { ProfileHeader } from "@/components/profile/profile-header"
+import { ProfileHero } from "@/components/profile/profile-hero"
 import { AssignedPdiSection } from "@/components/gestao/assign-pdi-sheet"
 import { CollaboratorGestaoInsights } from "@/components/gestao/collaborator-gestao-insights"
 import { useOptionalSession } from "@/hooks/use-optional-session"
@@ -87,14 +85,6 @@ export default function ProfilePage() {
     return selectAssignmentsForUser(gestaoPdi.assignments, session.userId)[0]
   }, [gestaoPdi.assignments, session])
 
-  const frameworkDoCicloRecente = useMemo(
-    () =>
-      cicloRecente
-        ? gestaoPdi.frameworks.find((framework) => framework.id === cicloRecente.frameworkId)
-        : undefined,
-    [cicloRecente, gestaoPdi.frameworks]
-  )
-
   const assignedFramework = useMemo(
     () => (assigned ? gestaoPdi.frameworks.find((framework) => framework.id === assigned.frameworkId) : undefined),
     [assigned, gestaoPdi.frameworks]
@@ -162,20 +152,17 @@ export default function ProfilePage() {
       description="Identidade, PDI e objetivo de carreira no mesmo lugar."
     >
       <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:items-stretch">
-        <ProfileHeader
-          identity={displayIdentity}
-          levelName={currentLevel?.name ?? ""}
-          avatarUrl={currentUser?.avatarUrl}
-        />
-
-        <PdiHighlight
-          baselineAt={pdi.baselineAt}
-          cicloRecente={cicloRecente}
-          framework={frameworkDoCicloRecente}
-          className="h-full"
-        />
-      </div>
+      <ProfileHero
+        identity={displayIdentity}
+        levelName={currentLevel?.name ?? ""}
+        avatarUrl={currentUser?.avatarUrl}
+        goal={profile.goal}
+        ladder={profile.ladder}
+        currentLevelId={profile.identity.levelId}
+        readiness={readiness}
+        baselineAt={pdi.baselineAt}
+        cicloRecente={cicloRecente}
+      />
 
       <ImpactSummarySection summary={summary} />
 
@@ -183,7 +170,12 @@ export default function ProfilePage() {
         <CollaboratorGestaoInsights userId={session.userId} areaId={session.areaId} />
       ) : null}
 
-      <div id="pdi" className="grid scroll-mt-24 grid-cols-1 gap-4 lg:grid-cols-[1.5fr_1fr]">
+      {/* Insights acima da matriz, em largura total. Lado a lado, a matriz era
+          bem mais alta e sobrava um vão de ~250px sob os insights; e na leitura
+          o resumo vem antes do detalhe que ele resume. */}
+      <AiInsightsPanel current={insightsCurrent} expected={insightsExpected} />
+
+      <div id="pdi" className="scroll-mt-24">
         {assigned && assignedFramework && assignedCurrent && assignedExpected ? (
           <AssignedPdiSection
             framework={assignedFramework}
@@ -211,15 +203,7 @@ export default function ProfilePage() {
             objectives={objectives}
           />
         )}
-        <AiInsightsPanel current={insightsCurrent} expected={insightsExpected} />
       </div>
-
-      <CareerGoalCard
-        goal={profile.goal}
-        ladder={profile.ladder}
-        currentLevelId={profile.identity.levelId}
-        progress={readiness}
-      />
       </div>
     </EvolutionShell>
   )

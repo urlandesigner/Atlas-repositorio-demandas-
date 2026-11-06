@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/card-list"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { Field } from "@/components/ui/field"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { PersonAvatar } from "@/components/ui/person-avatar"
 import {
   Dialog,
@@ -105,11 +105,11 @@ export function AdminManagersManager() {
         </PageHeaderActions>
       </PageHeader>
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <MetricCard label="Gestores ativos" value={managers.length} helper="Cadastros disponíveis para atuação" />
-        <MetricCard label="Com time vinculado" value={managersWithTeam} helper="Já responsáveis por pessoas da área" />
-        <MetricCard label="Sem time ainda" value={Math.max(managers.length - managersWithTeam, 0)} helper="Podem receber novos vínculos" />
-      </div>
+      <StatStrip>
+        <Stat label="Gestores ativos" value={managers.length} helper="Cadastros disponíveis para atuação" />
+        <Stat label="Com time vinculado" value={managersWithTeam} helper="Já responsáveis por pessoas da área" />
+        <Stat label="Sem time ainda" value={Math.max(managers.length - managersWithTeam, 0)} helper="Podem receber novos vínculos" />
+      </StatStrip>
 
       <CardList>
         <CardListHeader

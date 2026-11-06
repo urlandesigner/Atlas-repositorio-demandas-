@@ -195,7 +195,7 @@ function CollapsibleNavGroup({
     <SidebarGroup>
       <SidebarGroupLabel
         render={<button type="button" onClick={onToggle} aria-expanded={open} />}
-        className="w-full justify-between gap-2 text-sidebar-foreground/55 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground/80"
+        className="w-full justify-between gap-2 text-muted-foreground transition-colors hover:bg-muted hover:text-sidebar-foreground"
       >
         <span>{label}</span>
         <ChevronDown
@@ -270,7 +270,7 @@ export function AppSidebar() {
               escolha em localStorage. O componente segue existindo em
               components/ui/theme-toggle. */}
           <div className="flex items-center gap-1 group-data-[collapsible=icon]:hidden">
-            <SidebarTrigger className="size-8 rounded-xl text-sidebar-foreground/72 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground" />
+            <SidebarTrigger className="size-8 rounded-xl text-muted-foreground hover:bg-muted hover:text-sidebar-foreground" />
           </div>
         </div>
       </SidebarHeader>
@@ -314,10 +314,10 @@ export function AppSidebar() {
               <PersonAvatar name={session?.name ?? "Usuário"} size="lg" />
 
               <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-sidebar-foreground/92">
+                <p className="truncate text-sm font-medium text-sidebar-foreground">
                   {session?.name ?? "Usuário"}
                 </p>
-                <p className="truncate text-xs text-sidebar-foreground/50">
+                <p className="truncate text-xs text-muted-foreground">
                   {session?.email ?? "—"}
                 </p>
               </div>
@@ -328,7 +328,7 @@ export function AppSidebar() {
                     <Button
                       variant="ghost"
                       size="icon-sm"
-                      className="shrink-0 rounded-md text-sidebar-foreground/62 hover:bg-muted hover:text-sidebar-foreground"
+                      className="shrink-0 rounded-md text-muted-foreground hover:bg-muted hover:text-sidebar-foreground"
                     />
                   }
                 >

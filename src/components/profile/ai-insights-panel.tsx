@@ -12,10 +12,13 @@ import { Overline } from "@/components/ui/overline"
 function InsightGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div>
-      <Overline className="mb-2 text-muted-foreground/70">
+      <Overline className="mb-2 text-muted-foreground">
         {label}
       </Overline>
-      <div className="flex flex-col gap-2">{children}</div>
+      {/* Em colunas: o painel mora em largura total acima da matriz do PDI, e
+          três oportunidades empilhadas numa faixa larga deixavam a linha vazia
+          à direita. */}
+      <div className="grid gap-x-6 gap-y-2.5 sm:grid-cols-2 xl:grid-cols-3">{children}</div>
     </div>
   )
 }
@@ -91,7 +94,7 @@ export function AiInsightsPanel({
                           {" "}
                           <Link
                             href="/professional/objectives"
-                            className="text-brand-muted-foreground underline-offset-2 hover:underline"
+                            className="text-brand-muted-foreground link-draw"
                           >
                             + criar objetivo
                           </Link>

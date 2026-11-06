@@ -8,7 +8,6 @@ import {
   CircleDot,
   Clock3,
   FileText,
-  Flag,
   PauseCircle,
   Pencil,
   Plus,
@@ -30,7 +29,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
 import { Input } from "@/components/ui/input"
 import { ListRowButton } from "@/components/ui/list-row-button"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { Progress } from "@/components/ui/progress"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {
@@ -429,7 +428,7 @@ function ObjectiveCard({
 
   return (
     <Card
-      className="h-full cursor-pointer hover:-translate-y-0.5 hover:border-foreground/12 hover:shadow-card-hover"
+      className="h-full cursor-pointer hover-lift hover:border-foreground/12 hover:shadow-card-hover"
       onClick={onClick}
     >
       <CardHeader className="pb-3">
@@ -755,12 +754,12 @@ export default function ObjectivesPage() {
           </PageHeaderActions>
         </PageHeader>
 
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-          <MetricCard variant="card" label="Meus objetivos" value={objectives.length} icon={Target} />
-          <MetricCard variant="card" label="Em andamento" value={stats.active} icon={Clock3} />
-          <MetricCard variant="card" label="Evidências" value={stats.evidence} icon={FileText} />
-          <MetricCard variant="card" label="Até 30 dias" value={stats.dueSoon} icon={Flag} />
-        </div>
+        <StatStrip>
+          <Stat label="Meus objetivos" value={objectives.length} />
+          <Stat label="Em andamento" value={stats.active} />
+          <Stat label="Evidências" value={stats.evidence} />
+          <Stat label="Até 30 dias" value={stats.dueSoon} />
+        </StatStrip>
 
         {session?.userId ? <AssignedObjectivesSection userId={session.userId} /> : null}
 

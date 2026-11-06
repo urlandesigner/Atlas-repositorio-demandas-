@@ -777,7 +777,7 @@ function ProjectDetailSurface({
                                 <div className={cn("absolute left-0 top-0 flex size-9 items-center justify-center rounded-xl border shadow-sm", meta.className)}>
                                   <Icon className="size-4" />
                                 </div>
-                                <div className="rounded-lg border border-border/70 bg-background/90 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover">
+                                <div className="rounded-lg border border-border/70 bg-background/90 p-3 hover-lift hover:border-border hover:shadow-card-hover">
                                   <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                     <div className="min-w-0">
                                       <div className="flex flex-wrap items-center gap-2">
@@ -808,6 +808,7 @@ function ProjectDetailSurface({
           <DetailSection title="Links importantes">
             <div className="flex items-start justify-end gap-3">
               <Button
+                variant="outline"
                 size="sm"
                 className="gap-1.5"
                 onClick={() => {
@@ -865,7 +866,7 @@ function ProjectDetailSurface({
                   return (
                     <div
                       key={`${link.label}-${link.url}-${index}`}
-                      className="group rounded-lg border border-border/70 bg-background/80 p-3 transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-card-hover"
+                      className="group rounded-lg border border-border/70 bg-background/80 p-3 hover-lift hover:border-border hover:shadow-card-hover"
                     >
                       <div className="flex items-start gap-3">
                         <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-xl border", config.className)}>

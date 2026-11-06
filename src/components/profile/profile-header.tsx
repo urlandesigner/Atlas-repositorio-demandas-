@@ -47,7 +47,7 @@ export function ProfileHeader({
       <h2 className="col-start-2 text-xl font-semibold tracking-tight">{identity.name}</h2>
       <p className="col-start-2 mt-0.5 text-sm text-muted-foreground">
         {identity.role}
-        {levelName ? <span className="text-muted-foreground/70"> · {levelName}</span> : null}
+        {levelName ? <span className="text-muted-foreground"> · {levelName}</span> : null}
       </p>
 
       <div className="col-start-2 mt-3 flex flex-wrap gap-1.5">

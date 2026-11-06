@@ -43,7 +43,7 @@ export function PdiCompactCard({
         </div>
         <Link
           href="/professional/evolution/radar"
-          className="inline-flex items-center gap-1 self-start text-xs font-medium text-brand-muted-foreground underline-offset-2 hover:underline"
+          className="inline-flex items-center gap-1 self-start text-xs font-medium text-brand-muted-foreground link-draw"
         >
           Ver matrizes
           <ArrowUpRight className="size-3.5" />

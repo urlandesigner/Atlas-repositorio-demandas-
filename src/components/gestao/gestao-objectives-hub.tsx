@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/card-list"
 import { buttonVariants } from "@/components/ui/button"
 import { EmptyStateCard } from "@/components/ui/empty-state-card"
-import { MetricCard } from "@/components/ui/metric-card"
+import { Stat, StatStrip } from "@/components/ui/stat-strip"
 import { PageHeader } from "@/components/ui/page-header"
 import {
   getGestaoObjectivesServerSnapshot,
@@ -61,18 +61,18 @@ export function GestaoObjectivesHub() {
         description="Objetivos ativos do seu time, ligados ao ciclo atual de desenvolvimento."
       />
 
-      <div className="grid gap-3 md:grid-cols-3">
-        <MetricCard
+      <StatStrip>
+        <Stat
           label="Metas ativas"
           value={objectives.filter((objective) => objective.status === "in_progress").length}
           helper="Em execução agora"
         />
-        <MetricCard
+        <Stat
           label="Pessoas com meta"
           value={new Set(objectives.map((objective) => objective.userId)).size}
           helper="Cobertura do time"
         />
-        <MetricCard
+        <Stat
           label="Prazo próximo"
           value={objectives.filter((objective) => {
             if (!objective.deadline) return false
@@ -81,13 +81,13 @@ export function GestaoObjectivesHub() {
           }).length}
           helper="Vence nos próximos 30 dias"
         />
-      </div>
+      </StatStrip>
 
       <CardList>
         <CardListHeader
           title="Lista de acompanhamento"
           description="Status, prazo e vínculo com a ficha de cada pessoa."
-          action={<Badge variant="outline">{objectives.length} registros</Badge>}
+          action={<Badge variant="outline">{objectives.length} {objectives.length === 1 ? "registro" : "registros"}</Badge>}
         />
         <CardListBody>
           {objectives.map((objective) => {
